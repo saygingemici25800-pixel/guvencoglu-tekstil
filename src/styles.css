@@ -610,7 +610,7 @@ section {
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* About */
-.about { background: var(--bg); }
+.about { background: transparent; position: relative; z-index: 2; }
 .about__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -706,7 +706,7 @@ section {
 .about__quote footer strong { color: var(--navy); margin-right: var(--s-2); }
 
 /* Services */
-.services { background: var(--bg-deep); position: relative; }
+.services { background: transparent; position: relative; z-index: 2; }
 .services::before {
   content: '';
   position: absolute;
@@ -859,7 +859,7 @@ section {
 .service-card:hover .service-card__cta .arrow { transform: translateX(6px); }
 
 /* Why Us */
-.why { background: var(--bg); }
+.why { background: transparent; position: relative; z-index: 2; }
 .why__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1034,7 +1034,7 @@ section {
 .trust__badge p { font-size: 0.85rem; color: rgba(245, 245, 240, 0.7); margin: 0; }
 
 /* Quote form */
-.quote { background: var(--bg); position: relative; overflow: hidden; }
+.quote { background: transparent; position: relative; overflow: hidden; z-index: 2; }
 .quote::before {
   content: '';
   position: absolute;
