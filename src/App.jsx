@@ -12,6 +12,7 @@ import Footer from './components/Footer.jsx'
 import WhatsAppFloat from './components/WhatsAppFloat.jsx'
 import MobileStickyCTA from './components/MobileStickyCTA.jsx'
 
+
 export default function App() {
   return (
     <>
