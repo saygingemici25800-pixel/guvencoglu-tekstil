@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useReveal } from '../hooks/useReveal.js'
 
 const SERVICES = [
@@ -65,20 +65,61 @@ const SERVICES = [
   },
 ]
 
-function FlipCard({ rotate = "y", className, children, back }) {
-  const rotationClass = {
-    x: ["group-hover:[transform:rotateX(180deg)]", "[transform:rotateX(180deg)]"],
-    y: ["group-hover:[transform:rotateY(180deg)]", "[transform:rotateY(180deg)]"],
-  };
-  const rotation = React.useMemo(() => rotationClass[rotate], [rotate]);
+function FlipCard({ rotate = 'y', className, children, back }) {
+  const [hover, setHover] = useState(false)
+  const axis = rotate === 'x' ? 'X' : 'Y'
+
+  const wrapperStyle = {
+    perspective: '1200px',
+    WebkitPerspective: '1200px',
+    width: '16rem',
+    height: '24rem',
+  }
+
+  const innerStyle = {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)',
+    transformStyle: 'preserve-3d',
+    WebkitTransformStyle: 'preserve-3d',
+    transform: hover ? `rotate${axis}(180deg)` : `rotate${axis}(0deg)`,
+    willChange: 'transform',
+  }
+
+  const faceStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    borderRadius: '1rem',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
+  }
+
+  const backFaceStyle = {
+    ...faceStyle,
+    transform: `rotate${axis}(180deg)`,
+  }
+
   return (
-    <div className={`group h-96 w-64 [perspective:1000px] ${className || ""}`}>
-      <div className={`relative h-full rounded-2xl transition-all duration-500 [transform-style:preserve-3d] ${rotation[0]}`}>
-        <div className="absolute size-full overflow-hidden rounded-2xl border [backface-visibility:hidden]">{children}</div>
-        <div className={`absolute h-full w-full overflow-hidden rounded-2xl border bg-black/80 p-4 text-slate-200 [backface-visibility:hidden] ${rotation[1]}`}>{back}</div>
+    <div
+      className={className}
+      style={wrapperStyle}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+      tabIndex={0}
+    >
+      <div style={innerStyle}>
+        <div style={faceStyle}>{children}</div>
+        <div style={backFaceStyle}>{back}</div>
       </div>
     </div>
-  );
+  )
 }
 
 function ServiceFlipCard({ service, index }) {

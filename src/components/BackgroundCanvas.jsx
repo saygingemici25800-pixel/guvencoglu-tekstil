@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 
-const NAVY = '#0A2463'
 const COPPER = '#D4A373'
 const HIGHLIGHT = '#f1d6b3'
 const THREAD = '#e7b985'
@@ -9,7 +8,6 @@ const PALETTE = [COPPER, THREAD, HIGHLIGHT, COPPER, THREAD]
 
 export default function BackgroundCanvas() {
   const canvasRef = useRef(null)
-  const wrapperRef = useRef(null)
   const rafRef = useRef(0)
   const stateRef = useRef({
     fibers: [],
@@ -23,8 +21,7 @@ export default function BackgroundCanvas() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const wrapper = wrapperRef.current
-    if (!canvas || !wrapper) return
+    if (!canvas) return
 
     const reduced =
       window.matchMedia &&
@@ -48,8 +45,8 @@ export default function BackgroundCanvas() {
           amp: 18 + Math.random() * 60,
           drift: -0.08 - Math.random() * 0.18,
           color: PALETTE[i % PALETTE.length],
-          width: 0.4 + Math.random() * 0.9,
-          alpha: 0.35 + Math.random() * 0.45,
+          width: 0.5 + Math.random() * 1.0,
+          alpha: 0.55 + Math.random() * 0.4,
           weave: Math.random() * 0.5 + 0.5,
         })
       }
@@ -72,10 +69,11 @@ export default function BackgroundCanvas() {
     }
 
     const onScroll = () => {
-      const heroEnd = window.innerHeight * 0.6
-      const fadeRange = window.innerHeight * 0.4
+      const heroH = window.innerHeight
+      const fadeStart = heroH * 0.85
+      const fadeEnd = heroH * 1.05
       const y = window.scrollY
-      const k = Math.min(1, Math.max(0, (y - heroEnd * 0.2) / fadeRange))
+      const k = Math.min(1, Math.max(0, (y - fadeStart) / (fadeEnd - fadeStart)))
       s.targetOpacity = k
     }
 
@@ -90,13 +88,6 @@ export default function BackgroundCanvas() {
         rafRef.current = requestAnimationFrame(draw)
         return
       }
-
-      const grad = ctx.createLinearGradient(0, 0, 0, h)
-      grad.addColorStop(0, 'rgba(10,36,99,0)')
-      grad.addColorStop(0.5, 'rgba(10,36,99,0.04)')
-      grad.addColorStop(1, 'rgba(10,36,99,0)')
-      ctx.fillStyle = grad
-      ctx.fillRect(0, 0, w, h)
 
       ctx.globalCompositeOperation = 'lighter'
 
@@ -153,29 +144,19 @@ export default function BackgroundCanvas() {
   }, [])
 
   return (
-    <div
-      ref={wrapperRef}
+    <canvas
+      ref={canvasRef}
       aria-hidden="true"
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
         zIndex: -1,
         pointerEvents: 'none',
-        background:
-          'radial-gradient(ellipse at 50% 0%, rgba(10,36,99,0) 0%, rgba(10,36,99,0.02) 60%, rgba(10,36,99,0.05) 100%)',
+        opacity: 0.07,
       }}
-    >
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          opacity: 0.085,
-          mixBlendMode: 'screen',
-        }}
-      />
-    </div>
+    />
   )
 }
