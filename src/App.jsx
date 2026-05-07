@@ -2,6 +2,7 @@ import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Services from './components/Services.jsx'
+import PerspectiveMarquee from './components/PerspectiveMarquee.jsx'
 import WhyUs from './components/WhyUs.jsx'
 import TrustBadges from './components/TrustBadges.jsx'
 import QuoteForm from './components/QuoteForm.jsx'
@@ -18,6 +19,7 @@ export default function App() {
         <Hero />
         <About />
         <Services />
+        <PerspectiveMarquee />
         <WhyUs />
         <TrustBadges />
         <QuoteForm />
