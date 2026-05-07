@@ -1,6 +1,6 @@
 import Nav from './components/Nav.jsx'
+import GlobalCanvas from './components/GlobalCanvas.jsx'
 import Hero from './components/Hero.jsx'
-import BackgroundCanvas from './components/BackgroundCanvas.jsx'
 import About from './components/About.jsx'
 import Services from './components/Services.jsx'
 import PerspectiveMarquee from './components/PerspectiveMarquee.jsx'
@@ -11,12 +11,13 @@ import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 import WhatsAppFloat from './components/WhatsAppFloat.jsx'
 import MobileStickyCTA from './components/MobileStickyCTA.jsx'
+import GuvencogluFinale from './components/GuvencogluFinale.jsx'
 
 
 export default function App() {
   return (
     <>
-      <BackgroundCanvas />
+      <GlobalCanvas />
       <Nav />
       <main>
         <Hero />
@@ -31,6 +32,7 @@ export default function App() {
       <Footer />
       <WhatsAppFloat />
       <MobileStickyCTA />
+      <GuvencogluFinale />
     </>
   )
 }
