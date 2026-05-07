@@ -1,5 +1,6 @@
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
+import BackgroundCanvas from './components/BackgroundCanvas.jsx'
 import About from './components/About.jsx'
 import Services from './components/Services.jsx'
 import PerspectiveMarquee from './components/PerspectiveMarquee.jsx'
@@ -17,6 +18,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <BackgroundCanvas />
         <About />
         <Services />
         <PerspectiveMarquee />
