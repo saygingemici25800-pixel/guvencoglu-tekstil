@@ -16,10 +16,10 @@ import MobileStickyCTA from './components/MobileStickyCTA.jsx'
 export default function App() {
   return (
     <>
+      <BackgroundCanvas />
       <Nav />
       <main>
         <Hero />
-        <BackgroundCanvas />
         <About />
         <Services />
         <PerspectiveMarquee />
