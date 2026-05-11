@@ -324,36 +324,6 @@ function MobileTimeline({ milestones }) {
   )
 }
 
-const MOBILE_DWELL_PER_MILESTONE = 3.2
-
-function MobileTunnelDriver({ milestones, onActiveChange, activeRef }) {
-  const startRef = useRef(null)
-  const lastIdxRef = useRef(-1)
-
-  useFrame(({ camera, clock }) => {
-    if (!activeRef.current) return
-    if (startRef.current === null) startRef.current = clock.elapsedTime
-    const t = clock.elapsedTime - startRef.current
-
-    const total = milestones.length * MOBILE_DWELL_PER_MILESTONE
-    const progress = (t % total) / total
-
-    const startZ = CAMERA_START_Z
-    const endZ = -(milestones.length - 0.5) * SPACING
-    camera.position.z = startZ + (endZ - startZ) * progress
-    camera.position.x = Math.sin(progress * Math.PI * 2) * 0.4
-    camera.lookAt(0, 0, camera.position.z - 4)
-
-    const idx = Math.max(0, Math.min(milestones.length - 1, Math.floor(progress * milestones.length)))
-    if (idx !== lastIdxRef.current) {
-      lastIdxRef.current = idx
-      onActiveChange(idx)
-    }
-  })
-
-  return null
-}
-
 function MobileMilestonePanel({ milestone, index, total }) {
   return (
     <article
@@ -441,96 +411,66 @@ function MobileDotRail({ count, active }) {
 function MobileTimelineTunnel({ milestones }) {
   const sectionRef = useRef(null)
   const [active, setActive] = useState(0)
-  const [inView, setInView] = useState(false)
-  const inViewRef = useRef(false)
-
-  useEffect(() => {
-    const node = sectionRef.current
-    if (!node) return
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inViewRef.current = entry.isIntersecting
-        setInView(entry.isIntersecting)
-      },
-      { threshold: 0.15, rootMargin: '0px 0px 100px 0px' },
-    )
-    io.observe(node)
-    return () => io.disconnect()
-  }, [])
+  const reduced = usePrefersReducedMotion()
 
   return (
     <section
       ref={sectionRef}
       aria-label="Kronolojik kilometre taşları"
-      className="v2-mobile-3d-stage"
-      style={{ background: '#2D3142' }}
+      style={{
+        position: 'relative',
+        height: `${100 + milestones.length * 80}vh`,
+        background: '#2D3142',
+      }}
     >
-      <Canvas
-        frameloop={inView ? 'always' : 'demand'}
-        tabIndex={-1}
-        camera={{ position: [0, 0, CAMERA_START_Z], fov: 55 }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-        dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
-        style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
-      >
-        <Suspense fallback={null}>
-          <fog attach="fog" args={['#2D3142', 6, 32]} />
-          <color attach="background" args={['#2D3142']} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[3, 6, 4]} intensity={0.9} color="#D4A373" />
-          <directionalLight position={[-4, 2, 2]} intensity={0.3} color="#EFEAE0" />
-          {milestones.map((m, i) => {
-            const side = i % 2 === 0 ? -1.5 : 1.5
-            return (
-              <YearSign
-                key={m.year}
-                position={[side, 0.2, -i * SPACING]}
-                year={m.year}
-                mono={m.mono}
-                index={i}
-                sideOffset={side}
-              />
-            )
-          })}
-          <FloorPlane count={milestones.length} />
-          <MobileTunnelDriver
-            milestones={milestones}
-            activeRef={inViewRef}
-            onActiveChange={setActive}
-          />
-        </Suspense>
-      </Canvas>
+      <div className="v2-mobile-3d-sticky">
+        <Canvas
+          tabIndex={-1}
+          camera={{ position: [0, 0, CAMERA_START_Z], fov: 55 }}
+          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+          dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
+          style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
+        >
+          <Suspense fallback={null}>
+            <TunnelScene
+              milestones={milestones}
+              sectionRef={sectionRef}
+              onActiveChange={setActive}
+              reduced={reduced}
+            />
+          </Suspense>
+        </Canvas>
 
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(180deg, rgba(45,49,66,0.15) 0%, rgba(45,49,66,0) 35%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(180deg, rgba(45,49,66,0.15) 0%, rgba(45,49,66,0) 35%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
 
-      <MobileMilestonePanel
-        milestone={milestones[active]}
-        index={active}
-        total={milestones.length}
-      />
-      <MobileDotRail count={milestones.length} active={active} />
+        <MobileMilestonePanel
+          milestone={milestones[active]}
+          index={active}
+          total={milestones.length}
+        />
+        <MobileDotRail count={milestones.length} active={active} />
+      </div>
 
       <style>{`
-        .v2-mobile-3d-stage {
-          position: relative;
-          height: 88vh;
-          height: 88svh;
-          min-height: 540px;
+        .v2-mobile-3d-sticky {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          height: 100svh;
           overflow: hidden;
           isolation: isolate;
           touch-action: pan-y;
-          overscroll-behavior: contain;
         }
-        .v2-mobile-3d-stage canvas { outline: none !important; }
+        .v2-mobile-3d-sticky canvas { outline: none !important; }
         @keyframes v2-mobile-fade {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }

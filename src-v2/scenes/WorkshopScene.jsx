@@ -596,37 +596,6 @@ function MobileWorkshop({ stations }) {
   )
 }
 
-const MOBILE_DWELL_PER_STATION = 3.0
-
-function MobileWorkshopDriver({ stations, onActiveChange, activeRef }) {
-  const startRef = useRef(null)
-  const lastIdxRef = useRef(-1)
-
-  useFrame(({ camera, clock }) => {
-    if (!activeRef.current) return
-    if (startRef.current === null) startRef.current = clock.elapsedTime
-    const t = clock.elapsedTime - startRef.current
-
-    const total = stations.length * MOBILE_DWELL_PER_STATION
-    const progress = (t % total) / total
-
-    const eased = progress * (stations.length - 1)
-    const targetZ = -eased * SPACING
-    camera.position.z = targetZ + 3.6
-    camera.position.x = Math.sin(progress * Math.PI * 3) * 0.5
-    camera.position.y = 1.05 + Math.sin(progress * Math.PI * 2) * 0.1
-    camera.lookAt(0, FLOOR_Y + 0.45, targetZ - 0.5)
-
-    const idx = Math.max(0, Math.min(stations.length - 1, Math.round(progress * (stations.length - 1))))
-    if (idx !== lastIdxRef.current) {
-      lastIdxRef.current = idx
-      onActiveChange(idx)
-    }
-  })
-
-  return null
-}
-
 function MobileStationPanel({ station, index, total }) {
   return (
     <article
@@ -714,87 +683,61 @@ function MobileWorkshopDots({ count, active }) {
 function MobileWorkshopExperience({ stations, reduced }) {
   const sectionRef = useRef(null)
   const [active, setActive] = useState(0)
-  const [inView, setInView] = useState(false)
-  const inViewRef = useRef(false)
-
-  useEffect(() => {
-    const node = sectionRef.current
-    if (!node) return
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inViewRef.current = entry.isIntersecting
-        setInView(entry.isIntersecting)
-      },
-      { threshold: 0.15, rootMargin: '0px 0px 100px 0px' },
-    )
-    io.observe(node)
-    return () => io.disconnect()
-  }, [])
 
   return (
     <section
       ref={sectionRef}
       aria-label="Üretim hattının 7 adımı"
-      className="v2-mobile-3d-stage"
-      style={{ background: NAVY }}
+      style={{
+        position: 'relative',
+        height: `${100 + stations.length * 70}vh`,
+        background: NAVY,
+      }}
     >
-      <Canvas
-        frameloop={inView ? 'always' : 'demand'}
-        tabIndex={-1}
-        camera={{ position: [0, 1.1, 3.6], fov: 50 }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-        dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
-        style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
-      >
-        <Suspense fallback={null}>
-          <fog attach="fog" args={[NAVY, 5, 30]} />
-          <color attach="background" args={[NAVY]} />
-          <ambientLight intensity={0.45} />
-          <directionalLight position={[4, 7, 3]} intensity={0.85} color={COPPER} />
-          <directionalLight position={[-3, 4, 2]} intensity={0.25} color={CREAM} />
-          <WorkshopFloor count={stations.length} />
-          {stations.map((s, i) => {
-            const Comp = STATION_COMPONENTS[i] || STATION_COMPONENTS[0]
-            return (
-              <group key={s.id} position={[0, 0, -i * SPACING]}>
-                <Comp reduced={reduced} />
-              </group>
-            )
-          })}
-          <MobileWorkshopDriver
-            stations={stations}
-            activeRef={inViewRef}
-            onActiveChange={setActive}
-          />
-        </Suspense>
-      </Canvas>
+      <div className="v2-mobile-3d-sticky">
+        <Canvas
+          tabIndex={-1}
+          camera={{ position: [0, 1.1, 3.6], fov: 50 }}
+          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+          dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
+          style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
+        >
+          <Suspense fallback={null}>
+            <WorkshopSceneInner
+              stations={stations}
+              sectionRef={sectionRef}
+              onActiveChange={setActive}
+              reduced={reduced}
+            />
+          </Suspense>
+        </Canvas>
 
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(180deg, rgba(45,49,66,0.2) 0%, rgba(45,49,66,0) 30%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(180deg, rgba(45,49,66,0.2) 0%, rgba(45,49,66,0) 30%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
 
-      <MobileStationPanel station={stations[active]} index={active} total={stations.length} />
-      <MobileWorkshopDots count={stations.length} active={active} />
+        <MobileStationPanel station={stations[active]} index={active} total={stations.length} />
+        <MobileWorkshopDots count={stations.length} active={active} />
+      </div>
 
       <style>{`
-        .v2-mobile-3d-stage {
-          position: relative;
-          height: 88vh;
-          height: 88svh;
-          min-height: 540px;
+        .v2-mobile-3d-sticky {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          height: 100svh;
           overflow: hidden;
           isolation: isolate;
           touch-action: pan-y;
-          overscroll-behavior: contain;
         }
-        .v2-mobile-3d-stage canvas { outline: none !important; }
+        .v2-mobile-3d-sticky canvas { outline: none !important; }
         @keyframes v2-mobile-fade {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
