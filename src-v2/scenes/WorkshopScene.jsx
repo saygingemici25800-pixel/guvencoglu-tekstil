@@ -596,6 +596,206 @@ function MobileWorkshop({ stations }) {
   )
 }
 
+const MOBILE_DWELL_PER_STATION = 3.0
+
+function MobileWorkshopDriver({ stations, onActiveChange, activeRef }) {
+  const startRef = useRef(null)
+
+  useFrame(({ camera, clock }) => {
+    if (!activeRef.current) return
+    if (startRef.current === null) startRef.current = clock.elapsedTime
+    const t = clock.elapsedTime - startRef.current
+
+    const total = stations.length * MOBILE_DWELL_PER_STATION
+    const progress = (t % total) / total
+
+    const eased = progress * (stations.length - 1)
+    const targetZ = -eased * SPACING
+    camera.position.z = targetZ + 3.6
+    camera.position.x = Math.sin(progress * Math.PI * 3) * 0.5
+    camera.position.y = 1.05 + Math.sin(progress * Math.PI * 2) * 0.1
+    camera.lookAt(0, FLOOR_Y + 0.45, targetZ - 0.5)
+
+    const idx = Math.max(0, Math.min(stations.length - 1, Math.round(progress * (stations.length - 1))))
+    onActiveChange(idx)
+  })
+
+  return null
+}
+
+function MobileStationPanel({ station, index, total }) {
+  return (
+    <article
+      key={index}
+      style={{
+        position: 'absolute',
+        left: 24,
+        right: 24,
+        bottom: 64,
+        color: CREAM,
+        pointerEvents: 'none',
+        animation: 'v2-mobile-fade 600ms cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+    >
+      <p
+        className="mono"
+        style={{
+          fontSize: 11,
+          letterSpacing: '0.2em',
+          color: COPPER,
+          marginBottom: 12,
+          textTransform: 'uppercase',
+        }}
+      >
+        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} — {station.mono}
+      </p>
+      <h3
+        style={{
+          fontFamily: 'Fraunces, serif',
+          fontSize: 'clamp(22px, 6.5vw, 32px)',
+          fontStyle: 'italic',
+          fontVariationSettings: '"opsz" 144',
+          fontWeight: 500,
+          lineHeight: 1.1,
+          marginBottom: 10,
+          color: CREAM,
+        }}
+      >
+        {station.title}
+      </h3>
+      <p
+        style={{
+          fontFamily: 'Inter Tight, sans-serif',
+          fontSize: 14,
+          lineHeight: 1.55,
+          opacity: 0.85,
+          maxWidth: '36ch',
+        }}
+      >
+        {station.description}
+      </p>
+    </article>
+  )
+}
+
+function MobileWorkshopDots({ count, active }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        bottom: 24,
+        left: 24,
+        right: 24,
+        display: 'flex',
+        gap: 6,
+      }}
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+            width: i === active ? 28 : 8,
+            height: 3,
+            background: i === active ? COPPER : 'rgba(239,234,224,0.28)',
+            borderRadius: 2,
+            transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+function MobileWorkshopExperience({ stations, reduced }) {
+  const sectionRef = useRef(null)
+  const [active, setActive] = useState(0)
+  const [inView, setInView] = useState(false)
+  const inViewRef = useRef(false)
+
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting
+        setInView(entry.isIntersecting)
+      },
+      { threshold: 0.15, rootMargin: '0px 0px 100px 0px' },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-label="Üretim hattının 7 adımı"
+      className="v2-mobile-3d-stage"
+      style={{ background: NAVY }}
+    >
+      <Canvas
+        frameloop={inView ? 'always' : 'demand'}
+        camera={{ position: [0, 1.1, 3.6], fov: 50 }}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
+        style={{ position: 'absolute', inset: 0 }}
+      >
+        <Suspense fallback={null}>
+          <fog attach="fog" args={[NAVY, 5, 30]} />
+          <color attach="background" args={[NAVY]} />
+          <ambientLight intensity={0.45} />
+          <directionalLight position={[4, 7, 3]} intensity={0.85} color={COPPER} />
+          <directionalLight position={[-3, 4, 2]} intensity={0.25} color={CREAM} />
+          <WorkshopFloor count={stations.length} />
+          {stations.map((s, i) => {
+            const Comp = STATION_COMPONENTS[i] || STATION_COMPONENTS[0]
+            return (
+              <group key={s.id} position={[0, 0, -i * SPACING]}>
+                <Comp reduced={reduced} />
+              </group>
+            )
+          })}
+          <MobileWorkshopDriver
+            stations={stations}
+            activeRef={inViewRef}
+            onActiveChange={(idx) => setActive((prev) => (prev === idx ? prev : idx))}
+          />
+        </Suspense>
+      </Canvas>
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(180deg, rgba(45,49,66,0.2) 0%, rgba(45,49,66,0) 30%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <MobileStationPanel station={stations[active]} index={active} total={stations.length} />
+      <MobileWorkshopDots count={stations.length} active={active} />
+
+      <style>{`
+        .v2-mobile-3d-stage {
+          position: relative;
+          height: 88vh;
+          height: 88svh;
+          min-height: 540px;
+          overflow: hidden;
+          isolation: isolate;
+        }
+        @keyframes v2-mobile-fade {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </section>
+  )
+}
+
 export default function WorkshopScene({ stations }) {
   const sectionRef = useRef(null)
   const [active, setActive] = useState(0)
@@ -611,7 +811,10 @@ export default function WorkshopScene({ stations }) {
     return () => mq.removeEventListener('change', handler)
   }, [])
 
-  if (isMobile) return <MobileWorkshop stations={stations} />
+  if (isMobile) {
+    if (reduced) return <MobileWorkshop stations={stations} />
+    return <MobileWorkshopExperience stations={stations} reduced={reduced} />
+  }
 
   return (
     <section

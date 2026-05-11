@@ -324,6 +324,214 @@ function MobileTimeline({ milestones }) {
   )
 }
 
+const MOBILE_DWELL_PER_MILESTONE = 3.2
+
+function MobileTunnelDriver({ milestones, onActiveChange, activeRef }) {
+  const startRef = useRef(null)
+
+  useFrame(({ camera, clock }) => {
+    if (!activeRef.current) return
+    if (startRef.current === null) startRef.current = clock.elapsedTime
+    const t = clock.elapsedTime - startRef.current
+
+    const total = milestones.length * MOBILE_DWELL_PER_MILESTONE
+    const progress = (t % total) / total
+
+    const startZ = CAMERA_START_Z
+    const endZ = -(milestones.length - 0.5) * SPACING
+    camera.position.z = startZ + (endZ - startZ) * progress
+    camera.position.x = Math.sin(progress * Math.PI * 2) * 0.4
+    camera.lookAt(0, 0, camera.position.z - 4)
+
+    const idx = Math.max(0, Math.min(milestones.length - 1, Math.floor(progress * milestones.length)))
+    onActiveChange(idx)
+  })
+
+  return null
+}
+
+function MobileMilestonePanel({ milestone, index, total }) {
+  return (
+    <article
+      key={index}
+      style={{
+        position: 'absolute',
+        left: 24,
+        right: 24,
+        bottom: 64,
+        color: 'var(--v2-cream)',
+        pointerEvents: 'none',
+        animation: 'v2-mobile-fade 600ms cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+    >
+      <p
+        className="mono"
+        style={{
+          fontSize: 11,
+          letterSpacing: '0.18em',
+          color: 'var(--v2-copper)',
+          marginBottom: 12,
+          textTransform: 'uppercase',
+        }}
+      >
+        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} — {milestone.mono}
+      </p>
+      <h3
+        style={{
+          fontFamily: 'Fraunces, serif',
+          fontSize: 'clamp(24px, 7vw, 34px)',
+          fontStyle: 'italic',
+          fontVariationSettings: '"opsz" 144',
+          fontWeight: 500,
+          lineHeight: 1.1,
+          marginBottom: 10,
+          color: 'var(--v2-cream)',
+        }}
+      >
+        {milestone.title}
+      </h3>
+      <p
+        style={{
+          fontFamily: 'Inter Tight, sans-serif',
+          fontSize: 14,
+          lineHeight: 1.55,
+          opacity: 0.82,
+          maxWidth: '40ch',
+        }}
+      >
+        {milestone.description}
+      </p>
+    </article>
+  )
+}
+
+function MobileDotRail({ count, active }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        bottom: 24,
+        left: 24,
+        right: 24,
+        display: 'flex',
+        gap: 6,
+      }}
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+            width: i === active ? 28 : 8,
+            height: 3,
+            background: i === active ? 'var(--v2-copper)' : 'rgba(239,234,224,0.28)',
+            borderRadius: 2,
+            transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+function MobileTimelineTunnel({ milestones }) {
+  const sectionRef = useRef(null)
+  const [active, setActive] = useState(0)
+  const [inView, setInView] = useState(false)
+  const inViewRef = useRef(false)
+
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting
+        setInView(entry.isIntersecting)
+      },
+      { threshold: 0.15, rootMargin: '0px 0px 100px 0px' },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-label="Kronolojik kilometre taşları"
+      className="v2-mobile-3d-stage"
+      style={{ background: '#2D3142' }}
+    >
+      <Canvas
+        frameloop={inView ? 'always' : 'demand'}
+        camera={{ position: [0, 0, CAMERA_START_Z], fov: 55 }}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
+        style={{ position: 'absolute', inset: 0 }}
+      >
+        <Suspense fallback={null}>
+          <fog attach="fog" args={['#2D3142', 6, 32]} />
+          <color attach="background" args={['#2D3142']} />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[3, 6, 4]} intensity={0.9} color="#D4A373" />
+          <directionalLight position={[-4, 2, 2]} intensity={0.3} color="#EFEAE0" />
+          {milestones.map((m, i) => {
+            const side = i % 2 === 0 ? -1.5 : 1.5
+            return (
+              <YearSign
+                key={m.year}
+                position={[side, 0.2, -i * SPACING]}
+                year={m.year}
+                mono={m.mono}
+                index={i}
+                sideOffset={side}
+              />
+            )
+          })}
+          <FloorPlane count={milestones.length} />
+          <MobileTunnelDriver
+            milestones={milestones}
+            activeRef={inViewRef}
+            onActiveChange={(idx) => setActive((prev) => (prev === idx ? prev : idx))}
+          />
+        </Suspense>
+      </Canvas>
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(180deg, rgba(45,49,66,0.15) 0%, rgba(45,49,66,0) 35%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <MobileMilestonePanel
+        milestone={milestones[active]}
+        index={active}
+        total={milestones.length}
+      />
+      <MobileDotRail count={milestones.length} active={active} />
+
+      <style>{`
+        .v2-mobile-3d-stage {
+          position: relative;
+          height: 88vh;
+          height: 88svh;
+          min-height: 540px;
+          overflow: hidden;
+          isolation: isolate;
+        }
+        @keyframes v2-mobile-fade {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </section>
+  )
+}
+
 export default function TimelineTunnel({ milestones }) {
   const sectionRef = useRef(null)
   const [active, setActive] = useState(0)
@@ -340,7 +548,8 @@ export default function TimelineTunnel({ milestones }) {
   }, [])
 
   if (isMobile) {
-    return <MobileTimeline milestones={milestones} />
+    if (reduced) return <MobileTimeline milestones={milestones} />
+    return <MobileTimelineTunnel milestones={milestones} />
   }
 
   return (
