@@ -44,11 +44,11 @@ function Spool({ reduced }) {
     <group ref={groupRef} rotation={[-0.32, 0, 0.05]}>
       <mesh position={[0, 0.95, 0]}>
         <cylinderGeometry args={[1.35, 1.35, 0.14, 96]} />
-        <meshStandardMaterial color="#0A2463" metalness={0.2} roughness={0.45} />
+        <meshStandardMaterial color="#2D3142" metalness={0.2} roughness={0.45} />
       </mesh>
       <mesh position={[0, -0.95, 0]}>
         <cylinderGeometry args={[1.35, 1.35, 0.14, 96]} />
-        <meshStandardMaterial color="#0A2463" metalness={0.2} roughness={0.45} />
+        <meshStandardMaterial color="#2D3142" metalness={0.2} roughness={0.45} />
       </mesh>
       <mesh>
         <cylinderGeometry args={[0.82, 0.82, 1.78, 64]} />
@@ -187,7 +187,7 @@ export default function ThreadSpool() {
         }
         .v2-spool-link:hover .v2-spool-no,
         .v2-spool-link:focus-visible .v2-spool-no {
-          color: #0A2463;
+          color: #2D3142;
         }
         @media (prefers-reduced-motion: reduce) {
           .v2-spool-item { animation: none; opacity: 1; transform: none; }
@@ -208,7 +208,7 @@ export default function ThreadSpool() {
 
 const wrap = {
   position: 'relative',
-  background: 'var(--v2-cream, #F5F5F0)',
+  background: 'var(--v2-cream, #EFEAE0)',
   color: 'var(--v2-ink, #0B0F1A)',
   padding: '128px 32px',
   zIndex: 2,
@@ -234,7 +234,7 @@ const h2 = {
   fontWeight: 400,
   fontSize: 'clamp(40px, 6vw, 88px)',
   lineHeight: 1.0,
-  color: 'var(--v2-navy, #0A2463)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: 0,
   letterSpacing: '-0.02em',
 }
@@ -265,7 +265,7 @@ const canvasShadow = {
   left: '15%',
   right: '15%',
   height: 36,
-  background: 'radial-gradient(ellipse at center, rgba(10, 36, 99, 0.22) 0%, transparent 70%)',
+  background: 'radial-gradient(ellipse at center, rgba(45, 49, 66, 0.22) 0%, transparent 70%)',
   filter: 'blur(8px)',
   pointerEvents: 'none',
   zIndex: -1,
@@ -280,7 +280,7 @@ const link = {
   padding: '22px 24px',
   textDecoration: 'none',
   color: 'var(--v2-ink, #0B0F1A)',
-  borderTop: '1px solid rgba(10, 36, 99, 0.12)',
+  borderTop: '1px solid rgba(45, 49, 66, 0.12)',
   background: 'transparent',
 }
 const no = {
@@ -294,7 +294,7 @@ const titleCol = { display: 'flex', flexDirection: 'column', gap: 4 }
 const t1 = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontSize: 'clamp(22px, 2.4vw, 32px)',
-  color: 'var(--v2-navy, #0A2463)',
+  color: 'var(--v2-navy, #2D3142)',
   lineHeight: 1.1,
   transition: 'color 240ms ease',
 }

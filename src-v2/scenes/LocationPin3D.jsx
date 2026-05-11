@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 
-const NAVY = '#0A2463'
+const NAVY = '#2D3142'
 const COPPER = '#D4A373'
-const CREAM = '#F5F5F0'
+const CREAM = '#EFEAE0'
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -165,7 +165,7 @@ export default function LocationPin3D({ height = 360, caption }) {
 const wrap = {
   position: 'relative',
   width: '100%',
-  background: 'var(--v2-navy, #0A2463)',
+  background: 'var(--v2-navy, #2D3142)',
   borderRadius: 8,
   overflow: 'hidden',
   border: '1px solid rgba(212, 163, 115, 0.25)',
@@ -184,7 +184,7 @@ const coord = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
   letterSpacing: '0.14em',
-  color: 'rgba(245, 245, 240, 0.55)',
+  color: 'rgba(239, 234, 224, 0.55)',
   margin: 0,
   textTransform: 'uppercase',
 }

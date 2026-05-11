@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 
-const NAVY = '#0A2463'
+const NAVY = '#2D3142'
 const COPPER = '#D4A373'
 const COPPER_DIM = '#8E6B47'
-const CREAM = '#F5F5F0'
+const CREAM = '#EFEAE0'
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false)

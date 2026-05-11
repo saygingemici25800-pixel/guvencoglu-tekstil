@@ -21,7 +21,7 @@ const wrap = {
   /* Section height = ~57% of text font-size → bottom 40-45% of glyphs is clipped */
   height: 'clamp(80px, 9vw, 160px)',
   overflow: 'hidden',
-  background: '#F5F5F0',
+  background: '#EFEAE0',
   margin: 0,
   padding: 0,
   display: 'block',
@@ -38,7 +38,7 @@ const mark = {
   letterSpacing: '-0.03em',
   lineHeight: 1,
   whiteSpace: 'nowrap',
-  backgroundImage: 'linear-gradient(90deg, #0A2463 0%, #D4A373 100%)',
+  backgroundImage: 'linear-gradient(90deg, #2D3142 0%, #D4A373 100%)',
   WebkitBackgroundClip: 'text',
   backgroundClip: 'text',
   WebkitTextFillColor: 'transparent',

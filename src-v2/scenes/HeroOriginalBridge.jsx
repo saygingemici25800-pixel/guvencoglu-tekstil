@@ -27,7 +27,7 @@ export default function HeroOriginalBridge() {
 
   useEffect(() => {
     const prev = document.body.style.background
-    document.body.style.background = '#0A2463'
+    document.body.style.background = '#EFEAE0'
     return () => {
       document.body.style.background = prev
     }

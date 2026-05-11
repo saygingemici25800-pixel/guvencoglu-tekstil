@@ -26,7 +26,7 @@ function YearSign({ position, year, mono, index, sideOffset }) {
       <mesh>
         <planeGeometry args={[3.4, 1.9]} />
         <meshStandardMaterial
-          color="#F5F5F0"
+          color="#EFEAE0"
           transparent
           opacity={0.92}
           roughness={0.85}
@@ -35,7 +35,7 @@ function YearSign({ position, year, mono, index, sideOffset }) {
       </mesh>
       <mesh position={[0, 0, 0.01]}>
         <planeGeometry args={[3.2, 1.7]} />
-        <meshBasicMaterial color="#0A2463" opacity={0.04} transparent />
+        <meshBasicMaterial color="#2D3142" opacity={0.04} transparent />
       </mesh>
 
       <Html
@@ -45,7 +45,7 @@ function YearSign({ position, year, mono, index, sideOffset }) {
         position={[0, 0, 0.05]}
         style={{ pointerEvents: 'none', width: 320, textAlign: 'center' }}
       >
-        <div style={{ color: '#0A2463' }}>
+        <div style={{ color: '#2D3142' }}>
           <div
             style={{
               fontFamily: 'JetBrains Mono, monospace',
@@ -108,11 +108,11 @@ function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
 
   return (
     <>
-      <fog attach="fog" args={['#0A2463', 6, 32]} />
-      <color attach="background" args={['#0A2463']} />
+      <fog attach="fog" args={['#2D3142', 6, 32]} />
+      <color attach="background" args={['#2D3142']} />
       <ambientLight intensity={0.5} />
       <directionalLight position={[3, 6, 4]} intensity={0.9} color="#D4A373" />
-      <directionalLight position={[-4, 2, 2]} intensity={0.3} color="#F5F5F0" />
+      <directionalLight position={[-4, 2, 2]} intensity={0.3} color="#EFEAE0" />
 
       {milestones.map((m, i) => {
         const side = i % 2 === 0 ? -1.5 : 1.5
@@ -218,7 +218,7 @@ function ProgressRail({ milestones, activeIndex }) {
             style={{
               width: i === activeIndex ? 28 : 10,
               height: 2,
-              background: i === activeIndex ? 'var(--v2-copper)' : 'rgba(245,245,240,0.3)',
+              background: i === activeIndex ? 'var(--v2-copper)' : 'rgba(239,234,224,0.3)',
               transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
@@ -226,7 +226,7 @@ function ProgressRail({ milestones, activeIndex }) {
             className="mono"
             style={{
               fontSize: 11,
-              color: i === activeIndex ? 'var(--v2-cream)' : 'rgba(245,245,240,0.4)',
+              color: i === activeIndex ? 'var(--v2-cream)' : 'rgba(239,234,224,0.4)',
               transition: 'color 400ms',
             }}
           >
@@ -350,7 +350,7 @@ export default function TimelineTunnel({ milestones }) {
       style={{
         position: 'relative',
         height: `${100 + milestones.length * 80}vh`,
-        background: '#0A2463',
+        background: '#2D3142',
       }}
     >
       <div
@@ -384,7 +384,7 @@ export default function TimelineTunnel({ milestones }) {
             position: 'absolute',
             inset: 0,
             background:
-              'radial-gradient(circle at 50% 50%, transparent 30%, rgba(10,36,99,0.55) 80%)',
+              'radial-gradient(circle at 50% 50%, transparent 30%, rgba(45,49,66,0.55) 80%)',
             pointerEvents: 'none',
           }}
         />

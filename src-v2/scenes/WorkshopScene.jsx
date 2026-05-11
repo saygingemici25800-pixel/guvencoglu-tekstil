@@ -5,9 +5,9 @@ import { usePrefersReducedMotion } from '../shared/ReducedMotion.jsx'
 
 const SPACING = 7
 const FLOOR_Y = -0.85
-const NAVY = '#0A2463'
+const NAVY = '#2D3142'
 const COPPER = '#D4A373'
-const CREAM = '#F5F5F0'
+const CREAM = '#EFEAE0'
 const INK = '#0B0F1A'
 
 /* Station 1: Hammadde — yarn spools */
@@ -476,7 +476,7 @@ function ProgressRail({ stations, activeIndex }) {
               style={{
                 width: active ? 32 : 10,
                 height: 2,
-                background: active ? COPPER : 'rgba(245,245,240,0.3)',
+                background: active ? COPPER : 'rgba(239,234,224,0.3)',
                 transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             />
@@ -484,7 +484,7 @@ function ProgressRail({ stations, activeIndex }) {
               className="mono"
               style={{
                 fontSize: 11,
-                color: active ? CREAM : 'rgba(245,245,240,0.4)',
+                color: active ? CREAM : 'rgba(239,234,224,0.4)',
                 transition: 'color 400ms',
                 letterSpacing: '0.16em',
               }}
@@ -654,7 +654,7 @@ export default function WorkshopScene({ stations }) {
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(180deg, rgba(10,36,99,0.35) 0%, rgba(10,36,99,0) 30%, rgba(10,36,99,0) 60%, rgba(10,36,99,0.7) 100%)',
+              'linear-gradient(180deg, rgba(45,49,66,0.35) 0%, rgba(45,49,66,0) 30%, rgba(45,49,66,0) 60%, rgba(45,49,66,0.7) 100%)',
             pointerEvents: 'none',
           }}
         />
