@@ -328,6 +328,7 @@ const MOBILE_DWELL_PER_MILESTONE = 3.2
 
 function MobileTunnelDriver({ milestones, onActiveChange, activeRef }) {
   const startRef = useRef(null)
+  const lastIdxRef = useRef(-1)
 
   useFrame(({ camera, clock }) => {
     if (!activeRef.current) return
@@ -344,7 +345,10 @@ function MobileTunnelDriver({ milestones, onActiveChange, activeRef }) {
     camera.lookAt(0, 0, camera.position.z - 4)
 
     const idx = Math.max(0, Math.min(milestones.length - 1, Math.floor(progress * milestones.length)))
-    onActiveChange(idx)
+    if (idx !== lastIdxRef.current) {
+      lastIdxRef.current = idx
+      onActiveChange(idx)
+    }
   })
 
   return null
@@ -463,10 +467,11 @@ function MobileTimelineTunnel({ milestones }) {
     >
       <Canvas
         frameloop={inView ? 'always' : 'demand'}
+        tabIndex={-1}
         camera={{ position: [0, 0, CAMERA_START_Z], fov: 55 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
-        style={{ position: 'absolute', inset: 0 }}
+        style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
       >
         <Suspense fallback={null}>
           <fog attach="fog" args={['#2D3142', 6, 32]} />
@@ -491,7 +496,7 @@ function MobileTimelineTunnel({ milestones }) {
           <MobileTunnelDriver
             milestones={milestones}
             activeRef={inViewRef}
-            onActiveChange={(idx) => setActive((prev) => (prev === idx ? prev : idx))}
+            onActiveChange={setActive}
           />
         </Suspense>
       </Canvas>
@@ -522,7 +527,10 @@ function MobileTimelineTunnel({ milestones }) {
           min-height: 540px;
           overflow: hidden;
           isolation: isolate;
+          touch-action: pan-y;
+          overscroll-behavior: contain;
         }
+        .v2-mobile-3d-stage canvas { outline: none !important; }
         @keyframes v2-mobile-fade {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
