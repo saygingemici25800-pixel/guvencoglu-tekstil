@@ -4,6 +4,7 @@ import ImpactStats from '../shared/ImpactStats.jsx'
 import FeaturedWork from '../shared/FeaturedWork.jsx'
 import FoundersQuote from '../shared/FoundersQuote.jsx'
 import CTABand from '../shared/CTABand.jsx'
+import GiantBrandMark from '../shared/GiantBrandMark.jsx'
 import HeroOriginalBridge from '../scenes/HeroOriginalBridge.jsx'
 import ThreadSpool from '../scenes/ThreadSpool.jsx'
 
@@ -30,6 +31,7 @@ export default function HomeV2() {
       <FeaturedWork />
       <FoundersQuote />
       <CTABand />
+      <GiantBrandMark />
     </PageTransition>
   )
 }
