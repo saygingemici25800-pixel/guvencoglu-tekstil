@@ -90,7 +90,7 @@ function FabricMesh() {
       uTime: { value: 0 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uScroll: { value: 0 },
-      uNavy: { value: new THREE.Color('#0A2463') },
+      uNavy: { value: new THREE.Color('#2D3142') },
       uCopper: { value: new THREE.Color('#D4A373') },
       uHighlight: { value: new THREE.Color('#f1d6b3') },
     }),
@@ -209,7 +209,7 @@ export default function GlobalCanvas() {
         opacity: 0.3,
       }}
     >
-      <color attach="background" args={['#0A2463']} />
+      <color attach="background" args={['#EFEAE0']} />
       <ambientLight intensity={0.6} />
       <FabricMesh />
       <Threads />

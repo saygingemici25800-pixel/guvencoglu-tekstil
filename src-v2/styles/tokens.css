@@ -1,12 +1,12 @@
 /* V2 Design Tokens — scoped under .v2-root to avoid V1 collision */
 .v2-root {
   /* Palette */
-  --v2-navy: #0A2463;
+  --v2-navy: #2D3142;        /* anthracite (was #0A2463) */
   --v2-copper: #D4A373;
-  --v2-cream: #F5F5F0;
+  --v2-cream: #EFEAE0;       /* light beige (was #F5F5F0) */
   --v2-ink: #0B0F1A;
   --v2-mist: #8A8F9E;
-  --v2-line: rgba(10, 36, 99, 0.12);
+  --v2-line: rgba(45, 49, 66, 0.12);
 
   /* Surfaces */
   --v2-surface: var(--v2-cream);
