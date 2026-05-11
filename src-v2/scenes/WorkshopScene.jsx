@@ -1,5 +1,6 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { CanvasTexture, SRGBColorSpace } from 'three'
 import { usePrefersReducedMotion } from '../shared/ReducedMotion.jsx'
 
 const SPACING = 7
@@ -213,9 +214,58 @@ function StationBoxes({ reduced }) {
   )
 }
 
+/* Brand decal — Güvençoğlu Tekstil logo + wordmark for truck cargo sides */
+function useTruckBrandTexture() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 1024
+    canvas.height = 512
+    const ctx = canvas.getContext('2d')
+
+    // Copper monogram disk
+    const cx = 150
+    const cy = 256
+    const r = 96
+    ctx.fillStyle = COPPER
+    ctx.beginPath()
+    ctx.arc(cx, cy, r, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Cream "G" inside the disk
+    ctx.fillStyle = CREAM
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.font = '600 italic 140px "Fraunces", "Times New Roman", serif'
+    ctx.fillText('G', cx, cy + 6)
+
+    // Wordmark — GÜVENÇOĞLU (upright) + TEKSTİL (italic accent)
+    ctx.fillStyle = CREAM
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+    ctx.font = '600 132px "Fraunces", "Times New Roman", serif'
+    ctx.fillText('GÜVENÇOĞLU', 280, 200)
+    ctx.font = '500 italic 96px "Fraunces", "Times New Roman", serif'
+    ctx.fillStyle = COPPER
+    ctx.fillText('TEKSTİL', 280, 332)
+
+    // Hairline copper underline
+    ctx.fillRect(280, 392, 520, 4)
+
+    const tex = new CanvasTexture(canvas)
+    tex.colorSpace = SRGBColorSpace
+    tex.anisotropy = 8
+    tex.needsUpdate = true
+    return tex
+  }, [])
+
+  useEffect(() => () => texture.dispose(), [texture])
+  return texture
+}
+
 /* Station 7: Teslimat — truck silhouette traveling */
 function StationTruck({ reduced }) {
   const truckRef = useRef(null)
+  const brandTexture = useTruckBrandTexture()
   useFrame((state) => {
     if (reduced || !truckRef.current) return
     const t = state.clock.elapsedTime
@@ -236,6 +286,16 @@ function StationTruck({ reduced }) {
         <mesh position={[0, 0.1, 0]}>
           <boxGeometry args={[1.1, 0.55, 0.5]} />
           <meshStandardMaterial color={NAVY} roughness={0.6} />
+        </mesh>
+        {/* Brand decal — front side (+Z) */}
+        <mesh position={[0, 0.1, 0.2515]}>
+          <planeGeometry args={[1.02, 0.46]} />
+          <meshBasicMaterial map={brandTexture} transparent />
+        </mesh>
+        {/* Brand decal — back side (-Z), mirrored so text reads correctly */}
+        <mesh position={[0, 0.1, -0.2515]} rotation={[0, Math.PI, 0]}>
+          <planeGeometry args={[1.02, 0.46]} />
+          <meshBasicMaterial map={brandTexture} transparent />
         </mesh>
         <mesh position={[-0.55, 0.02, 0]}>
           <boxGeometry args={[0.5, 0.35, 0.45]} />
