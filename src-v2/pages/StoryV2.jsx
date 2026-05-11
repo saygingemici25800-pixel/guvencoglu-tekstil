@@ -1,10 +1,99 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
+import CTABand from '../shared/CTABand.jsx'
 import TimelineTunnel from '../scenes/TimelineTunnel.jsx'
 import { MILESTONES } from '../data/milestones.js'
 
+const STORY_METRICS = [
+  { value: 45, suffix: '',  label: 'Yıllık Zanaat',   hint: '1980 → bugün, kesintisiz' },
+  { value: 3,  suffix: '',  label: 'Kuşak',           hint: 'Aile · aynı tezgâh' },
+  { value: 480, suffix: '+', label: 'Kurumsal Partner', hint: 'Okul · otel · sağlık · kamu' },
+]
+
+const PRINCIPLES = [
+  {
+    no: '01',
+    title: 'El işçiliği',
+    body: 'Otomasyon arttı, el azalmadı. Kritik dikişler, son kontrol, etiket hâlâ insan elinden geçer.',
+  },
+  {
+    no: '02',
+    title: 'Kalite kontrolü',
+    body: 'Üç farklı istasyon: kesim sonrası, dikim sonrası, paketleme öncesi. Hiçbir ürün tek bakışla geçmez.',
+  },
+  {
+    no: '03',
+    title: 'Süreklilik',
+    body: 'Aynı kumaş tedarikçisi 22 yıldır. Aynı boya tonu 15 yıldır eşleşiyor. Tutarlılık tesadüf değil.',
+  },
+  {
+    no: '04',
+    title: 'Aile',
+    body: 'Karar mutfakta verilir, tezgâhta uygulanır. Üç kuşak aynı ad, aynı söz — bu da bir taahhüt.',
+  },
+]
+
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3) }
+
+function useCountUp(target, isActive, duration = 1500) {
+  const [val, setVal] = useState(0)
+  useEffect(() => {
+    if (!isActive) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVal(target)
+      return
+    }
+    let raf
+    const start = performance.now()
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / duration)
+      setVal(Math.round(target * easeOutCubic(p)))
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target, isActive, duration])
+  return val
+}
+
+function Metric({ value, suffix, label, hint, isActive, index }) {
+  const current = useCountUp(value, isActive)
+  return (
+    <article
+      className="v2-story-metric"
+      style={{ ...metric, animationDelay: `${index * 110}ms` }}
+    >
+      <p style={metricValue}>
+        <span style={metricNumber}>{current.toLocaleString('tr-TR')}</span>
+        <span style={metricSuffix}>{suffix}</span>
+      </p>
+      <h3 style={metricLabel}>{label}</h3>
+      <p style={metricHint}>{hint}</p>
+    </article>
+  )
+}
+
 export default function StoryV2() {
+  const metricsRef = useRef(null)
+  const [metricsActive, setMetricsActive] = useState(false)
+
+  useEffect(() => {
+    const node = metricsRef.current
+    if (!node) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMetricsActive(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.3 },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
   return (
     <PageTransition>
       <SEOHead
@@ -21,160 +110,352 @@ export default function StoryV2() {
         }}
       />
 
-      <section className="v2-page" style={introStyle}>
-        <p className="mono" style={tagStyle}>02 / Hikayemiz</p>
-        <h1 style={titleStyle}>
-          Üç kuşak,
-          <br />
-          tek <em style={italicStyle}>iplik</em>.
-        </h1>
-        <p style={ledeStyle}>
-          1980'de Fethiye'de tek bir dikiş makinesiyle başladık. Bugün üçüncü
-          kuşak aynı atölyede, aynı titizlikle çalışıyor. Aşağı kaydırarak
-          yolculuğa girin — kronolojik tünelin içinden geçeceksiniz.
-        </p>
-        <div className="mono" style={hintStyle}>
-          ↓ KAYDIR
+      <section style={heroSection}>
+        <div style={heroInner}>
+          <p style={mono}>02 / Hikayemiz</p>
+          <h1 style={hero}>
+            Üç kuşak,
+            <br />
+            tek <em style={emStyle}>iplik.</em>
+          </h1>
+          <p style={lede}>
+            1980'de Fethiye'de tek bir dikiş makinesiyle başladık. Bugün üçüncü
+            kuşak aynı atölyede, aynı titizlikle çalışıyor. Aşağı kaydır —
+            kronolojik tünelin içinden geç.
+          </p>
+          <div style={scrollHint} aria-hidden="true">
+            ↓ KAYDIR · KRONOLOJİK TÜNEL
+          </div>
+        </div>
+      </section>
+
+      <section ref={metricsRef} style={metricsSection} aria-label="Hikaye metrikleri">
+        <div style={metricsGrid} className="v2-story-metrics-grid">
+          {STORY_METRICS.map((m, i) => (
+            <Metric key={m.label} index={i} isActive={metricsActive} {...m} />
+          ))}
         </div>
       </section>
 
       <TimelineTunnel milestones={MILESTONES} />
 
-      <section className="v2-page" style={quoteStyle}>
-        <blockquote style={quoteBlock}>
-          <p style={quoteText}>
-            "Bir formanın iyiliği, ilk dikişten son düğmeye kadar bizim
-            <em style={italicStyle}> elimizden geçtiği </em>için belli olur."
-          </p>
-          <footer style={quoteFooter}>
-            <span className="mono" style={{ fontSize: 12, letterSpacing: '0.18em', color: 'var(--v2-copper)' }}>
-              KURUCU
-            </span>
-            <strong style={{ fontSize: 18, fontWeight: 600 }}>Ömer Güvençoğlu</strong>
-            <span style={{ fontSize: 14, opacity: 0.6 }}>Fethiye, 1980'den beri</span>
-          </footer>
-        </blockquote>
+      <section style={principlesSection} aria-label="Sabit kalan ilkeler">
+        <div style={principlesInner}>
+          <header style={principlesHeader}>
+            <p style={mono}>03 / Sabit kalanlar</p>
+            <h2 style={h2}>
+              45 yıldır <em style={emStyle}>değişmeyen</em>
+              <br />
+              dört şey.
+            </h2>
+            <p style={ledeNarrow}>
+              Üç kuşak boyunca makine değişti, kumaş değişti, müşteri değişti.
+              Bu dördü değişmedi.
+            </p>
+          </header>
+
+          <ul style={principlesGrid} className="v2-story-principles-grid">
+            {PRINCIPLES.map((p, i) => (
+              <li
+                key={p.no}
+                style={{ ...principleCard, animationDelay: `${i * 90}ms` }}
+                className="v2-story-principle"
+              >
+                <span style={principleNo}>{p.no}</span>
+                <h3 style={principleTitle}>{p.title}</h3>
+                <p style={principleBody}>{p.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="v2-page" style={ctaStyle}>
-        <p className="mono" style={{ ...tagStyle, color: 'var(--v2-copper)' }}>SIRADAKİ</p>
-        <h2 style={ctaTitleStyle}>
-          Tezgahın içine bakmak ister misiniz?
-        </h2>
-        <Link to="/v2/uretim" style={ctaButton}>
-          Üretim Sürecine Git
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </Link>
+      <section style={quoteSection} aria-label="Kurucu sözü">
+        <div style={quoteInner}>
+          <p style={quoteTag}>04 / Söz</p>
+          <blockquote style={quoteBlock}>
+            <span aria-hidden="true" style={openMark}>“</span>
+            <p style={quoteText}>
+              Bir formanın iyiliği, ilk dikişten son düğmeye kadar
+              <em style={emStyle}> bizim elimizden </em>
+              geçtiği için belli olur.
+            </p>
+          </blockquote>
+          <footer style={quoteFooter}>
+            <span style={hairline} aria-hidden="true" />
+            <div style={attrBlock}>
+              <p style={attrName}>Ömer Güvençoğlu</p>
+              <p style={attrRole}>Kurucu · Fethiye, 1980'den beri</p>
+            </div>
+          </footer>
+        </div>
       </section>
+
+      <CTABand />
+
+      <style>{`
+        @keyframes v2-story-rise {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .v2-story-metric,
+        .v2-story-principle {
+          animation: v2-story-rise 660ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .v2-story-metric,
+          .v2-story-principle { animation: none; opacity: 1; transform: none; }
+        }
+        @media (max-width: 960px) {
+          .v2-story-metrics-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+          .v2-story-principles-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 560px) {
+          .v2-story-principles-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </PageTransition>
   )
 }
 
-const introStyle = {
-  background: 'var(--v2-cream)',
-  color: 'var(--v2-ink)',
+const NAVY = '#0A2463'
+const COPPER = '#D4A373'
+const CREAM = '#F5F5F0'
+
+const heroSection = {
+  background: 'var(--v2-cream, #F5F5F0)',
+  color: 'var(--v2-ink, #0B0F1A)',
   padding: '160px 32px 96px',
-  minHeight: '90vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  maxWidth: 1440,
-  margin: '0 auto',
 }
-const tagStyle = {
-  fontFamily: 'var(--v2-font-mono)',
+const heroInner = { maxWidth: 1440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }
+const mono = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 12,
   letterSpacing: '0.18em',
-  color: 'var(--v2-copper)',
   textTransform: 'uppercase',
-  marginBottom: 24,
+  color: COPPER,
+  margin: 0,
 }
-const titleStyle = {
-  fontFamily: 'var(--v2-font-display)',
-  fontSize: 'clamp(64px, 12vw, 180px)',
-  color: 'var(--v2-navy)',
+const hero = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(64px, 11vw, 180px)',
   lineHeight: 0.9,
-  letterSpacing: '-0.04em',
-  marginBottom: 48,
-  fontWeight: 500,
-  fontVariationSettings: '"opsz" 144',
+  letterSpacing: '-0.03em',
+  color: NAVY,
+  margin: 0,
+  maxWidth: '12ch',
 }
-const italicStyle = {
-  fontStyle: 'italic',
-  color: 'var(--v2-copper)',
-  fontVariationSettings: '"opsz" 144',
-}
-const ledeStyle = {
-  fontFamily: 'var(--v2-font-body)',
-  fontSize: 'clamp(18px, 1.6vw, 22px)',
+const emStyle = { fontStyle: 'italic', color: COPPER }
+const lede = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 18,
   lineHeight: 1.55,
-  color: 'var(--v2-ink)',
-  opacity: 0.8,
+  opacity: 0.72,
+  margin: 0,
   maxWidth: '52ch',
-  marginBottom: 64,
 }
-const hintStyle = {
-  fontFamily: 'var(--v2-font-mono)',
-  fontSize: 12,
-  letterSpacing: '0.3em',
-  color: 'var(--v2-mist)',
-  alignSelf: 'flex-start',
+const scrollHint = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 11,
+  letterSpacing: '0.22em',
+  color: 'var(--v2-mist, #8A8F9E)',
+  marginTop: 40,
+  textTransform: 'uppercase',
 }
-const quoteStyle = {
-  background: 'var(--v2-cream)',
-  padding: '160px 32px',
+
+const metricsSection = {
+  background: NAVY,
+  color: CREAM,
+  padding: '64px 32px',
+  borderTop: '1px solid rgba(212, 163, 115, 0.25)',
+  borderBottom: '1px solid rgba(212, 163, 115, 0.25)',
+}
+const metricsGrid = {
   maxWidth: 1440,
   margin: '0 auto',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: 0,
 }
-const quoteBlock = { margin: 0, maxWidth: 920 }
-const quoteText = {
-  fontFamily: 'var(--v2-font-display)',
-  fontSize: 'clamp(32px, 5vw, 64px)',
-  lineHeight: 1.15,
-  color: 'var(--v2-navy)',
-  marginBottom: 40,
-  fontWeight: 400,
-  letterSpacing: '-0.02em',
-  fontVariationSettings: '"opsz" 144',
-  maxWidth: 'none',
-}
-const quoteFooter = {
+const metric = {
+  padding: '24px 32px 24px 0',
+  borderRight: '1px solid rgba(212, 163, 115, 0.18)',
   display: 'flex',
   flexDirection: 'column',
   gap: 8,
-  color: 'var(--v2-ink)',
+  opacity: 0,
 }
-const ctaStyle = {
-  background: 'var(--v2-navy)',
-  color: 'var(--v2-cream)',
-  padding: '160px 32px',
-  maxWidth: 'none',
-  textAlign: 'left',
-}
-const ctaTitleStyle = {
-  fontFamily: 'var(--v2-font-display)',
-  fontSize: 'clamp(40px, 6vw, 80px)',
-  lineHeight: 1,
+const metricValue = {
+  display: 'flex',
+  alignItems: 'baseline',
+  gap: 4,
+  margin: 0,
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  color: CREAM,
   letterSpacing: '-0.03em',
-  marginBottom: 48,
-  fontWeight: 500,
-  fontVariationSettings: '"opsz" 144',
-  maxWidth: '20ch',
-  color: 'var(--v2-cream)',
+  lineHeight: 1,
 }
-const ctaButton = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 12,
-  padding: '18px 32px',
-  borderRadius: 999,
-  background: 'var(--v2-copper)',
-  color: 'var(--v2-navy)',
-  fontWeight: 600,
+const metricNumber = { fontSize: 'clamp(48px, 5vw, 76px)', fontVariantNumeric: 'tabular-nums' }
+const metricSuffix = {
+  fontSize: 'clamp(18px, 2vw, 26px)',
+  color: COPPER,
+  fontFamily: 'var(--v2-font-mono, monospace)',
+}
+const metricLabel = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
-  minHeight: 48,
-  transition: 'transform 300ms var(--v2-ease-out)',
+  fontWeight: 500,
+  color: CREAM,
+  margin: 0,
+}
+const metricHint = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 13,
+  color: 'rgba(245, 245, 240, 0.6)',
+  margin: 0,
+}
+
+const principlesSection = {
+  background: 'var(--v2-cream, #F5F5F0)',
+  padding: '128px 32px',
+}
+const principlesInner = {
+  maxWidth: 1440,
+  margin: '0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 72,
+}
+const principlesHeader = { display: 'flex', flexDirection: 'column', gap: 16, maxWidth: '60ch' }
+const h2 = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(40px, 6vw, 80px)',
+  lineHeight: 1.0,
+  color: NAVY,
+  margin: 0,
+  letterSpacing: '-0.02em',
+}
+const ledeNarrow = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 17,
+  lineHeight: 1.6,
+  opacity: 0.7,
+  margin: '8px 0 0',
+  maxWidth: '50ch',
+}
+const principlesGrid = {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: 0,
+  borderTop: '1px solid rgba(10, 36, 99, 0.15)',
+}
+const principleCard = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+  padding: '40px 28px 40px 0',
+  borderRight: '1px solid rgba(10, 36, 99, 0.1)',
+  opacity: 0,
+}
+const principleNo = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.16em',
+  color: COPPER,
+}
+const principleTitle = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(26px, 2.6vw, 34px)',
+  lineHeight: 1.1,
+  color: NAVY,
+  margin: 0,
+  letterSpacing: '-0.015em',
+}
+const principleBody = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 15,
+  lineHeight: 1.55,
+  color: 'var(--v2-ink, #0B0F1A)',
+  opacity: 0.7,
+  margin: 0,
+}
+
+const quoteSection = {
+  background: NAVY,
+  color: CREAM,
+  padding: '160px 32px',
+  position: 'relative',
+  overflow: 'hidden',
+}
+const quoteInner = {
+  maxWidth: 1100,
+  margin: '0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 48,
+  position: 'relative',
+}
+const quoteTag = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  color: COPPER,
+  margin: 0,
+}
+const quoteBlock = { position: 'relative', margin: 0, padding: 0 }
+const openMark = {
+  position: 'absolute',
+  top: -50,
+  left: -20,
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontSize: 'clamp(140px, 18vw, 220px)',
+  lineHeight: 1,
+  color: COPPER,
+  opacity: 0.22,
+  fontStyle: 'italic',
+  pointerEvents: 'none',
+  userSelect: 'none',
+}
+const quoteText = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(28px, 4.2vw, 56px)',
+  lineHeight: 1.2,
+  letterSpacing: '-0.015em',
+  color: CREAM,
+  margin: 0,
+  maxWidth: '24ch',
+  position: 'relative',
+}
+const quoteFooter = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 24,
+  paddingTop: 32,
+  borderTop: '1px solid rgba(212, 163, 115, 0.25)',
+}
+const hairline = { width: 64, height: 1, background: COPPER, flexShrink: 0 }
+const attrBlock = { display: 'flex', flexDirection: 'column', gap: 4 }
+const attrName = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontWeight: 600,
+  fontSize: 17,
+  color: CREAM,
+  margin: 0,
+}
+const attrRole = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  color: COPPER,
+  margin: 0,
 }
