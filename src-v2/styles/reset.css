@@ -1,11 +1,29 @@
 /* V2 reset — scoped to .v2-root, intentionally minimal to avoid clobbering V1 bridges */
 
+/* Global mobile overflow guard — prevents horizontal scroll site-wide */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 .v2-root {
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   box-sizing: border-box;
+}
+
+/* Mobile-safe images / iframes — never exceed viewport */
+.v2-root img,
+.v2-root video,
+.v2-root iframe {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Box-sizing only on declared V2 component containers, not arbitrary children.
@@ -48,7 +66,9 @@
 .v1-bridge {
   position: relative;
   isolation: isolate;
-  background: #0A2463;
+  background: #EFEAE0;
   margin: 0;
   padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
 }

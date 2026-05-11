@@ -193,6 +193,7 @@ export default function ServicesV2() {
         @media (max-width: 720px) {
           .v2-service-tab span:last-child { display: none; }
           .v2-service-nav { width: 40px !important; height: 40px !important; font-size: 17px !important; }
+          .v2-service-detail { grid-template-columns: 1fr !important; gap: 32px !important; }
         }
       `}</style>
     </PageTransition>
@@ -206,7 +207,7 @@ const CREAM = '#F5F5F0'
 const heroSection = {
   background: 'var(--v2-cream, #F5F5F0)',
   color: 'var(--v2-ink, #0B0F1A)',
-  padding: '160px 32px 96px',
+  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px) clamp(48px, 8vw, 96px)',
 }
 const heroInner = { maxWidth: 1440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }
 const mono = {

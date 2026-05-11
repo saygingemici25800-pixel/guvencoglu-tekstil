@@ -71,7 +71,7 @@ export default function ProcessV2() {
 const introStyle = {
   background: 'var(--v2-cream)',
   color: 'var(--v2-ink)',
-  padding: '160px 32px 96px',
+  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px) clamp(48px, 8vw, 96px)',
   minHeight: '90vh',
   display: 'flex',
   flexDirection: 'column',
@@ -146,7 +146,7 @@ const hintStyle = {
 const ctaStyle = {
   background: 'var(--v2-navy)',
   color: 'var(--v2-cream)',
-  padding: '160px 32px',
+  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px)',
 }
 const ctaTitleStyle = {
   fontFamily: 'var(--v2-font-display)',

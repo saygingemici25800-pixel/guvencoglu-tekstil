@@ -132,7 +132,7 @@ export default function ContactV2() {
 const heroSection = {
   background: 'var(--v2-cream, #F5F5F0)',
   color: 'var(--v2-ink, #0B0F1A)',
-  padding: '160px 32px 96px',
+  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px) clamp(48px, 8vw, 96px)',
   position: 'relative',
 }
 const heroInner = { maxWidth: 1440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }

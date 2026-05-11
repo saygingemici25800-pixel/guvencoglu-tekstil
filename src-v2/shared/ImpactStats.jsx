@@ -115,7 +115,7 @@ const wrap = {
   position: 'relative',
   background: 'var(--v2-navy, #0A2463)',
   color: '#F5F5F0',
-  padding: '128px 32px',
+  padding: 'clamp(64px, 10vw, 128px) clamp(20px, 5vw, 32px)',
   zIndex: 2,
 }
 const inner = {

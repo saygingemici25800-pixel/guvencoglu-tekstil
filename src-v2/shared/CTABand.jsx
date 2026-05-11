@@ -83,7 +83,7 @@ const wrap = {
   position: 'relative',
   background: 'var(--v2-copper, #D4A373)',
   color: 'var(--v2-navy, #0A2463)',
-  padding: '160px 32px',
+  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px)',
   zIndex: 2,
   overflow: 'hidden',
 }
