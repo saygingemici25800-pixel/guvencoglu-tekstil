@@ -1,0 +1,54 @@
+/* V2 reset — scoped to .v2-root, intentionally minimal to avoid clobbering V1 bridges */
+
+.v2-root {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  box-sizing: border-box;
+}
+
+/* Box-sizing only on declared V2 component containers, not arbitrary children.
+   V1 components inside a .v1-bridge wrapper are left untouched. */
+.v2-page,
+.v2-page *,
+.v2-page *::before,
+.v2-page *::after {
+  box-sizing: border-box;
+}
+
+.v2-root :focus-visible {
+  outline: 2px solid var(--v2-copper);
+  outline-offset: 4px;
+  border-radius: var(--v2-r-sm);
+}
+
+.v2-root .mono {
+  font-family: var(--v2-font-mono);
+  font-feature-settings: "tnum";
+}
+
+.v2-root .skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--v2-navy);
+  color: var(--v2-cream);
+  padding: var(--v2-s-2) var(--v2-s-3);
+  z-index: var(--v2-z-modal);
+  border-radius: var(--v2-r-sm);
+}
+.v2-root .skip-link:focus {
+  left: var(--v2-s-2);
+  top: var(--v2-s-2);
+}
+
+/* V1 Bridge — guarantees the bridge gets a clean stacking context and dark backdrop
+   while Hero/GlobalCanvas render. Cream V2 surface stays untouched outside it. */
+.v1-bridge {
+  position: relative;
+  isolation: isolate;
+  background: #0A2463;
+  margin: 0;
+  padding: 0;
+}

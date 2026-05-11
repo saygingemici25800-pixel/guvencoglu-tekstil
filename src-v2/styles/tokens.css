@@ -1,0 +1,59 @@
+/* V2 Design Tokens — scoped under .v2-root to avoid V1 collision */
+.v2-root {
+  /* Palette */
+  --v2-navy: #0A2463;
+  --v2-copper: #D4A373;
+  --v2-cream: #F5F5F0;
+  --v2-ink: #0B0F1A;
+  --v2-mist: #8A8F9E;
+  --v2-line: rgba(10, 36, 99, 0.12);
+
+  /* Surfaces */
+  --v2-surface: var(--v2-cream);
+  --v2-surface-elevated: #FFFFFF;
+  --v2-surface-dark: var(--v2-navy);
+
+  /* Type */
+  --v2-font-display: "Fraunces", "Times New Roman", serif;
+  --v2-font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+  --v2-font-mono: "JetBrains Mono", "SF Mono", monospace;
+
+  /* Spacing (8pt grid) */
+  --v2-s-1: 8px;
+  --v2-s-2: 16px;
+  --v2-s-3: 24px;
+  --v2-s-4: 32px;
+  --v2-s-5: 48px;
+  --v2-s-6: 64px;
+  --v2-s-7: 96px;
+  --v2-s-8: 128px;
+
+  /* Radii */
+  --v2-r-sm: 4px;
+  --v2-r-md: 8px;
+  --v2-r-lg: 16px;
+  --v2-r-pill: 999px;
+
+  /* Z-index scale */
+  --v2-z-canvas: 10;
+  --v2-z-content: 20;
+  --v2-z-overlay: 30;
+  --v2-z-modal: 40;
+  --v2-z-nav: 50;
+
+  /* Motion */
+  --v2-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --v2-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --v2-dur-fast: 150ms;
+  --v2-dur-base: 300ms;
+  --v2-dur-slow: 600ms;
+
+  /* Layout */
+  --v2-content-max: 1440px;
+  --v2-prose-max: 75ch;
+
+  /* Colors applied */
+  color: var(--v2-ink);
+  background: var(--v2-surface);
+  font-family: var(--v2-font-body);
+}
