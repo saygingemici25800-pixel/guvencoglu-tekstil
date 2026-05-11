@@ -1,6 +1,9 @@
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import ImpactStats from '../shared/ImpactStats.jsx'
+import FeaturedWork from '../shared/FeaturedWork.jsx'
+import FoundersQuote from '../shared/FoundersQuote.jsx'
+import CTABand from '../shared/CTABand.jsx'
 import HeroOriginalBridge from '../scenes/HeroOriginalBridge.jsx'
 import ThreadSpool from '../scenes/ThreadSpool.jsx'
 
@@ -24,6 +27,9 @@ export default function HomeV2() {
       <HeroOriginalBridge />
       <ThreadSpool />
       <ImpactStats />
+      <FeaturedWork />
+      <FoundersQuote />
+      <CTABand />
     </PageTransition>
   )
 }
