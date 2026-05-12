@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const links = [
-  { to: '/v2', label: 'Ana Sayfa', end: true },
-  { to: '/v2/hikayemiz', label: 'Hikayemiz' },
-  { to: '/v2/uretim', label: 'Üretim' },
-  { to: '/v2/hizmetler', label: 'Hizmetler' },
-  { to: '/v2/referanslar', label: 'Referanslar' },
-  { to: '/v2/iletisim', label: 'İletişim' },
+  { to: '/', label: 'Ana Sayfa', end: true },
+  { to: '/hikayemiz', label: 'Hikayemiz' },
+  { to: '/uretim', label: 'Üretim' },
+  { to: '/hizmetler', label: 'Hizmetler' },
+  { to: '/referanslar', label: 'Referanslar' },
+  { to: '/iletisim', label: 'İletişim' },
 ]
 
 const EASE = [0.22, 1, 0.36, 1]
@@ -45,7 +45,7 @@ export default function NavV2() {
           transition: 'background 300ms var(--v2-ease-out)',
         }}
       >
-        <Link to="/v2" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span
             aria-hidden="true"
             style={{
@@ -83,7 +83,7 @@ export default function NavV2() {
         </nav>
 
         <Link
-          to="/v2/iletisim"
+          to="/iletisim"
           className="v2-cta-desktop"
           style={{
             display: 'none',

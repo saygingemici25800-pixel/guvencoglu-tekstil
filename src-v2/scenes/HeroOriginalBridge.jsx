@@ -4,9 +4,9 @@ import GlobalCanvas from '../../src/components/GlobalCanvas.jsx'
 import Hero from '../../src/components/Hero.jsx'
 
 const ANCHOR_MAP = {
-  '#teklif': '/v2/iletisim',
-  '#hizmetler': '/v2/hizmetler',
-  '#hakkimizda': '/v2/hikayemiz',
+  '#teklif': '/iletisim',
+  '#hizmetler': '/hizmetler',
+  '#hakkimizda': '/hikayemiz',
 }
 
 export default function HeroOriginalBridge() {
