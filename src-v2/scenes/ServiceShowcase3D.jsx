@@ -201,16 +201,40 @@ function Pedestal({ active }) {
 function Carousel({ services, sectionRef, activeIdx, onActiveChange, reduced }) {
   const groupRef = useRef()
   const lastIdxRef = useRef(-1)
+  const progressRef = useRef(0)
   const radius = 2.9
 
+  useEffect(() => {
+    const update = () => {
+      const node = sectionRef.current
+      if (!node) return
+      const rect = node.getBoundingClientRect()
+      const total = Math.max(1, rect.height - window.innerHeight)
+      let p = -rect.top / total
+      if (p < 0) p = 0
+      if (p > 1) p = 1
+      progressRef.current = p
+    }
+    update()
+    let raf = 0
+    const tick = () => {
+      update()
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [sectionRef])
+
   useFrame((_, delta) => {
-    if (!groupRef.current || !sectionRef.current) return
+    if (!groupRef.current) return
 
-    const rect = sectionRef.current.getBoundingClientRect()
-    const totalScroll = Math.max(1, rect.height - window.innerHeight)
-    const scrolled = -rect.top
-    const progress = Math.max(0, Math.min(1, scrolled / totalScroll))
-
+    const progress = progressRef.current
     const span = services.length > 1 ? services.length - 1 : 1
     const target = -progress * Math.PI * 2 * (span / services.length)
 

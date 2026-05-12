@@ -78,15 +78,37 @@ function YearSign({ position, year, mono, index, sideOffset }) {
 
 function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
   const lastActive = useRef(-1)
+  const progressRef = useRef(0)
+
+  useEffect(() => {
+    const update = () => {
+      const node = sectionRef.current
+      if (!node) return
+      const rect = node.getBoundingClientRect()
+      const total = Math.max(1, rect.height - window.innerHeight)
+      let p = -rect.top / total
+      if (p < 0) p = 0
+      if (p > 1) p = 1
+      progressRef.current = p
+    }
+    update()
+    let raf = 0
+    const tick = () => {
+      update()
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [sectionRef])
 
   useFrame(({ camera }) => {
-    if (!sectionRef.current) return
-    const rect = sectionRef.current.getBoundingClientRect()
-    const viewportH = window.innerHeight
-    const total = Math.max(1, rect.height - viewportH)
-    let progress = -rect.top / total
-    if (progress < 0) progress = 0
-    if (progress > 1) progress = 1
+    const progress = progressRef.current
 
     if (!reduced) {
       const startZ = CAMERA_START_Z
