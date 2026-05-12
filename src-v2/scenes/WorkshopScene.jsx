@@ -773,7 +773,7 @@ export default function WorkshopScene({ stations }) {
       aria-label="Üretim hattının 7 adımı"
       style={{
         position: 'relative',
-        height: `${100 + stations.length * 70}vh`,
+        height: `${stations.length * 100}vh`,
         background: NAVY,
       }}
     >

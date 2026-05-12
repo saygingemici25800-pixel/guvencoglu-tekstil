@@ -506,7 +506,7 @@ export default function TimelineTunnel({ milestones }) {
       aria-label="Kronolojik kilometre taşları"
       style={{
         position: 'relative',
-        height: `${100 + milestones.length * 80}vh`,
+        height: `${milestones.length * 100}vh`,
         background: '#2D3142',
       }}
     >
