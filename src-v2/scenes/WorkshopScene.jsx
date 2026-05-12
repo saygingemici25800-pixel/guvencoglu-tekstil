@@ -772,6 +772,7 @@ function MobileWorkshopExperience({ stations, reduced }) {
 
 export default function WorkshopScene({ stations }) {
   const sectionRef = useRef(null)
+  const pinRef = useRef(null)
   const [active, setActive] = useState(0)
   const reduced = usePrefersReducedMotion()
   const [isMobile, setIsMobile] = useState(() =>
@@ -784,6 +785,37 @@ export default function WorkshopScene({ stations }) {
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+    const update = () => {
+      const section = sectionRef.current
+      const pin = pinRef.current
+      if (!section || !pin) return
+      const rect = section.getBoundingClientRect()
+      const viewportH = window.innerHeight
+      const sectionH = rect.height
+      let y
+      if (rect.top >= 0) y = 0
+      else if (-rect.top + viewportH >= sectionH) y = sectionH - viewportH
+      else y = -rect.top
+      pin.style.transform = `translate3d(0, ${y}px, 0)`
+    }
+    update()
+    let raf = 0
+    const tick = () => {
+      update()
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [isMobile])
 
   if (isMobile) {
     if (reduced) return <MobileWorkshop stations={stations} />
@@ -801,12 +833,16 @@ export default function WorkshopScene({ stations }) {
       }}
     >
       <div
+        ref={pinRef}
         style={{
-          position: 'sticky',
+          position: 'absolute',
           top: 0,
+          left: 0,
+          right: 0,
           height: '100vh',
           overflow: 'hidden',
           isolation: 'isolate',
+          willChange: 'transform',
         }}
       >
         <Canvas
