@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 
-const NAVY = '#2D3142'
+const NAVY = '#0A2463'
 const COPPER = '#D4A373'
 const COPPER_DIM = '#8E6B47'
-const CREAM = '#EFEAE0'
+const CREAM = '#F5F5F0'
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -198,60 +198,21 @@ function Pedestal({ active }) {
   )
 }
 
-function Carousel({ services, sectionRef, activeIdx, onActiveChange, reduced }) {
+function Carousel({ services, activeIdx, reduced, onPick }) {
   const groupRef = useRef()
-  const lastIdxRef = useRef(-1)
-  const progressRef = useRef(0)
   const radius = 2.9
-
-  useEffect(() => {
-    const update = () => {
-      const node = sectionRef.current
-      if (!node) return
-      const rect = node.getBoundingClientRect()
-      const total = Math.max(1, rect.height - window.innerHeight)
-      let p = -rect.top / total
-      if (p < 0) p = 0
-      if (p > 1) p = 1
-      progressRef.current = p
-    }
-    update()
-    let raf = 0
-    const tick = () => {
-      update()
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update, { passive: true })
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-    }
-  }, [sectionRef])
 
   useFrame((_, delta) => {
     if (!groupRef.current) return
-
-    const progress = progressRef.current
-    const span = services.length > 1 ? services.length - 1 : 1
-    const target = -progress * Math.PI * 2 * (span / services.length)
-
+    const target = -((activeIdx / services.length) * Math.PI * 2)
+    const current = groupRef.current.rotation.y
+    let diff = target - current
+    while (diff > Math.PI) diff -= Math.PI * 2
+    while (diff < -Math.PI) diff += Math.PI * 2
     if (reduced) {
       groupRef.current.rotation.y = target
     } else {
-      const current = groupRef.current.rotation.y
-      let diff = target - current
-      while (diff > Math.PI) diff -= Math.PI * 2
-      while (diff < -Math.PI) diff += Math.PI * 2
-      groupRef.current.rotation.y = current + diff * Math.min(1, delta * 6)
-    }
-
-    const idx = Math.max(0, Math.min(services.length - 1, Math.round(progress * span)))
-    if (idx !== lastIdxRef.current) {
-      lastIdxRef.current = idx
-      onActiveChange(idx)
+      groupRef.current.rotation.y = current + diff * Math.min(1, delta * 4.5)
     }
   })
 
@@ -264,7 +225,22 @@ function Carousel({ services, sectionRef, activeIdx, onActiveChange, reduced }) 
         const Comp = GEOMETRY_MAP[s.id] || MannequinIcon
         const isActive = i === activeIdx
         return (
-          <group key={s.id} position={[x, 0, z]} rotation={[0, angle, 0]}>
+          <group
+            key={s.id}
+            position={[x, 0, z]}
+            rotation={[0, angle, 0]}
+            onClick={(e) => {
+              e.stopPropagation()
+              onPick(i)
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation()
+              document.body.style.cursor = 'pointer'
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = ''
+            }}
+          >
             <Pedestal active={isActive} />
             <Comp active={isActive} reduced={reduced} />
           </group>
@@ -274,18 +250,13 @@ function Carousel({ services, sectionRef, activeIdx, onActiveChange, reduced }) 
   )
 }
 
-export default function ServiceShowcase3D({ services, activeIdx, onPick }) {
+export default function ServiceShowcase3D({ services, activeIdx, onPick, height = '70vh' }) {
   const reduced = usePrefersReducedMotion()
-  const sectionRef = useRef(null)
+  const wrapRef = useRef(null)
   const [mounted, setMounted] = useState(false)
-  const [internalIdx, setInternalIdx] = useState(typeof activeIdx === 'number' ? activeIdx : 0)
 
   useEffect(() => {
-    if (typeof activeIdx === 'number') setInternalIdx(activeIdx)
-  }, [activeIdx])
-
-  useEffect(() => {
-    const node = sectionRef.current
+    const node = wrapRef.current
     if (!node) return
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -294,61 +265,41 @@ export default function ServiceShowcase3D({ services, activeIdx, onPick }) {
           io.disconnect()
         }
       },
-      { rootMargin: '300px 0px' },
+      { rootMargin: '200px 0px' },
     )
     io.observe(node)
     return () => io.disconnect()
   }, [])
 
-  const handleActiveChange = (idx) => {
-    setInternalIdx(idx)
-    if (onPick) onPick(idx)
-  }
-
   return (
-    <section
-      ref={sectionRef}
+    <div
+      ref={wrapRef}
+      className="v2-showcase"
+      style={{ ...wrap, height }}
       aria-hidden="true"
-      style={{
-        position: 'relative',
-        height: `${services.length * 100}vh`,
-      }}
     >
-      <div
-        className="v2-showcase"
-        style={{
-          ...wrap,
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          width: '100%',
-        }}
-      >
-        {mounted ? (
-          <Canvas
-            tabIndex={-1}
-            camera={{ position: [0, 1.5, 5.4], fov: 38 }}
-            dpr={[1, 1.75]}
-            gl={{ antialias: true, alpha: true }}
-            style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
-          >
-            <fog attach="fog" args={[NAVY, 5, 14]} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[3, 5, 3]} intensity={0.9} color={CREAM} />
-            <directionalLight position={[-3, -1, -3]} intensity={0.3} color={COPPER} />
-            <Carousel
-              services={services}
-              sectionRef={sectionRef}
-              activeIdx={internalIdx}
-              onActiveChange={handleActiveChange}
-              reduced={reduced}
-            />
-          </Canvas>
-        ) : null}
+      {mounted ? (
+        <Canvas
+          camera={{ position: [0, 1.5, 5.4], fov: 38 }}
+          dpr={[1, 1.75]}
+          gl={{ antialias: true, alpha: true }}
+          style={{ position: 'absolute', inset: 0 }}
+        >
+          <fog attach="fog" args={[NAVY, 5, 14]} />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[3, 5, 3]} intensity={0.9} color={CREAM} />
+          <directionalLight position={[-3, -1, -3]} intensity={0.3} color={COPPER} />
+          <Carousel
+            services={services}
+            activeIdx={activeIdx}
+            reduced={reduced}
+            onPick={onPick}
+          />
+        </Canvas>
+      ) : null}
 
-        <div style={vignette} aria-hidden="true" />
-      </div>
-    </section>
+      <div style={vignette} aria-hidden="true" />
+    </div>
   )
 }
 
