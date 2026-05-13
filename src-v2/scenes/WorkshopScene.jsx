@@ -242,8 +242,8 @@ function useTruckBrandTexture() {
     ctx.fillStyle = CREAM
     ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
-    ctx.font = '600 132px "Fraunces", "Times New Roman", serif'
-    ctx.fillText('GÜVENÇOĞLU', 280, 200)
+    ctx.font = '600 100px "Fraunces", "Times New Roman", serif'
+    ctx.fillText('GÜVENÇOĞLU', 280, 210)
     ctx.font = '500 italic 96px "Fraunces", "Times New Roman", serif'
     ctx.fillStyle = COPPER
     ctx.fillText('TEKSTİL', 280, 332)
