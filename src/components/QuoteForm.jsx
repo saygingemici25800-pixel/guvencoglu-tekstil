@@ -79,7 +79,7 @@ export default function QuoteForm() {
             <p>
               Aşağıdaki formu doldurun, ekibimiz ihtiyacınıza özel teklifi WhatsApp veya
               telefonla en kısa sürede iletsin. Acil siparişler için doğrudan
-              <a href="tel:+902526125092" style={{ color: 'var(--copper-deep)', fontWeight: 600 }}> 0252 612 50 92</a>.
+              <a href="tel:+905321347602" style={{ color: 'var(--copper-deep)', fontWeight: 600 }}> 0532 134 7602</a>.
             </p>
             <ul className="quote__benefits">
               {BENEFITS.map((b) => (
@@ -138,7 +138,7 @@ export default function QuoteForm() {
                 autoComplete="tel"
                 value={form.phone}
                 onChange={update}
-                placeholder="0532 134 76 02"
+                placeholder="0532 134 7602"
               />
             </div>
 

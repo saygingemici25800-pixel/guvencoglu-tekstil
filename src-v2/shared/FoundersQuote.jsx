@@ -20,7 +20,7 @@ export default function FoundersQuote() {
         <footer style={attribution} className="v2-quote-attribution">
           <span style={hairline} aria-hidden="true" />
           <div style={attrText}>
-            <p style={attrName}>Ömer Güvençoğlu</p>
+            <p style={attrName}>Ömer Güvenç</p>
             <p style={attrRole}>Kurucu · 1980'den beri</p>
           </div>
           <Link to="/v2/hikayemiz" style={attrLink} className="v2-quote-link">

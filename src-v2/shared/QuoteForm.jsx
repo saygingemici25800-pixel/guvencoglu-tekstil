@@ -149,7 +149,7 @@ export default function QuoteForm() {
         <h3 style={successTitle}>Teklif talebin alındı.</h3>
         <p style={successBody}>
           E-posta uygulaman açıldı — gönderdiğinde 48 saat içinde sana döneceğiz.
-          Acil durumlar için <a href="tel:+902526125092" style={successLink}>0252 612 50 92</a>.
+          Acil durumlar için <a href="tel:+905321347602" style={successLink}>0532 134 7602</a>.
         </p>
         <button
           type="button"

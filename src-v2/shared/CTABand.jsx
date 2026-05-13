@@ -23,9 +23,9 @@ export default function CTABand() {
             <span style={primaryArrow} className="v2-cta-primary-arrow" aria-hidden="true">→</span>
           </Link>
 
-          <a href="tel:+902526125092" style={secondaryCta} className="v2-cta-secondary">
+          <a href="tel:+905321347602" style={secondaryCta} className="v2-cta-secondary">
             <span style={callMono}>VEYA HEMEN ARA</span>
-            <span style={callNum}>0252 612 50 92</span>
+            <span style={callNum}>0532 134 7602</span>
           </a>
         </div>
       </div>

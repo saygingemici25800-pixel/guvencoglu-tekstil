@@ -4,9 +4,9 @@ import QuoteForm from '../shared/QuoteForm.jsx'
 import LocationPin3D from '../scenes/LocationPin3D.jsx'
 
 const CONTACT = {
-  phone: '0252 612 50 92',
-  phoneE164: '+902526125092',
-  whatsapp: '0532 134 76 02',
+  phone: '0532 134 7602',
+  phoneE164: '+905321347602',
+  whatsapp: '0532 134 7602',
   whatsappE164: '+905321347602',
   email: 'guvencoglutekstil@gmail.com',
   address: 'Kesikkapı Mah. Atatürk Cad. No:144/146, Fethiye, Muğla 48300',

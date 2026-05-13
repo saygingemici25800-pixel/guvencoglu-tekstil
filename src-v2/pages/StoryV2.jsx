@@ -105,7 +105,7 @@ export default function StoryV2() {
           '@type': 'Organization',
           name: 'Güvencoğlu Tekstil',
           foundingDate: '1980',
-          founder: { '@type': 'Person', name: 'Ömer Güvençoğlu' },
+          founder: { '@type': 'Person', name: 'Ömer Güvenç' },
           url: 'https://guvencoglutekstil.com/v2/hikayemiz',
         }}
       />
@@ -184,7 +184,7 @@ export default function StoryV2() {
           <footer style={quoteFooter}>
             <span style={hairline} aria-hidden="true" />
             <div style={attrBlock}>
-              <p style={attrName}>Ömer Güvençoğlu</p>
+              <p style={attrName}>Ömer Güvenç</p>
               <p style={attrRole}>Kurucu · Fethiye, 1980'den beri</p>
             </div>
           </footer>

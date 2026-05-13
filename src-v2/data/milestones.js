@@ -5,7 +5,7 @@ export const MILESTONES = [
     mono: 'KURULUŞ',
     title: 'İlk dikiş',
     description:
-      'Ömer Güvençoğlu, Fethiye\'de küçük bir atölyede ilk makinasını çalıştırır. Tek müşteri, tek model, tek söz: kalite.',
+      'Ömer Güvenç, Fethiye\'de küçük bir atölyede ilk makinasını çalıştırır. Tek müşteri, tek model, tek söz: kalite.',
   },
   {
     year: '1995',

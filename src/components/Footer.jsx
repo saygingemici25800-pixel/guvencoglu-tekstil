@@ -59,11 +59,11 @@ export default function Footer() {
             <h4>İletişim</h4>
             <ul>
               <li>
-                <a href="tel:+902526125092">0252 612 50 92</a>
+                <a href="tel:+905321347602">0532 134 7602</a>
               </li>
               <li>
                 <a href="https://wa.me/905321347602" target="_blank" rel="noopener noreferrer">
-                  WhatsApp · 0532 134 76 02
+                  WhatsApp · 0532 134 7602
                 </a>
               </li>
               <li>

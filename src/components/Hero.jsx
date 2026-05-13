@@ -93,7 +93,7 @@ export default function Hero() {
             <div className="hero__card-author">
               <div className="hero__card-mono" aria-hidden="true">Ö</div>
               <div>
-                <strong>Ömer Güvençoğlu</strong>
+                <strong>Ömer Güvenç</strong>
                 <span>Kurucu · Fethiye</span>
               </div>
             </div>
