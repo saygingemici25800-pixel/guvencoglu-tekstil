@@ -41,7 +41,7 @@ export default function NavV2() {
         <span
           aria-hidden="true"
           style={{
-            width: 56, height: 56, borderRadius: 0, backgroundImage: 'url(/logo-tekstil.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+            width: 88, height: 88, borderRadius: 0, backgroundImage: 'url(/logo-tekstil.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
         />
