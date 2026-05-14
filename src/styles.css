@@ -447,7 +447,7 @@ section {
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.2 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
-.hero__inner { padding-top: 180px;
+.hero__inner { padding-top: 60px;
   position: relative;
   z-index: var(--z-hero);
   display: grid;
@@ -455,7 +455,7 @@ section {
   gap: var(--s-7);
 }
 @media (min-width: 1024px) {
-  .hero__inner { padding-top: 180px;
+  .hero__inner { padding-top: 60px;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     align-items: center;
     gap: var(--s-9);
