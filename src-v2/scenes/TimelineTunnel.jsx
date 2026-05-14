@@ -519,7 +519,7 @@ export default function TimelineTunnel({ milestones }) {
   }, [])
 
   useEffect(() => {
-    if (isMobile) return
+    if (false) return
     const update = () => {
       const section = sectionRef.current
       const pin = pinRef.current

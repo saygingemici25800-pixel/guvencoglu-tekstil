@@ -787,7 +787,7 @@ export default function WorkshopScene({ stations }) {
   }, [])
 
   useEffect(() => {
-    if (isMobile) return
+    if (false) return
     const update = () => {
       const section = sectionRef.current
       const pin = pinRef.current
