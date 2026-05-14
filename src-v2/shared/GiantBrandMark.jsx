@@ -19,7 +19,7 @@ export default function GiantBrandMark() {
 const wrap = {
   position: 'relative',
   /* Section height = ~57% of text font-size → bottom 40-45% of glyphs is clipped */
-  height: 'clamp(80px, 9vw, 160px)',
+  height: 'clamp(34px, 8vw, 160px)',
   overflow: 'hidden',
   background: '#EFEAE0',
   margin: 0,
@@ -33,7 +33,7 @@ const mark = {
   left: '50%',
   transform: 'translateX(-50%)',
   fontFamily: 'Fraunces, "Times New Roman", serif',
-  fontSize: 'clamp(140px, 16vw, 280px)',
+  fontSize: 'clamp(60px, 14vw, 280px)',
   fontWeight: 700,
   letterSpacing: '-0.03em',
   lineHeight: 1,
