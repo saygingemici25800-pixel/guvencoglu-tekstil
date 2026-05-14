@@ -41,13 +41,12 @@ export default function NavV2() {
         <span
           aria-hidden="true"
           style={{
-            width: 36, height: 36, borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--v2-navy), var(--v2-copper))',
+            width: 56, height: 56, borderRadius: 0, backgroundImage: 'url(/logo-tekstil.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
         />
         <span style={{
-          fontFamily: 'var(--v2-font-display)',
+          display: 'none', fontFamily: 'var(--v2-font-display)',
           fontSize: 20,
           fontWeight: 600,
           color: 'var(--v2-navy)',
