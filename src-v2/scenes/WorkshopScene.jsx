@@ -817,7 +817,7 @@ export default function WorkshopScene({ stations }) {
     }
   }, [isMobile])
 
-  if (isMobile) {
+  if (false) {
     if (reduced) return <MobileWorkshop stations={stations} />
     return <MobileWorkshopExperience stations={stations} reduced={reduced} />
   }

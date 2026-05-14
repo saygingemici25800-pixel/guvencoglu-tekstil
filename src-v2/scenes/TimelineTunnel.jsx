@@ -549,7 +549,7 @@ export default function TimelineTunnel({ milestones }) {
     }
   }, [isMobile])
 
-  if (isMobile) {
+  if (false) {
     if (reduced) return <MobileTimeline milestones={milestones} />
     return <MobileTimelineTunnel milestones={milestones} />
   }
