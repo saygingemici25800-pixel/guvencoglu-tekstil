@@ -166,13 +166,13 @@ const lede = {
 }
 const mainSection = {
   background: 'var(--v2-cream, #F5F5F0)',
-  padding: '0 32px 128px',
+  padding: '0 clamp(16px, 5vw, 32px) 128px',
 }
-const mainGrid = {
+const mainGrid = { width: '100%', boxSizing: 'border-box',
   maxWidth: 1440,
   margin: '0 auto',
   display: 'grid',
-  gridTemplateColumns: '1fr 1.15fr',
+  gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.15fr)',
   gap: 64,
   alignItems: 'flex-start',
 }
