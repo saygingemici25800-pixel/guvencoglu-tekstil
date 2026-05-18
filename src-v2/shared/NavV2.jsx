@@ -33,10 +33,8 @@ export default function NavV2() {
 
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
-    padding: isCta
-      ? (isMobile ? '5px 10px' : '8px 16px')
-      : (isMobile ? '5px 8px' : '8px 14px'),
-    marginLeft: isCta ? 4 : 0,
+    padding: isMobile ? '5px 8px' : '8px 14px',
+    marginLeft: isCta ? '8px' : 0,
     borderRadius: 999,
     fontSize: isMobile ? '11px' : '14px',
     color: isCta ? 'var(--v2-ink)' : (isActive ? 'var(--v2-cream)' : 'var(--v2-navy)'),
@@ -60,8 +58,7 @@ export default function NavV2() {
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'nowrap',
-        gap: 8,
-        padding: isMobile ? '4px 10px' : '6px 16px',
+        padding: isMobile ? '6px 12px' : '10px 24px',
         borderRadius: 999,
         background: scrolled ? 'rgba(245, 245, 240, 0.95)' : 'rgba(245, 245, 240, 0.7)',
         backdropFilter: 'blur(16px)',
@@ -78,7 +75,7 @@ export default function NavV2() {
           src="/logo-tekstil.png"
           alt="Güvençoğlu Tekstil"
           style={{
-            height: isMobile ? '56px' : 'clamp(64px, 12vw, 84px)',
+            height: isMobile ? '48px' : '64px',
             width: 'auto',
             objectFit: 'contain',
             display: 'block',
@@ -87,7 +84,7 @@ export default function NavV2() {
         />
       </Link>
 
-      <nav style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '1px' : '2px', flexWrap: 'nowrap' }}>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '2px' : '4px', flexShrink: 0, flexWrap: 'nowrap' }}>
         {links.map((l, i) => (
           <NavLink key={`${l.to}-${i}`} to={l.to} style={({ isActive }) => linkStyle(isActive, l.cta)}>
             {l.label}
