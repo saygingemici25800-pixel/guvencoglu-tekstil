@@ -22,7 +22,7 @@ export default function NavV2() {
 
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
-    padding: 'clamp(4px, 1vw, 8px) clamp(6px, 1.6vw, 14px)',
+    padding: 'clamp(6px, 1vw, 10px) clamp(10px, 1.4vw, 16px)',
     borderRadius: 999,
     fontSize: 'clamp(9px, 1.8vw, 14px)',
     color: isCta ? 'var(--v2-ink)' : (isActive ? 'var(--v2-cream)' : 'var(--v2-navy)'),
@@ -39,14 +39,15 @@ export default function NavV2() {
       style={{
         position: 'fixed',
         top: 16,
-        left: 16,
-        right: 16,
+        left: 24,
+        right: 24,
         zIndex: 50,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexWrap: 'nowrap',
         gap: 8,
-        padding: 'clamp(6px, 1.4vw, 10px) clamp(10px, 2vw, 16px)',
+        padding: 'clamp(8px, 1.2vw, 12px) clamp(14px, 2vw, 22px)',
         borderRadius: 999,
         background: scrolled ? 'rgba(245, 245, 240, 0.95)' : 'rgba(245, 245, 240, 0.7)',
         backdropFilter: 'blur(16px)',
@@ -54,12 +55,16 @@ export default function NavV2() {
         border: '1px solid var(--v2-line)',
       }}
     >
-      <Link to="/" aria-label="Ana Sayfa" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+      <Link
+        to="/"
+        aria-label="Ana Sayfa"
+        style={{ flexShrink: 0, display: 'flex', alignItems: 'center', minWidth: 48 }}
+      >
         <img
           src="/logo-tekstil.png"
           alt="Güvençoğlu Tekstil"
           style={{
-            height: 'clamp(36px, 8vw, 56px)',
+            height: 'clamp(48px, 10vw, 60px)',
             width: 'auto',
             objectFit: 'contain',
             display: 'block',
@@ -67,7 +72,7 @@ export default function NavV2() {
         />
       </Link>
 
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(2px, 0.6vw, 6px)', flexWrap: 'nowrap' }}>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(2px, 0.4vw, 8px)', flexWrap: 'nowrap' }}>
         {links.map((l, i) => (
           <NavLink key={`${l.to}-${i}`} to={l.to} style={({ isActive }) => linkStyle(isActive, l.cta)}>
             {l.label}
