@@ -15,6 +15,7 @@ export default function NavV2() {
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.matchMedia('(max-width: 720px)').matches : false
   )
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -30,6 +31,26 @@ export default function NavV2() {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  useEffect(() => {
+    if (!isMobile && mobileMenuOpen) setMobileMenuOpen(false)
+  }, [isMobile, mobileMenuOpen])
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [mobileMenuOpen])
+
+  const closeMobileMenu = () => setMobileMenuOpen(false)
 
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
@@ -47,6 +68,7 @@ export default function NavV2() {
   })
 
   return (
+    <>
     <header
       style={{
         position: 'fixed',
@@ -86,13 +108,117 @@ export default function NavV2() {
         />
       </Link>
 
-      <nav style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '2px' : '4px', flexShrink: 0, flexWrap: 'nowrap' }}>
-        {links.map((l, i) => (
-          <NavLink key={`${l.to}-${i}`} to={l.to} style={({ isActive }) => linkStyle(isActive, l.cta)}>
-            {l.label}
+      {isMobile ? (
+        <>
+          <NavLink
+            to="/iletisim"
+            style={({ isActive }) => linkStyle(isActive, true)}
+          >
+            Teklif Al
           </NavLink>
-        ))}
-      </nav>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Menüyü aç"
+            aria-expanded={mobileMenuOpen}
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              padding: 0,
+              border: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 5,
+            }}
+          >
+            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+          </button>
+        </>
+      ) : (
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, flexWrap: 'nowrap' }}>
+          {links.map((l, i) => (
+            <NavLink key={`${l.to}-${i}`} to={l.to} style={({ isActive }) => linkStyle(isActive, l.cta)}>
+              {l.label}
+            </NavLink>
+          ))}
+        </nav>
+      )}
     </header>
+
+    {isMobile && mobileMenuOpen && (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobil menü"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 100,
+          background: 'rgba(245, 245, 240, 0.98)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '32px',
+          animation: 'navv2-fade-in 200ms ease',
+        }}
+      >
+        <button
+          type="button"
+          onClick={closeMobileMenu}
+          aria-label="Menüyü kapat"
+          style={{
+            position: 'absolute',
+            top: 24,
+            right: 24,
+            width: 40,
+            height: 40,
+            border: 'none',
+            background: 'transparent',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+          }}
+        >
+          <span style={{ position: 'absolute', width: 26, height: 2, background: 'var(--v2-navy)', borderRadius: 1, transform: 'rotate(45deg)' }} />
+          <span style={{ position: 'absolute', width: 26, height: 2, background: 'var(--v2-navy)', borderRadius: 1, transform: 'rotate(-45deg)' }} />
+        </button>
+        <nav style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+          {links.filter((l) => !l.cta).map((l, i) => (
+            <NavLink
+              key={`mob-${l.to}-${i}`}
+              to={l.to}
+              onClick={closeMobileMenu}
+              style={({ isActive }) => ({
+                fontSize: '28px',
+                fontFamily: 'var(--v2-font-display, Fraunces, serif)',
+                fontWeight: 500,
+                color: isActive ? 'var(--v2-copper)' : 'var(--v2-navy)',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+              })}
+            >
+              {l.label}
+            </NavLink>
+          ))}
+        </nav>
+        <style>{`@keyframes navv2-fade-in { from { opacity: 0 } to { opacity: 1 } }`}</style>
+      </div>
+    )}
+  </>
   )
 }
