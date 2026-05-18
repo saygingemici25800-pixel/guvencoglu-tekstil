@@ -360,8 +360,11 @@ export default function QuoteForm() {
           .v2-form-next-arrow,
           .v2-form-back { transition: none !important; }
         }
-        @media (max-width: 560px) {
-          .v2-quote-form { padding: 32px !important; }
+        @media (max-width: 720px) {
+          .v2-quote-form { padding: 24px !important; gap: 24px !important; }
+        }
+        @media (max-width: 420px) {
+          .v2-quote-form { padding: 18px !important; }
         }
       `}</style>
     </form>
@@ -378,8 +381,19 @@ const formWrap = {
   flexDirection: 'column',
   gap: 32,
   border: '1px solid rgba(212, 163, 115, 0.25)',
+  width: '100%',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+  minWidth: 0,
+  overflow: 'hidden',
 }
-const formHeader = { display: 'flex', flexDirection: 'column', gap: 12 }
+const formHeader = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+  maxWidth: '100%',
+  minWidth: 0,
+}
 const mono = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 12,
@@ -388,24 +402,48 @@ const mono = {
   color: 'var(--v2-copper, #D4A373)',
   margin: 0,
 }
-const progressTrack = { display: 'flex', gap: 6, alignItems: 'center' }
+const progressTrack = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 6,
+  alignItems: 'center',
+  maxWidth: '100%',
+}
 const progressDot = {
   height: 4,
   borderRadius: 999,
   transition: 'all 320ms cubic-bezier(0.16, 1, 0.3, 1)',
 }
-const fieldset = { border: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 24 }
+const fieldset = {
+  border: 'none',
+  padding: 0,
+  margin: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 24,
+  minWidth: 0,
+  maxWidth: '100%',
+}
 const legend = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(26px, 3.4vw, 38px)',
+  fontSize: 'clamp(22px, 3.4vw, 38px)',
   lineHeight: 1.15,
   color: '#F5F5F0',
   margin: 0,
   padding: 0,
   letterSpacing: '-0.015em',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  maxWidth: '100%',
 }
-const optionsGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 12 }
+const optionsGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+  gap: 12,
+  maxWidth: '100%',
+  minWidth: 0,
+}
 const optionLabel = {
   position: 'relative',
   padding: '20px 56px 20px 20px',
@@ -416,18 +454,25 @@ const optionLabel = {
   flexDirection: 'column',
   gap: 4,
   minHeight: 88,
+  minWidth: 0,
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
 const optionTitle = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontSize: 19,
   fontWeight: 500,
   color: '#F5F5F0',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }
 const optionHint = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 13,
   color: 'rgba(245, 245, 240, 0.6)',
   lineHeight: 1.4,
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }
 const optionTick = {
   position: 'absolute',
@@ -453,8 +498,20 @@ const visuallyHidden = {
   clip: 'rect(0,0,0,0)',
   border: 0,
 }
-const fieldsCol = { display: 'flex', flexDirection: 'column', gap: 20 }
-const fieldGroup = { display: 'flex', flexDirection: 'column', gap: 8 }
+const fieldsCol = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 20,
+  minWidth: 0,
+  maxWidth: '100%',
+}
+const fieldGroup = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+  minWidth: 0,
+  maxWidth: '100%',
+}
 const fieldLabel = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
@@ -472,9 +529,11 @@ const input = {
   borderRadius: 4,
   color: '#F5F5F0',
   width: '100%',
+  maxWidth: '100%',
   boxSizing: 'border-box',
   resize: 'vertical',
   minHeight: 44,
+  display: 'block',
 }
 const errorText = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
@@ -484,10 +543,12 @@ const errorText = {
 }
 const formFooter = {
   display: 'flex',
+  flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
-  gap: 24,
+  gap: 16,
   paddingTop: 8,
+  maxWidth: '100%',
 }
 const backBtn = {
   fontFamily: 'var(--v2-font-mono, monospace)',
@@ -525,7 +586,7 @@ const nextBtnArrow = {
 const successWrap = {
   background: 'var(--v2-navy, #0A2463)',
   color: '#F5F5F0',
-  padding: '64px 48px',
+  padding: 'clamp(32px, 6vw, 64px) clamp(20px, 5vw, 48px)',
   borderRadius: 8,
   border: '1px solid rgba(212, 163, 115, 0.3)',
   display: 'flex',
@@ -533,6 +594,11 @@ const successWrap = {
   alignItems: 'center',
   gap: 20,
   textAlign: 'center',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }
 const successCheck = {
   width: 72,

@@ -62,7 +62,9 @@ export default function ContactV2() {
       <section style={mainSection}>
         <div style={mainGrid} className="v2-contact-grid">
           <aside style={leftCol}>
-            <LocationPin3D height={360} caption="GÜVENCOĞLU · FETHİYE" />
+            <div style={pinWrap}>
+              <LocationPin3D height={360} caption="GÜVENCOĞLU · FETHİYE" />
+            </div>
 
             <article style={infoCard}>
               <p style={infoTag}>FABRİKA</p>
@@ -71,19 +73,19 @@ export default function ContactV2() {
             </article>
 
             <ul style={contactList}>
-              <li style={contactItem}>
+              <li style={contactItem} className="v2-contact-item">
                 <span style={contactMono}>TELEFON</span>
                 <a href={`tel:${CONTACT.phoneE164}`} style={contactLink} className="v2-contact-link">
                   {CONTACT.phone}
                 </a>
               </li>
-              <li style={contactItem}>
+              <li style={contactItem} className="v2-contact-item">
                 <span style={contactMono}>WHATSAPP</span>
                 <a href={`https://wa.me/${CONTACT.whatsappE164.replace('+', '')}`} target="_blank" rel="noreferrer" style={contactLink} className="v2-contact-link">
                   {CONTACT.whatsapp} <span aria-hidden="true" style={extLink}>↗</span>
                 </a>
               </li>
-              <li style={contactItem}>
+              <li style={contactItem} className="v2-contact-item">
                 <span style={contactMono}>E-POSTA</span>
                 <a href={`mailto:${CONTACT.email}`} style={contactLink} className="v2-contact-link">
                   {CONTACT.email}
@@ -124,6 +126,12 @@ export default function ContactV2() {
         @media (max-width: 960px) {
           .v2-contact-grid { grid-template-columns: 1fr !important; gap: 56px !important; }
         }
+        @media (max-width: 560px) {
+          .v2-contact-item {
+            grid-template-columns: 1fr !important;
+            gap: 4px !important;
+          }
+        }
       `}</style>
     </PageTransition>
   )
@@ -132,10 +140,20 @@ export default function ContactV2() {
 const heroSection = {
   background: 'var(--v2-cream, #F5F5F0)',
   color: 'var(--v2-ink, #0B0F1A)',
-  padding: 'clamp(72px, 12vw, 160px) clamp(20px, 5vw, 32px) clamp(48px, 8vw, 96px)',
+  padding: 'clamp(72px, 12vw, 160px) clamp(16px, 5vw, 32px) clamp(48px, 8vw, 96px)',
   position: 'relative',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
-const heroInner = { maxWidth: 1440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }
+const heroInner = {
+  maxWidth: 1440,
+  width: '100%',
+  boxSizing: 'border-box',
+  margin: '0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 24,
+}
 const mono = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 12,
@@ -153,6 +171,8 @@ const hero = {
   color: 'var(--v2-navy, #0A2463)',
   margin: 0,
   maxWidth: '12ch',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }
 const emStyle = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
 const lede = {
@@ -163,21 +183,39 @@ const lede = {
   opacity: 0.72,
   margin: 0,
   maxWidth: '54ch',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }
 const mainSection = {
   background: 'var(--v2-cream, #F5F5F0)',
   padding: '0 clamp(16px, 5vw, 32px) 128px',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
-const mainGrid = { width: '100%', boxSizing: 'border-box',
+const mainGrid = {
+  width: '100%',
   maxWidth: 1440,
+  boxSizing: 'border-box',
   margin: '0 auto',
   display: 'grid',
   gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.15fr)',
   gap: 64,
   alignItems: 'flex-start',
 }
-const leftCol = { display: 'flex', flexDirection: 'column', gap: 24 }
-const rightCol = { display: 'flex', flexDirection: 'column' }
+const leftCol = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 24,
+  minWidth: 0,
+  maxWidth: '100%',
+}
+const rightCol = {
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: 0,
+  maxWidth: '100%',
+}
+const pinWrap = { maxWidth: '100%', overflow: 'hidden' }
 const infoCard = {
   background: 'transparent',
   padding: '24px 0',
@@ -186,6 +224,8 @@ const infoCard = {
   display: 'flex',
   flexDirection: 'column',
   gap: 8,
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
 const infoTag = {
   fontFamily: 'var(--v2-font-mono, monospace)',
@@ -202,6 +242,9 @@ const infoAddress = {
   color: 'var(--v2-navy, #0A2463)',
   margin: 0,
   letterSpacing: '-0.01em',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  maxWidth: '100%',
 }
 const infoHours = {
   fontFamily: 'var(--v2-font-mono, monospace)',
@@ -210,15 +253,29 @@ const infoHours = {
   color: 'var(--v2-mist, #8A8F9E)',
   margin: 0,
   textTransform: 'uppercase',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  maxWidth: '100%',
 }
-const contactList = { listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 4 }
+const contactList = {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 4,
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+}
 const contactItem = {
   display: 'grid',
-  gridTemplateColumns: '120px 1fr',
+  gridTemplateColumns: '110px minmax(0, 1fr)',
   alignItems: 'baseline',
   gap: 20,
   padding: '14px 0',
   borderBottom: '1px solid rgba(10, 36, 99, 0.08)',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
 const contactMono = {
   fontFamily: 'var(--v2-font-mono, monospace)',
@@ -229,21 +286,29 @@ const contactMono = {
 }
 const contactLink = {
   fontFamily: 'var(--v2-font-display, serif)',
-  fontSize: 'clamp(17px, 1.8vw, 20px)',
+  fontSize: 'clamp(15px, 1.8vw, 20px)',
   color: 'var(--v2-navy, #0A2463)',
   textDecoration: 'none',
   display: 'inline-flex',
   alignItems: 'center',
   gap: 8,
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  minWidth: 0,
+  maxWidth: '100%',
 }
-const extLink = { fontSize: 12, opacity: 0.6 }
+const extLink = { fontSize: 12, opacity: 0.6, flexShrink: 0 }
 const mapSection = {
   background: 'var(--v2-cream, #F5F5F0)',
   padding: '0 0 96px',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
 }
 const mapFrame = {
   width: '100%',
+  maxWidth: '100%',
   height: 'clamp(320px, 50vh, 520px)',
   border: 0,
   display: 'block',
+  boxSizing: 'border-box',
 }
