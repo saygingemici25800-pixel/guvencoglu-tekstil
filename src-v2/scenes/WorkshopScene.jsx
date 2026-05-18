@@ -361,17 +361,10 @@ function WorkshopSceneInner({ stations, sectionRef, onActiveChange, reduced }) {
       progressRef.current = p
     }
     update()
-    let raf = 0
-    const tick = () => {
-      update()
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    
+    window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
-      
+      window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
   }, [sectionRef])
@@ -380,10 +373,11 @@ function WorkshopSceneInner({ stations, sectionRef, onActiveChange, reduced }) {
     const progress = progressRef.current
 
     if (!reduced) {
+      const lerpK = window.innerWidth < 768 ? 0.18 : 0.12
       const eased = progress * (stations.length - 1)
       const targetZ = -eased * SPACING
-      camera.position.z += (targetZ + 3.6 - camera.position.z) * 0.12
-      camera.position.x += (Math.sin(progress * Math.PI * 3) * 0.7 - camera.position.x) * 0.12
+      camera.position.z += (targetZ + 3.6 - camera.position.z) * lerpK
+      camera.position.x += (Math.sin(progress * Math.PI * 3) * 0.7 - camera.position.x) * lerpK
       camera.position.y = 1.05 + Math.sin(progress * Math.PI * 2) * 0.1
       camera.lookAt(0, FLOOR_Y + 0.45, targetZ - 0.5)
     } else {
@@ -787,7 +781,6 @@ export default function WorkshopScene({ stations }) {
   }, [])
 
   useEffect(() => {
-    if (false) return
     const update = () => {
       const section = sectionRef.current
       const pin = pinRef.current
@@ -802,17 +795,10 @@ export default function WorkshopScene({ stations }) {
       pin.style.transform = `translate3d(0, ${y}px, 0)`
     }
     update()
-    let raf = 0
-    const tick = () => {
-      update()
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    
+    window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
-      
+      window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
   }, [isMobile])

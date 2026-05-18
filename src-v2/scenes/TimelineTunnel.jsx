@@ -92,17 +92,10 @@ function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
       progressRef.current = p
     }
     update()
-    let raf = 0
-    const tick = () => {
-      update()
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    
+    window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
-      
+      window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
   }, [sectionRef])
@@ -111,10 +104,11 @@ function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
     const progress = progressRef.current
 
     if (!reduced) {
+      const lerpK = window.innerWidth < 768 ? 0.18 : 0.12
       const startZ = CAMERA_START_Z
       const endZ = -(milestones.length - 0.5) * SPACING
-      camera.position.z += (startZ + (endZ - startZ) * progress - camera.position.z) * 0.12
-      camera.position.x += (Math.sin(progress * Math.PI * 2) * 0.6 - camera.position.x) * 0.12
+      camera.position.z += (startZ + (endZ - startZ) * progress - camera.position.z) * lerpK
+      camera.position.x += (Math.sin(progress * Math.PI * 2) * 0.6 - camera.position.x) * lerpK
       camera.lookAt(0, 0, camera.position.z - 4)
     } else {
       camera.position.z = CAMERA_START_Z - ((milestones.length - 1) * SPACING) / 2
@@ -519,7 +513,6 @@ export default function TimelineTunnel({ milestones }) {
   }, [])
 
   useEffect(() => {
-    if (false) return
     const update = () => {
       const section = sectionRef.current
       const pin = pinRef.current
@@ -534,17 +527,10 @@ export default function TimelineTunnel({ milestones }) {
       pin.style.transform = `translate3d(0, ${y}px, 0)`
     }
     update()
-    let raf = 0
-    const tick = () => {
-      update()
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    
+    window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
-      
+      window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
   }, [isMobile])
