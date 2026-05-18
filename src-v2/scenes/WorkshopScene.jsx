@@ -382,8 +382,8 @@ function WorkshopSceneInner({ stations, sectionRef, onActiveChange, reduced }) {
     if (!reduced) {
       const eased = progress * (stations.length - 1)
       const targetZ = -eased * SPACING
-      camera.position.z = targetZ + 3.6
-      camera.position.x = Math.sin(progress * Math.PI * 3) * 0.7
+      camera.position.z += (targetZ + 3.6 - camera.position.z) * 0.12
+      camera.position.x += (Math.sin(progress * Math.PI * 3) * 0.7 - camera.position.x) * 0.12
       camera.position.y = 1.05 + Math.sin(progress * Math.PI * 2) * 0.1
       camera.lookAt(0, FLOOR_Y + 0.45, targetZ - 0.5)
     } else {

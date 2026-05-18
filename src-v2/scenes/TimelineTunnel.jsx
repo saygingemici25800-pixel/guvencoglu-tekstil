@@ -113,8 +113,8 @@ function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
     if (!reduced) {
       const startZ = CAMERA_START_Z
       const endZ = -(milestones.length - 0.5) * SPACING
-      camera.position.z = startZ + (endZ - startZ) * progress
-      camera.position.x = Math.sin(progress * Math.PI * 2) * 0.6
+      camera.position.z += (startZ + (endZ - startZ) * progress - camera.position.z) * 0.12
+      camera.position.x += (Math.sin(progress * Math.PI * 2) * 0.6 - camera.position.x) * 0.12
       camera.lookAt(0, 0, camera.position.z - 4)
     } else {
       camera.position.z = CAMERA_START_Z - ((milestones.length - 1) * SPACING) / 2
