@@ -254,244 +254,100 @@ function ProgressRail({ milestones, activeIndex }) {
   )
 }
 
-function MobileTimeline({ milestones }) {
-  return (
-    <ol
-      style={{
-        background: 'var(--v2-navy)',
-        color: 'var(--v2-cream)',
-        listStyle: 'none',
-        padding: '96px 24px',
-        margin: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 64,
-      }}
-    >
-      {milestones.map((m, i) => (
-        <li key={m.year} style={{ position: 'relative', paddingLeft: 32 }}>
-          <span
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 12,
-              width: 12,
-              height: 12,
-              borderRadius: '50%',
-              background: 'var(--v2-copper)',
-              boxShadow: '0 0 0 6px rgba(212,163,115,0.18)',
-            }}
-          />
-          {i < milestones.length - 1 && (
-            <span
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                left: 5,
-                top: 30,
-                bottom: -64,
-                width: 2,
-                background: 'rgba(212,163,115,0.25)',
-              }}
-            />
-          )}
-          <p
-            className="mono"
-            style={{
-              fontSize: 11,
-              letterSpacing: '0.18em',
-              color: 'var(--v2-copper)',
-              marginBottom: 8,
-              textTransform: 'uppercase',
-            }}
-          >
-            {m.mono}
-          </p>
-          <h3
-            style={{
-              fontFamily: 'Fraunces, serif',
-              fontSize: 'clamp(36px, 9vw, 56px)',
-              fontWeight: 500,
-              fontVariationSettings: '"opsz" 144',
-              lineHeight: 1,
-              marginBottom: 12,
-              color: 'var(--v2-cream)',
-            }}
-          >
-            {m.year}
-          </h3>
-          <h4
-            style={{
-              fontFamily: 'Fraunces, serif',
-              fontStyle: 'italic',
-              fontSize: 22,
-              fontWeight: 500,
-              marginBottom: 12,
-              color: 'var(--v2-copper)',
-            }}
-          >
-            {m.title}
-          </h4>
-          <p style={{ fontSize: 16, lineHeight: 1.6, opacity: 0.85 }}>{m.description}</p>
-        </li>
-      ))}
-    </ol>
-  )
-}
-
-function MobileMilestonePanel({ milestone, index, total }) {
-  return (
-    <article
-      key={index}
-      style={{
-        position: 'absolute',
-        left: 24,
-        right: 24,
-        bottom: 64,
-        color: 'var(--v2-cream)',
-        pointerEvents: 'none',
-        animation: 'v2-mobile-fade 600ms cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
-    >
-      <p
-        className="mono"
-        style={{
-          fontSize: 11,
-          letterSpacing: '0.18em',
-          color: 'var(--v2-copper)',
-          marginBottom: 12,
-          textTransform: 'uppercase',
-        }}
-      >
-        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} — {milestone.mono}
-      </p>
-      <h3
-        style={{
-          fontFamily: 'Fraunces, serif',
-          fontSize: 'clamp(24px, 7vw, 34px)',
-          fontStyle: 'italic',
-          fontVariationSettings: '"opsz" 144',
-          fontWeight: 500,
-          lineHeight: 1.1,
-          marginBottom: 10,
-          color: 'var(--v2-cream)',
-        }}
-      >
-        {milestone.title}
-      </h3>
-      <p
-        style={{
-          fontFamily: 'Inter Tight, sans-serif',
-          fontSize: 14,
-          lineHeight: 1.55,
-          opacity: 0.82,
-          maxWidth: '40ch',
-        }}
-      >
-        {milestone.description}
-      </p>
-    </article>
-  )
-}
-
-function MobileDotRail({ count, active }) {
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        position: 'absolute',
-        bottom: 24,
-        left: 24,
-        right: 24,
-        display: 'flex',
-        gap: 6,
-      }}
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <span
-          key={i}
-          style={{
-            width: i === active ? 28 : 8,
-            height: 3,
-            background: i === active ? 'var(--v2-copper)' : 'rgba(239,234,224,0.28)',
-            borderRadius: 2,
-            transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function MobileTimelineTunnel({ milestones }) {
-  const sectionRef = useRef(null)
-  const [active, setActive] = useState(0)
-  const reduced = usePrefersReducedMotion()
-
+function MobileTimelineStatic({ milestones }) {
   return (
     <section
-      ref={sectionRef}
       aria-label="Kronolojik kilometre taşları"
       style={{
-        position: 'relative',
-        height: `${milestones.length * 100}vh`,
         background: '#2D3142',
+        color: 'var(--v2-cream)',
+        padding: '80px 20px',
       }}
     >
-      <div className="v2-mobile-3d-sticky">
-        <Canvas
-          tabIndex={-1}
-          camera={{ position: [0, 0, CAMERA_START_Z], fov: 55 }}
-          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-          dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
-          style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
-        >
-          <Suspense fallback={null}>
-            <TunnelScene
-              milestones={milestones}
-              sectionRef={sectionRef}
-              onActiveChange={setActive}
-              reduced={reduced}
-            />
-          </Suspense>
-        </Canvas>
-
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(180deg, rgba(45,49,66,0.15) 0%, rgba(45,49,66,0) 35%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <MobileMilestonePanel
-          milestone={milestones[active]}
-          index={active}
-          total={milestones.length}
-        />
-        <MobileDotRail count={milestones.length} active={active} />
-      </div>
-
-      <style>{`
-        .v2-mobile-3d-sticky {
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          height: 100svh;
-          overflow: hidden;
-          isolation: isolate;
-          touch-action: pan-y;
-        }
-        .v2-mobile-3d-sticky canvas { outline: none !important; }
-        @keyframes v2-mobile-fade {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      <ol
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        {milestones.map((m, i) => {
+          const isLast = i === milestones.length - 1
+          return (
+            <li
+              key={m.year}
+              style={{
+                position: 'relative',
+                paddingLeft: 28,
+                paddingBottom: isLast ? 0 : 48,
+                borderLeft: isLast ? 'none' : '1px solid rgba(212,163,115,0.25)',
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: -6,
+                  top: 6,
+                  width: 11,
+                  height: 11,
+                  borderRadius: '50%',
+                  background: 'var(--v2-copper)',
+                  boxShadow: '0 0 0 5px rgba(212,163,115,0.18)',
+                }}
+              />
+              <p
+                className="mono"
+                style={{
+                  fontSize: 11,
+                  letterSpacing: '0.2em',
+                  color: 'var(--v2-copper)',
+                  marginBottom: 10,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {m.mono}
+              </p>
+              <h3
+                style={{
+                  fontFamily: 'Fraunces, serif',
+                  fontSize: 'clamp(44px, 12vw, 64px)',
+                  fontWeight: 500,
+                  fontVariationSettings: '"opsz" 144',
+                  lineHeight: 1,
+                  marginBottom: 14,
+                  color: 'var(--v2-copper)',
+                }}
+              >
+                {m.year}
+              </h3>
+              <h4
+                style={{
+                  fontFamily: 'Fraunces, serif',
+                  fontSize: 22,
+                  fontStyle: 'italic',
+                  fontWeight: 500,
+                  marginBottom: 12,
+                  color: 'var(--v2-cream)',
+                }}
+              >
+                {m.title}
+              </h4>
+              <p
+                style={{
+                  fontFamily: 'Inter Tight, sans-serif',
+                  fontSize: 15,
+                  lineHeight: 1.65,
+                  opacity: 0.78,
+                  color: 'var(--v2-cream)',
+                }}
+              >
+                {m.description}
+              </p>
+            </li>
+          )
+        })}
+      </ol>
     </section>
   )
 }
@@ -535,9 +391,8 @@ export default function TimelineTunnel({ milestones }) {
     }
   }, [isMobile])
 
-  if (false) {
-    if (reduced) return <MobileTimeline milestones={milestones} />
-    return <MobileTimelineTunnel milestones={milestones} />
+  if (isMobile) {
+    return <MobileTimelineStatic milestones={milestones} />
   }
 
   return (

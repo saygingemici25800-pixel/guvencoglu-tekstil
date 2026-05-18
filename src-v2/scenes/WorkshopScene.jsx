@@ -515,251 +515,89 @@ function ProgressRail({ stations, activeIndex }) {
   )
 }
 
-function StationVisualHint({ hint }) {
-  const base = { width: 80, height: 80, flexShrink: 0, marginRight: 24 }
-  if (hint === 'spools') {
-    return (
-      <span style={{ ...base, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
-        {[COPPER, '#E5C9A7', COPPER, '#B88557', CREAM, COPPER].map((c, i) => (
-          <span key={i} style={{ background: c, borderRadius: '50%', aspectRatio: '1' }} />
-        ))}
-      </span>
-    )
-  }
-  if (hint === 'cutting') {
-    return (
-      <span style={{ ...base, background: NAVY, position: 'relative' }}>
-        <span style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 2, background: COPPER }} />
-      </span>
-    )
-  }
-  if (hint === 'sewing') {
-    return (
-      <span style={{ ...base, background: CREAM, position: 'relative' }}>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <span key={i} style={{ position: 'absolute', left: 12 + i * 14, top: '40%', width: 2, height: 16, background: COPPER }} />
-        ))}
-      </span>
-    )
-  }
-  if (hint === 'embroidery') {
-    return (
-      <span style={{ ...base, background: CREAM, display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 4, padding: 8 }}>
-        {Array.from({ length: 25 }).map((_, i) => (
-          <span key={i} style={{ background: COPPER, borderRadius: '50%', aspectRatio: '1' }} />
-        ))}
-      </span>
-    )
-  }
-  if (hint === 'magnifier') {
-    return (
-      <span style={{ ...base, background: NAVY, position: 'relative' }}>
-        <span style={{ position: 'absolute', top: 12, left: 12, width: 40, height: 40, border: `3px solid ${COPPER}`, borderRadius: '50%' }} />
-        <span style={{ position: 'absolute', top: 48, left: 48, width: 24, height: 3, background: COPPER, transform: 'rotate(45deg)', transformOrigin: 'left' }} />
-      </span>
-    )
-  }
-  if (hint === 'boxes') {
-    return (
-      <span style={{ ...base, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: 4 }}>
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} style={{ background: '#E8D9B8', position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 0, right: 0, top: '40%', height: 4, background: COPPER }} />
-          </span>
-        ))}
-      </span>
-    )
-  }
-  if (hint === 'truck') {
-    return (
-      <span style={{ ...base, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 4, paddingBottom: 16 }}>
-        <span style={{ width: 24, height: 32, background: COPPER }} />
-        <span style={{ width: 36, height: 44, background: NAVY }} />
-      </span>
-    )
-  }
-  return null
-}
-
-function MobileWorkshop({ stations }) {
-  return (
-    <ol
-      style={{
-        background: NAVY,
-        color: CREAM,
-        listStyle: 'none',
-        padding: '96px 24px 128px',
-        margin: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 56,
-      }}
-    >
-      {stations.map((s, i) => (
-        <li key={s.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
-          <StationVisualHint hint={s.visualHint} />
-          <div style={{ flex: 1 }}>
-            <p className="mono" style={{ fontSize: 11, letterSpacing: '0.2em', color: COPPER, marginBottom: 8, textTransform: 'uppercase' }}>
-              {String(i + 1).padStart(2, '0')} / {s.mono}
-            </p>
-            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 500, fontStyle: 'italic', fontVariationSettings: '"opsz" 144', marginBottom: 12, lineHeight: 1.1, color: CREAM }}>
-              {s.title}
-            </h3>
-            <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.85 }}>{s.description}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  )
-}
-
-function MobileStationPanel({ station, index, total }) {
-  return (
-    <article
-      key={index}
-      style={{
-        position: 'absolute',
-        left: 24,
-        right: 24,
-        bottom: 64,
-        color: CREAM,
-        pointerEvents: 'none',
-        animation: 'v2-mobile-fade 600ms cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
-    >
-      <p
-        className="mono"
-        style={{
-          fontSize: 11,
-          letterSpacing: '0.2em',
-          color: COPPER,
-          marginBottom: 12,
-          textTransform: 'uppercase',
-        }}
-      >
-        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} — {station.mono}
-      </p>
-      <h3
-        style={{
-          fontFamily: 'Fraunces, serif',
-          fontSize: 'clamp(22px, 6.5vw, 32px)',
-          fontStyle: 'italic',
-          fontVariationSettings: '"opsz" 144',
-          fontWeight: 500,
-          lineHeight: 1.1,
-          marginBottom: 10,
-          color: CREAM,
-        }}
-      >
-        {station.title}
-      </h3>
-      <p
-        style={{
-          fontFamily: 'Inter Tight, sans-serif',
-          fontSize: 14,
-          lineHeight: 1.55,
-          opacity: 0.85,
-          maxWidth: '36ch',
-        }}
-      >
-        {station.description}
-      </p>
-    </article>
-  )
-}
-
-function MobileWorkshopDots({ count, active }) {
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        position: 'absolute',
-        bottom: 24,
-        left: 24,
-        right: 24,
-        display: 'flex',
-        gap: 6,
-      }}
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <span
-          key={i}
-          style={{
-            width: i === active ? 28 : 8,
-            height: 3,
-            background: i === active ? COPPER : 'rgba(239,234,224,0.28)',
-            borderRadius: 2,
-            transition: 'all 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function MobileWorkshopExperience({ stations, reduced }) {
-  const sectionRef = useRef(null)
-  const [active, setActive] = useState(0)
-
+function MobileWorkshopStatic({ stations }) {
   return (
     <section
-      ref={sectionRef}
-      aria-label="Üretim hattının 7 adımı"
+      aria-label="Üretim hattının adımları"
       style={{
-        position: 'relative',
-        height: `${stations.length * 100}vh`,
         background: NAVY,
+        color: CREAM,
+        padding: '80px 20px',
       }}
     >
-      <div className="v2-mobile-3d-sticky">
-        <Canvas
-          tabIndex={-1}
-          camera={{ position: [0, 1.1, 3.6], fov: 50 }}
-          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-          dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
-          style={{ position: 'absolute', inset: 0, touchAction: 'pan-y', outline: 'none' }}
-        >
-          <Suspense fallback={null}>
-            <WorkshopSceneInner
-              stations={stations}
-              sectionRef={sectionRef}
-              onActiveChange={setActive}
-              reduced={reduced}
-            />
-          </Suspense>
-        </Canvas>
-
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(180deg, rgba(45,49,66,0.2) 0%, rgba(45,49,66,0) 30%, rgba(45,49,66,0) 55%, rgba(45,49,66,0.85) 100%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <MobileStationPanel station={stations[active]} index={active} total={stations.length} />
-        <MobileWorkshopDots count={stations.length} active={active} />
-      </div>
-
-      <style>{`
-        .v2-mobile-3d-sticky {
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          height: 100svh;
-          overflow: hidden;
-          isolation: isolate;
-          touch-action: pan-y;
-        }
-        .v2-mobile-3d-sticky canvas { outline: none !important; }
-        @keyframes v2-mobile-fade {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      <ol
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        {stations.map((s, i) => {
+          const isLast = i === stations.length - 1
+          return (
+            <li
+              key={s.id}
+              style={{
+                position: 'relative',
+                paddingLeft: 28,
+                paddingBottom: isLast ? 0 : 48,
+                borderLeft: isLast ? 'none' : '1px solid rgba(212,163,115,0.25)',
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: -6,
+                  top: 6,
+                  width: 11,
+                  height: 11,
+                  borderRadius: '50%',
+                  background: COPPER,
+                  boxShadow: '0 0 0 5px rgba(212,163,115,0.18)',
+                }}
+              />
+              <p
+                className="mono"
+                style={{
+                  fontSize: 11,
+                  letterSpacing: '0.2em',
+                  color: COPPER,
+                  marginBottom: 10,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {String(i + 1).padStart(2, '0')} — {s.mono}
+              </p>
+              <h3
+                style={{
+                  fontFamily: 'Fraunces, serif',
+                  fontSize: 'clamp(26px, 7vw, 34px)',
+                  fontStyle: 'italic',
+                  fontVariationSettings: '"opsz" 144',
+                  fontWeight: 500,
+                  lineHeight: 1.1,
+                  marginBottom: 12,
+                  color: CREAM,
+                }}
+              >
+                {s.title}
+              </h3>
+              <p
+                style={{
+                  fontFamily: 'Inter Tight, sans-serif',
+                  fontSize: 15,
+                  lineHeight: 1.65,
+                  opacity: 0.78,
+                  color: CREAM,
+                }}
+              >
+                {s.description}
+              </p>
+            </li>
+          )
+        })}
+      </ol>
     </section>
   )
 }
@@ -803,9 +641,8 @@ export default function WorkshopScene({ stations }) {
     }
   }, [isMobile])
 
-  if (false) {
-    if (reduced) return <MobileWorkshop stations={stations} />
-    return <MobileWorkshopExperience stations={stations} reduced={reduced} />
+  if (isMobile) {
+    return <MobileWorkshopStatic stations={stations} />
   }
 
   return (
