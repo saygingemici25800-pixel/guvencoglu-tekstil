@@ -405,7 +405,7 @@ const legend = {
   padding: 0,
   letterSpacing: '-0.015em',
 }
-const optionsGrid = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }
+const optionsGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 12 }
 const optionLabel = {
   position: 'relative',
   padding: '20px 56px 20px 20px',

@@ -147,7 +147,7 @@ const mono = {
 const hero = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(56px, 9vw, 140px)',
+  fontSize: 'clamp(40px, 11vw, 140px)',
   lineHeight: 0.92,
   letterSpacing: '-0.025em',
   color: 'var(--v2-navy, #0A2463)',
@@ -197,7 +197,7 @@ const infoTag = {
 }
 const infoAddress = {
   fontFamily: 'var(--v2-font-display, serif)',
-  fontSize: 'clamp(20px, 2vw, 24px)',
+  fontSize: 'clamp(16px, 4vw, 24px)',
   lineHeight: 1.3,
   color: 'var(--v2-navy, #0A2463)',
   margin: 0,
