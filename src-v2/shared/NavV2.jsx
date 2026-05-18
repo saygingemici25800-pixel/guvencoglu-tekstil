@@ -50,15 +50,17 @@ export default function NavV2() {
     <header
       style={{
         position: 'fixed',
-        top: 20,
-        left: isMobile ? 16 : 32,
-        right: isMobile ? 16 : 32,
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
         zIndex: 50,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
         flexWrap: 'nowrap',
-        padding: isMobile ? '6px 12px' : '10px 24px',
+        gap: isMobile ? '12px' : '32px',
+        padding: isMobile ? '8px 14px' : '10px 24px',
+        width: 'auto',
+        maxWidth: 'calc(100vw - 32px)',
         borderRadius: 999,
         background: scrolled ? 'rgba(245, 245, 240, 0.95)' : 'rgba(245, 245, 240, 0.7)',
         backdropFilter: 'blur(16px)',
@@ -75,7 +77,7 @@ export default function NavV2() {
           src="/logo-tekstil.png"
           alt="Güvençoğlu Tekstil"
           style={{
-            height: isMobile ? '48px' : '64px',
+            height: isMobile ? '40px' : '48px',
             width: 'auto',
             objectFit: 'contain',
             display: 'block',
