@@ -98,11 +98,11 @@ function TunnelScene({ milestones, sectionRef, onActiveChange, reduced }) {
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    window.addEventListener('scroll', update, { passive: true })
+    
     window.addEventListener('resize', update, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', update)
+      
       window.removeEventListener('resize', update)
     }
   }, [sectionRef])
@@ -540,11 +540,11 @@ export default function TimelineTunnel({ milestones }) {
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    window.addEventListener('scroll', update, { passive: true })
+    
     window.addEventListener('resize', update, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', update)
+      
       window.removeEventListener('resize', update)
     }
   }, [isMobile])
