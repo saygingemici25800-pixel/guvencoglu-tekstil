@@ -1,12 +1,13 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
-import GlobalCanvas from '../../src/components/GlobalCanvas.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
    9 bölüm. Renk ritmi: cream → navy → cream → cream → navy → cream
-   → navy → copper → footer (global). 3D sahnesi (GlobalCanvas) hero'da.
+   → navy → copper → footer (global). Hero: statik editorial collage
+   (USPS ilhamlı) + sektör tab'ları. 3D yok.
    ────────────────────────────────────────────────────────────── */
 
 const SECTORS = [
@@ -25,6 +26,12 @@ const SECTORS = [
     sub: 'Anaokulu, ilkokul, ortaokul, lise, kolej',
     to: '/v2/hizmetler',
   },
+]
+
+const SECTOR_TABS = [
+  { id: 'saglik', label: 'Sağlık', name: 'Sağlık Personeli Kıyafetleri' },
+  { id: 'otel', label: 'Otel', name: 'Otel Personeli Kıyafetleri' },
+  { id: 'okul', label: 'Okul', name: 'Okul Personeli Kıyafetleri' },
 ]
 
 const SERVICES = [
@@ -131,7 +138,9 @@ function ServiceIcon({ name }) {
 }
 
 export default function HomeV2() {
-  const year = new Date().getFullYear()
+  const [activeTab, setActiveTab] = useState('saglik')
+  const activeSector =
+    SECTOR_TABS.find((t) => t.id === activeTab) ?? SECTOR_TABS[0]
 
   return (
     <PageTransition>
@@ -156,46 +165,81 @@ export default function HomeV2() {
         }}
       />
 
-      {/* 3D sahnesi — ambient fabric backdrop (KORUNDU) */}
-      <GlobalCanvas />
-
-      {/* ─── BÖLÜM 1 — HERO ─────────────────────────────────── */}
+      {/* ─── BÖLÜM 1 — HERO (editorial collage, statik) ─────── */}
       <section className="hv2-hero" style={heroWrap} aria-labelledby="hv2-hero-title">
-        <div style={heroInner}>
-          <div className="hv2-hero-text" style={heroText}>
-            <p className="hv2-rise" style={{ ...eyebrow, animationDelay: '40ms' }}>
-              1980’DEN BERİ · FETHİYE · KENDİ ÜRETİM TESİSİ
-            </p>
+        {/* Sektör tab'ları */}
+        <div className="hv2-hero-tabs" style={tabsWrap} role="group" aria-label="Sektör seçimi">
+          {SECTOR_TABS.map((t) => {
+            const active = t.id === activeTab
+            return (
+              <button
+                key={t.id}
+                type="button"
+                className="hv2-tab"
+                onClick={() => setActiveTab(t.id)}
+                aria-pressed={active}
+                aria-label={`${t.label} sektörü`}
+                style={active ? tabActive : tabInactive}
+              >
+                {t.label}
+              </button>
+            )
+          })}
+        </div>
 
-            <h1 id="hv2-hero-title" className="hv2-rise" style={{ ...h1, animationDelay: '120ms' }}>
-              Türkiye’nin <em style={h1Accent}>kurumsal üniforma</em> uzmanı.
-            </h1>
+        {/* Editorial collage sahne */}
+        <div className="hv2-hero-stage" style={stage}>
+          <div className="hv2-collage" style={collageWrap}>
+            {/* Katman 1 — görsel placeholder */}
+            <div style={layer1} role="img" aria-label="Sektör görseli yer tutucu">
+              <span style={placeholderText}>GÖRSEL YERİ</span>
+            </div>
 
-            <p className="hv2-rise" style={{ ...heroLede, animationDelay: '220ms' }}>
-              Sağlık personeli, otel ekipleri, okul üniformaları. Kendi tesisimizde,
-              aracısız, sözleşmenizdeki sayıda, taahhüt ettiğimiz tarihte.
-            </p>
+            {/* Katman 2 — copper mission bloğu */}
+            <div style={layer2} aria-hidden="true">
+              <span className="hv2-mission" style={missionText}>MISSION</span>
+              <div style={missionCircle}>
+                <span style={crosshairH} />
+                <span style={crosshairV} />
+              </div>
+              <span style={b20}>B 20</span>
+            </div>
 
-            <div className="hv2-rise hv2-hero-ctas" style={{ ...heroCtas, animationDelay: '320ms' }}>
-              <Link to="/v2/iletisim" className="hv2-btn-primary" style={btnPrimary}>
-                <span>Teklif Al</span>
-                <span className="hv2-btn-arrow" style={btnArrow} aria-hidden="true">→</span>
-              </Link>
-              <Link to="/v2/hizmetler" className="hv2-btn-outline" style={btnOutline}>
-                Çalıştığımız Sektörler
-              </Link>
+            {/* Katman 3 — etiketler */}
+            <span style={collageYear} aria-hidden="true">1980</span>
+            <span style={collageIndex} aria-hidden="true">01 / 03</span>
+            <div style={dotsPattern} aria-hidden="true" />
+          </div>
+
+          {/* Yıl markerları */}
+          <div className="hv2-markers" style={markersRow} aria-hidden="true">
+            <div style={markerLeft}>
+              <span className="hv2-marker-grow" style={markerGrow} />
+              <span style={markerTick} />
+              <span style={markerYear}>1980</span>
+            </div>
+            <div className="hv2-marker-spacer" style={markerSpacer} />
+            <div style={markerRight}>
+              <span style={markerYear}>2026</span>
+              <span style={markerTick} />
+              <span className="hv2-marker-grow" style={markerGrow} />
             </div>
           </div>
 
-          <div className="hv2-hero-visual" style={heroVisual} aria-hidden="true">
-            <div style={heroVisualFrame}>
-              <div style={heroVisualWeave} />
-              <div style={heroVisualGlow} />
-              <span style={heroVisualTop}>FETHİYE · KENDİ ÜRETİM</span>
-              <span style={heroVisualBottom}>1980 → {year}</span>
+          {/* Alt açıklamalar */}
+          <div className="hv2-hero-desc" style={descRow}>
+            <div style={descLeft}>
+              <span style={descSmall}>Keşfet</span>
+              <span style={descSector}>{activeSector.name}</span>
             </div>
+            <h1 id="hv2-hero-title" style={slogan}>
+              Türkiye’nin kurumsal üniforma uzmanı
+            </h1>
           </div>
         </div>
+
+        {/* En alt dev tipografi */}
+        <span className="hv2-giant" style={giant} aria-hidden="true">GUVENCOGLU</span>
       </section>
 
       {/* ─── BÖLÜM 2 — GÜVEN ŞERİDİ ─────────────────────────── */}
@@ -365,33 +409,21 @@ export default function HomeV2() {
       </section>
 
       <style>{`
-        .hv2-rise { opacity: 0; animation: hv2-rise 760ms cubic-bezier(0.16,1,0.3,1) both; }
-        @keyframes hv2-rise {
-          from { opacity: 0; transform: translateY(26px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .hv2-btn-primary, .hv2-btn-dark {
+        .hv2-btn-dark {
           transition: transform 280ms cubic-bezier(0.16,1,0.3,1), box-shadow 280ms ease, background 280ms ease;
         }
-        .hv2-btn-primary:hover, .hv2-btn-primary:focus-visible,
         .hv2-btn-dark:hover, .hv2-btn-dark:focus-visible {
           transform: translateY(-2px);
           box-shadow: 0 14px 32px rgba(26,26,26,0.18);
         }
         .hv2-btn-arrow { transition: transform 280ms cubic-bezier(0.16,1,0.3,1); }
-        .hv2-btn-primary:hover .hv2-btn-arrow, .hv2-btn-primary:focus-visible .hv2-btn-arrow,
         .hv2-btn-dark:hover .hv2-btn-arrow, .hv2-btn-dark:focus-visible .hv2-btn-arrow {
           transform: translateX(8px);
         }
 
-        .hv2-btn-outline {
-          transition: background 240ms ease, color 240ms ease, border-color 240ms ease;
-        }
-        .hv2-btn-outline:hover, .hv2-btn-outline:focus-visible {
-          background: var(--v2-navy, #2D3142);
-          color: var(--v2-cream, #EFEAE0);
-        }
+        .hv2-tab { cursor: pointer; transition: background 220ms ease, color 220ms ease, border-color 220ms ease; }
+        .hv2-tab:hover, .hv2-tab:focus-visible { border-color: var(--v2-copper, #D4A373); }
+        .hv2-tab:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 3px; }
 
         .hv2-textlink { transition: color 220ms ease; }
         .hv2-textlink span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
@@ -414,24 +446,25 @@ export default function HomeV2() {
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
         @media (max-width: 980px) {
-          .hv2-hero-text { max-width: 100% !important; }
           .hv2-story-inner { grid-template-columns: 1fr !important; }
           .hv2-refs-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 900px) {
-          .hv2-hero { min-height: auto !important; }
-          .hv2-hero-visual { display: none !important; }
         }
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
-          .hv2-hero-ctas { flex-direction: column !important; align-items: stretch !important; }
+          .hv2-tab { padding: 6px 14px !important; }
+          .hv2-collage { width: 80vw !important; height: 60vh !important; }
+          .hv2-mission { font-size: 10px !important; }
+          .hv2-marker-grow { display: none !important; }
+          .hv2-marker-spacer { width: 80vw !important; }
+          .hv2-hero-desc { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 16px !important; }
+          .hv2-hero-desc h1 { text-align: center !important; max-width: 90vw !important; margin: 0 !important; }
+          .hv2-giant { font-size: clamp(48px, 16vw, 100px) !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-rise { animation: none !important; opacity: 1 !important; transform: none !important; }
-          .hv2-btn-primary, .hv2-btn-dark, .hv2-btn-outline, .hv2-btn-arrow,
+          .hv2-btn-dark, .hv2-btn-arrow, .hv2-tab,
           .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
             transition: none !important;
           }
@@ -455,123 +488,256 @@ const eyebrow = {
 }
 const eyebrowDark = { ...eyebrow }
 
-/* BÖLÜM 1 — HERO */
+/* BÖLÜM 1 — HERO (editorial collage) */
 const heroWrap = {
   position: 'relative',
   zIndex: 1,
   minHeight: '100vh',
-  display: 'flex',
-  alignItems: 'center',
-  background: 'transparent',
-  padding: 'clamp(112px, 16vh, 168px) clamp(20px, 5vw, 48px) clamp(64px, 9vw, 96px)',
-}
-const heroInner = {
-  width: '100%',
-  maxWidth: 'var(--v2-content-max, 1440px)',
-  margin: '0 auto',
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)',
-  alignItems: 'center',
-  gap: 'clamp(32px, 6vw, 80px)',
-}
-const heroText = { maxWidth: 640, display: 'flex', flexDirection: 'column', gap: 24 }
-const h1 = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(40px, 6.4vw, 84px)',
-  lineHeight: 1.02,
-  letterSpacing: '-0.025em',
-  color: 'var(--v2-ink, #1A1A1A)',
-  margin: 0,
-  maxWidth: '18ch',
-}
-const h1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
-const heroLede = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 'clamp(18px, 1.8vw, 19px)',
-  lineHeight: 1.6,
-  color: 'var(--v2-ink, #1A1A1A)',
-  margin: 0,
-  maxWidth: '46ch',
-}
-const heroCtas = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginTop: 8 }
-const btnPrimary = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 14,
-  padding: '17px 30px',
-  background: 'var(--v2-copper, #D4A373)',
-  color: 'var(--v2-navy, #2D3142)',
-  textDecoration: 'none',
-  borderRadius: 'var(--v2-r-sm, 4px)',
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontWeight: 600,
-  fontSize: 17,
-  letterSpacing: '-0.005em',
-  minHeight: 44,
-}
-const btnArrow = { fontSize: 19, display: 'inline-block' }
-const btnOutline = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  padding: '16px 28px',
-  background: 'transparent',
-  color: 'var(--v2-navy, #2D3142)',
-  textDecoration: 'none',
-  border: '1.5px solid var(--v2-navy, #2D3142)',
-  borderRadius: 'var(--v2-r-sm, 4px)',
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontWeight: 600,
-  fontSize: 17,
-  minHeight: 44,
-}
-const heroVisual = { position: 'relative', minHeight: 'min(70vh, 540px)' }
-const heroVisualFrame = {
-  position: 'relative',
-  height: '100%',
-  minHeight: 'min(70vh, 540px)',
-  borderRadius: 'var(--v2-r-md, 8px)',
-  border: '1px solid rgba(45, 49, 66, 0.22)',
+  background: 'var(--v2-cream, #EFEAE0)',
   overflow: 'hidden',
-  background:
-    'linear-gradient(155deg, rgba(45,49,66,0.92) 0%, rgba(45,49,66,0.78) 45%, rgba(212,163,115,0.85) 100%)',
-  boxShadow: '0 30px 70px rgba(45,49,66,0.22)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 'clamp(180px, 24vh, 240px) clamp(20px, 5vw, 48px) clamp(150px, 22vh, 260px)',
 }
-const heroVisualWeave = {
+
+const tabsWrap = {
+  position: 'absolute',
+  top: 'clamp(120px, 14vh, 160px)',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  display: 'flex',
+  gap: 8,
+  zIndex: 5,
+}
+const tabBase = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 'clamp(12px, 1.4vw, 14px)',
+  fontWeight: 500,
+  lineHeight: 1,
+  padding: '8px 20px',
+  borderRadius: 999,
+  whiteSpace: 'nowrap',
+}
+const tabActive = {
+  ...tabBase,
+  background: 'var(--v2-copper, #D4A373)',
+  color: 'var(--v2-ink, #1A1A1A)',
+  border: '1px solid transparent',
+}
+const tabInactive = {
+  ...tabBase,
+  background: 'transparent',
+  color: 'var(--v2-navy, #2D3142)',
+  border: '1px solid rgba(45, 49, 66, 0.15)',
+}
+
+const stage = {
+  position: 'relative',
+  zIndex: 2,
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 'clamp(20px, 3.5vh, 36px)',
+}
+
+const collageWrap = {
+  position: 'relative',
+  width: 'clamp(280px, 36vw, 480px)',
+  height: 'clamp(360px, 48vh, 580px)',
+  flexShrink: 0,
+}
+const layer1 = {
   position: 'absolute',
   inset: 0,
-  backgroundImage:
-    'repeating-linear-gradient(90deg, rgba(239,234,224,0.07) 0 1px, transparent 1px 9px), repeating-linear-gradient(0deg, rgba(239,234,224,0.07) 0 1px, transparent 1px 9px)',
-  mixBlendMode: 'screen',
+  zIndex: 1,
+  background: 'linear-gradient(135deg, var(--v2-navy, #2D3142) 0%, #1F2230 100%)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 }
-const heroVisualGlow = {
-  position: 'absolute',
-  width: 360,
-  height: 360,
-  right: -80,
-  top: -60,
-  borderRadius: '50%',
-  background: 'radial-gradient(circle, rgba(241,214,179,0.55) 0%, transparent 65%)',
-  filter: 'blur(8px)',
+const placeholderText = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontStyle: 'italic',
+  fontSize: 14,
+  letterSpacing: '0.1em',
+  color: 'rgba(239, 234, 224, 0.3)',
 }
-const heroVisualTop = {
+const layer2 = {
   position: 'absolute',
-  top: 22,
-  left: 24,
+  zIndex: 2,
+  top: '-10%',
+  left: '7.5%',
+  width: '85%',
+  height: '50%',
+  background: 'var(--v2-copper, #D4A373)',
+}
+const missionText = {
+  position: 'absolute',
+  left: 16,
+  top: 24,
+  writingMode: 'vertical-rl',
+  transform: 'rotate(180deg)',
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontWeight: 600,
+  letterSpacing: '0.3em',
+  fontSize: 'clamp(12px, 1.4vw, 16px)',
+  color: 'var(--v2-navy, #2D3142)',
+}
+const missionCircle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 'clamp(80px, 10vw, 120px)',
+  height: 'clamp(80px, 10vw, 120px)',
+  borderRadius: 999,
+  background: 'var(--v2-cream, #EFEAE0)',
+}
+const crosshairH = {
+  position: 'absolute',
+  top: '50%',
+  left: '12%',
+  right: '12%',
+  height: 1,
+  background: 'rgba(45, 49, 66, 0.3)',
+  transform: 'translateY(-50%)',
+}
+const crosshairV = {
+  position: 'absolute',
+  left: '50%',
+  top: '12%',
+  bottom: '12%',
+  width: 1,
+  background: 'rgba(45, 49, 66, 0.3)',
+  transform: 'translateX(-50%)',
+}
+const b20 = {
+  position: 'absolute',
+  top: 12,
+  right: 16,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 11,
+  letterSpacing: '0.1em',
+  color: 'rgba(45, 49, 66, 0.6)',
+}
+/* Katman 3 etiketleri navy placeholder üzerinde — okunabilirlik için açık ton */
+const collageYear = {
+  position: 'absolute',
+  zIndex: 3,
+  bottom: 16,
+  left: 16,
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(26px, 3.2vw, 32px)',
+  lineHeight: 1,
+  color: 'var(--v2-cream, #EFEAE0)',
+}
+const collageIndex = {
+  position: 'absolute',
+  zIndex: 3,
+  top: 16,
+  right: 16,
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
-  letterSpacing: '0.2em',
-  color: 'rgba(239,234,224,0.78)',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: 'rgba(239, 234, 224, 0.6)',
 }
-const heroVisualBottom = {
+const dotsPattern = {
   position: 'absolute',
-  bottom: 22,
-  right: 24,
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 13,
-  letterSpacing: '0.16em',
-  color: 'rgba(239,234,224,0.9)',
+  zIndex: 3,
+  bottom: 18,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  width: 96,
+  height: 16,
+  backgroundImage: 'radial-gradient(rgba(239, 234, 224, 0.5) 1px, transparent 1px)',
+  backgroundSize: '8px 8px',
 }
+
+const markersRow = {
+  position: 'relative',
+  zIndex: 2,
+  width: 'min(100%, 1100px)',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 16,
+}
+const markerLeft = { flex: 1, display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }
+const markerRight = {
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: 10,
+  minWidth: 0,
+}
+const markerGrow = { flex: 1, height: 1, background: 'var(--v2-navy, #2D3142)' }
+const markerTick = { width: 1.5, height: 12, background: 'var(--v2-navy, #2D3142)', flexShrink: 0 }
+const markerYear = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 11,
+  letterSpacing: '0.15em',
+  color: 'var(--v2-navy, #2D3142)',
+  flexShrink: 0,
+}
+const markerSpacer = { width: 'clamp(280px, 36vw, 480px)', flexShrink: 0 }
+
+const descRow = {
+  width: 'min(100%, 1100px)',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: 24,
+  marginTop: 8,
+}
+const descLeft = { display: 'flex', flexDirection: 'column', gap: 6 }
+const descSmall = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
+  fontWeight: 400,
+  color: 'rgba(45, 49, 66, 0.65)',
+}
+const descSector = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 500,
+  fontSize: 'clamp(20px, 2.4vw, 24px)',
+  lineHeight: 1.2,
+  color: 'var(--v2-navy, #2D3142)',
+}
+const slogan = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontStyle: 'italic',
+  fontWeight: 400,
+  fontSize: 'clamp(16px, 1.8vw, 18px)',
+  lineHeight: 1.4,
+  color: 'var(--v2-navy, #2D3142)',
+  maxWidth: 280,
+  textAlign: 'right',
+  margin: 0,
+}
+
+const giant = {
+  position: 'absolute',
+  bottom: 32,
+  left: 0,
+  right: 0,
+  margin: 0,
+  textAlign: 'center',
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 800,
+  fontSize: 'clamp(80px, 14vw, 220px)',
+  letterSpacing: '-0.04em',
+  lineHeight: 0.85,
+  color: 'var(--v2-navy, #2D3142)',
+  whiteSpace: 'nowrap',
+  userSelect: 'none',
+  pointerEvents: 'none',
+}
+const h1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
 
 /* BÖLÜM 2 — GÜVEN ŞERİDİ */
 const trustWrap = {
