@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
-   9 bölüm. Renk ritmi: cream → navy → cream → cream → navy → cream
-   → navy → copper → footer (global). Hero: statik editorial collage
-   (USPS ilhamlı) + sektör tab'ları. 3D yok.
+   Hero: split-screen 3 sektör (gerçek foto) + altında atölye şeridi.
+   Devamı: güven şeridi → vaat → sektörler → hizmetler → referanslar
+   → hikaye → copper CTA → footer (global). 3D yok, statik.
    ────────────────────────────────────────────────────────────── */
 
 const SECTORS = [
@@ -28,10 +28,34 @@ const SECTORS = [
   },
 ]
 
-const SECTOR_TABS = [
-  { id: 'saglik', label: 'Sağlık', name: 'Sağlık Personeli Kıyafetleri' },
-  { id: 'otel', label: 'Otel', name: 'Otel Personeli Kıyafetleri' },
-  { id: 'okul', label: 'Okul', name: 'Okul Personeli Kıyafetleri' },
+const HERO_SECTORS = [
+  {
+    id: 'saglik',
+    num: '01',
+    name: 'Sağlık',
+    img: '/saglik-main.jpg',
+    desc: 'Hastane, klinik, eczane ve laboratuvar personeli için hijyenik, dayanıklı üniformalar.',
+  },
+  {
+    id: 'otel',
+    num: '02',
+    name: 'Otel',
+    img: '/otel-main.jpg',
+    desc: "Resepsiyondan mutfağa, housekeeping'den spa'ya otel ekipleri için kurumsal kıyafet.",
+  },
+  {
+    id: 'okul',
+    num: '03',
+    name: 'Okul',
+    img: '/okul-main.jpg',
+    desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
+  },
+]
+
+const ATELIER_PHOTOS = [
+  { img: '/atolye-uretim.jpg', label: 'ÜRETİM' },
+  { img: '/atolye-zanaat.jpg', label: 'ZANAAT' },
+  { img: '/atolye-renk.jpg', label: 'RENK & KUMAŞ' },
 ]
 
 const SERVICES = [
@@ -138,9 +162,9 @@ function ServiceIcon({ name }) {
 }
 
 export default function HomeV2() {
-  const [activeTab, setActiveTab] = useState('saglik')
-  const activeSector =
-    SECTOR_TABS.find((t) => t.id === activeTab) ?? SECTOR_TABS[0]
+  const navigate = useNavigate()
+  const [hoveredIndex, setHoveredIndex] = useState(null)
+  const goToSector = () => navigate('/sektorler')
 
   return (
     <PageTransition>
@@ -165,81 +189,109 @@ export default function HomeV2() {
         }}
       />
 
-      {/* ─── BÖLÜM 1 — HERO (editorial collage, statik) ─────── */}
-      <section className="hv2-hero" style={heroWrap} aria-labelledby="hv2-hero-title">
-        {/* Sektör tab'ları */}
-        <div className="hv2-hero-tabs" style={tabsWrap} role="group" aria-label="Sektör seçimi">
-          {SECTOR_TABS.map((t) => {
-            const active = t.id === activeTab
+      {/* ─── BÖLÜM 1 — SPLIT-SCREEN SEKTÖR HERO ─────────────── */}
+      <section className="hv2-hero" style={heroWrap} aria-label="Çalıştığımız sektörler">
+        <div className="hv2-hero-cols" style={heroCols}>
+          {HERO_SECTORS.map((s, i) => {
+            const isHovered = hoveredIndex === i
+            const isDimmed = hoveredIndex !== null && hoveredIndex !== i
+            const colStyle = {
+              ...heroCol,
+              flex: isHovered ? 1.8 : isDimmed ? 0.7 : 1,
+              borderRight:
+                i < HERO_SECTORS.length - 1
+                  ? '1px solid rgba(239, 234, 224, 0.15)'
+                  : 'none',
+            }
             return (
-              <button
-                key={t.id}
-                type="button"
-                className="hv2-tab"
-                onClick={() => setActiveTab(t.id)}
-                aria-pressed={active}
-                aria-label={`${t.label} sektörü`}
-                style={active ? tabActive : tabInactive}
+              <div
+                key={s.id}
+                className="hv2-hero-col"
+                style={colStyle}
+                role="button"
+                tabIndex={0}
+                aria-label={`${s.name} sektörü üniformaları - detaylar`}
+                onMouseEnter={() => setHoveredIndex(i)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={goToSector}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    goToSector()
+                  }
+                }}
               >
-                {t.label}
-              </button>
+                <div
+                  className="hv2-hero-photo"
+                  style={{
+                    ...heroPhoto,
+                    backgroundImage: `url(${s.img})`,
+                    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                  }}
+                  aria-hidden="true"
+                />
+                <div
+                  style={{ ...heroOverlay, ...(isHovered ? heroOverlayHover : null) }}
+                  aria-hidden="true"
+                />
+                <div style={heroColContent}>
+                  <span style={heroColNum}>{s.num}</span>
+                  <span style={heroColName}>{s.name}</span>
+                  <p style={heroColDesc}>{s.desc}</p>
+                  <span className="hv2-hero-cta" style={heroColCta}>
+                    Detayları gör →
+                  </span>
+                </div>
+              </div>
             )
           })}
         </div>
 
-        {/* Editorial collage sahne */}
-        <div className="hv2-hero-stage" style={stage}>
-          <div className="hv2-collage" style={collageWrap}>
-            {/* Katman 1 — görsel placeholder */}
-            <div style={layer1} role="img" aria-label="Sektör görseli yer tutucu">
-              <span style={placeholderText}>GÖRSEL YERİ</span>
-            </div>
-
-            {/* Katman 2 — copper mission bloğu */}
-            <div style={layer2} aria-hidden="true">
-              <span className="hv2-mission" style={missionText}>MISSION</span>
-              <div style={missionCircle}>
-                <span style={crosshairH} />
-                <span style={crosshairV} />
-              </div>
-              <span style={b20}>B 20</span>
-            </div>
-
-            {/* Katman 3 — etiketler */}
-            <span style={collageYear} aria-hidden="true">1980</span>
-            <span style={collageIndex} aria-hidden="true">01 / 03</span>
-            <div style={dotsPattern} aria-hidden="true" />
-          </div>
-
-          {/* Yıl markerları */}
-          <div className="hv2-markers" style={markersRow} aria-hidden="true">
-            <div style={markerLeft}>
-              <span className="hv2-marker-grow" style={markerGrow} />
-              <span style={markerTick} />
-              <span style={markerYear}>1980</span>
-            </div>
-            <div className="hv2-marker-spacer" style={markerSpacer} />
-            <div style={markerRight}>
-              <span style={markerYear}>2026</span>
-              <span style={markerTick} />
-              <span className="hv2-marker-grow" style={markerGrow} />
-            </div>
-          </div>
-
-          {/* Alt açıklamalar */}
-          <div className="hv2-hero-desc" style={descRow}>
-            <div style={descLeft}>
-              <span style={descSmall}>Keşfet</span>
-              <span style={descSector}>{activeSector.name}</span>
-            </div>
-            <h1 id="hv2-hero-title" style={slogan}>
-              Türkiye’nin kurumsal üniforma uzmanı
-            </h1>
-          </div>
+        {/* Üst katman — eyebrow + SEO h1 */}
+        <div className="hv2-hero-top" style={heroTop}>
+          <span style={heroEyebrow}>GÜVENÇOĞLU TEKSTİL — 1980</span>
+          <h1 style={heroSlogan}>Türkiye’nin kurumsal üniforma uzmanı</h1>
         </div>
 
-        {/* En alt dev tipografi */}
-        <span className="hv2-giant" style={giant} aria-hidden="true">GUVENCOGLU</span>
+        {/* Orta yıl çizgisi */}
+        <div className="hv2-hero-mid" style={heroMid} aria-hidden="true">
+          <span style={heroMidLine} />
+          <span style={heroMidYear}>1980 — 2026</span>
+          <span style={heroMidLine} />
+        </div>
+      </section>
+
+      {/* ─── BÖLÜM 2 — ATÖLYE ŞERİDİ ─────────────────────────── */}
+      <section className="hv2-atelier" style={atelierWrap} aria-labelledby="hv2-atelier-title">
+        <div style={atelierInner}>
+          <div className="hv2-atelier-head" style={atelierHead}>
+            <div style={atelierHeadLeft}>
+              <span style={atelierEyebrow}>KENDİ ÜRETİM TESİSİMİZ</span>
+              <h2 id="hv2-atelier-title" style={atelierH2}>
+                1980’den beri kendi atölyemizde, aracısız üretim.
+              </h2>
+            </div>
+            <p style={atelierLede}>
+              Tasarımdan dikişe, nakıştan son kontrole kadar her aşama Fethiye’deki kendi
+              tesisimizde. Aracı yok, sürpriz yok — sadece söz verdiğimiz kalite.
+            </p>
+          </div>
+
+          <div className="hv2-atelier-grid" style={atelierGrid}>
+            {ATELIER_PHOTOS.map((p) => (
+              <div key={p.label} className="hv2-atelier-card" style={atelierCard}>
+                <div
+                  className="hv2-atelier-photo"
+                  style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
+                  role="img"
+                  aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
+                />
+                <div style={atelierPhotoOverlay} aria-hidden="true" />
+                <span style={atelierLabel}>{p.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ─── BÖLÜM 2 — GÜVEN ŞERİDİ ─────────────────────────── */}
@@ -421,9 +473,11 @@ export default function HomeV2() {
           transform: translateX(8px);
         }
 
-        .hv2-tab { cursor: pointer; transition: background 220ms ease, color 220ms ease, border-color 220ms ease; }
-        .hv2-tab:hover, .hv2-tab:focus-visible { border-color: var(--v2-copper, #D4A373); }
-        .hv2-tab:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 3px; }
+        .hv2-hero-cta { opacity: 0; transition: opacity 0.4s ease; }
+        .hv2-hero-col:hover .hv2-hero-cta,
+        .hv2-hero-col:focus-visible .hv2-hero-cta { opacity: 1; }
+        .hv2-hero-col:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; }
+        .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
 
         .hv2-textlink { transition: color 220ms ease; }
         .hv2-textlink span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
@@ -453,19 +507,21 @@ export default function HomeV2() {
           .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
-          .hv2-tab { padding: 6px 14px !important; }
-          .hv2-collage { width: 80vw !important; height: 60vh !important; }
-          .hv2-mission { font-size: 10px !important; }
-          .hv2-marker-grow { display: none !important; }
-          .hv2-marker-spacer { width: 80vw !important; }
-          .hv2-hero-desc { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 16px !important; }
-          .hv2-hero-desc h1 { text-align: center !important; max-width: 90vw !important; margin: 0 !important; }
-          .hv2-giant { font-size: clamp(48px, 16vw, 100px) !important; }
+        }
+        @media (max-width: 720px) {
+          .hv2-hero-cols { flex-direction: column !important; height: auto !important; }
+          .hv2-hero-col { flex: none !important; min-height: 60vh !important; border-right: none !important; border-bottom: 1px solid rgba(239, 234, 224, 0.15) !important; }
+          .hv2-hero-cta { opacity: 1 !important; }
+          .hv2-hero-top { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
+          .hv2-hero-top h1 { text-align: left !important; max-width: 100% !important; }
+          .hv2-hero-mid { display: none !important; }
+          .hv2-atelier-head { flex-direction: column !important; }
+          .hv2-atelier-grid { grid-template-columns: 1fr !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-btn-dark, .hv2-btn-arrow, .hv2-tab,
-          .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
+          .hv2-btn-dark, .hv2-btn-arrow, .hv2-hero-col, .hv2-hero-photo, .hv2-hero-cta,
+          .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
             transition: none !important;
           }
         }
@@ -488,254 +544,212 @@ const eyebrow = {
 }
 const eyebrowDark = { ...eyebrow }
 
-/* BÖLÜM 1 — HERO (editorial collage) */
+/* BÖLÜM 1 — SPLIT-SCREEN SEKTÖR HERO */
 const heroWrap = {
   position: 'relative',
   zIndex: 1,
-  minHeight: '100vh',
-  background: 'var(--v2-cream, #EFEAE0)',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 'clamp(180px, 24vh, 240px) clamp(20px, 5vw, 48px) clamp(150px, 22vh, 260px)',
-}
-
-const tabsWrap = {
-  position: 'absolute',
-  top: 'clamp(120px, 14vh, 160px)',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  display: 'flex',
-  gap: 8,
-  zIndex: 5,
-}
-const tabBase = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 'clamp(12px, 1.4vw, 14px)',
-  fontWeight: 500,
-  lineHeight: 1,
-  padding: '8px 20px',
-  borderRadius: 999,
-  whiteSpace: 'nowrap',
-}
-const tabActive = {
-  ...tabBase,
-  background: 'var(--v2-copper, #D4A373)',
-  color: 'var(--v2-ink, #1A1A1A)',
-  border: '1px solid transparent',
-}
-const tabInactive = {
-  ...tabBase,
-  background: 'transparent',
-  color: 'var(--v2-navy, #2D3142)',
-  border: '1px solid rgba(45, 49, 66, 0.15)',
-}
-
-const stage = {
-  position: 'relative',
-  zIndex: 2,
   width: '100%',
+  minHeight: '100vh',
+  overflow: 'hidden',
+}
+const heroCols = {
   display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: 'clamp(20px, 3.5vh, 36px)',
+  flexDirection: 'row',
+  width: '100%',
+  height: '100vh',
 }
-
-const collageWrap = {
+const heroCol = {
   position: 'relative',
-  width: 'clamp(280px, 36vw, 480px)',
-  height: 'clamp(360px, 48vh, 580px)',
-  flexShrink: 0,
+  overflow: 'hidden',
+  cursor: 'pointer',
+  flex: 1,
+  minWidth: 0,
+  transition: 'flex 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
 }
-const layer1 = {
+const heroPhoto = {
+  position: 'absolute',
+  inset: 0,
+  zIndex: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+}
+const heroOverlay = {
   position: 'absolute',
   inset: 0,
   zIndex: 1,
-  background: 'linear-gradient(135deg, var(--v2-navy, #2D3142) 0%, #1F2230 100%)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  background:
+    'linear-gradient(to top, rgba(45,49,66,0.85) 0%, rgba(45,49,66,0.35) 50%, rgba(45,49,66,0.55) 100%)',
+  transition: 'background 0.6s ease',
 }
-const placeholderText = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontStyle: 'italic',
-  fontSize: 14,
-  letterSpacing: '0.1em',
-  color: 'rgba(239, 234, 224, 0.3)',
+const heroOverlayHover = {
+  background:
+    'linear-gradient(to top, rgba(45,49,66,0.7) 0%, rgba(45,49,66,0.2) 50%, rgba(45,49,66,0.4) 100%)',
 }
-const layer2 = {
+const heroColContent = {
   position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
   zIndex: 2,
-  top: '-10%',
-  left: '7.5%',
-  width: '85%',
-  height: '50%',
-  background: 'var(--v2-copper, #D4A373)',
+  padding: 'clamp(24px, 3vw, 48px)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
 }
-const missionText = {
-  position: 'absolute',
-  left: 16,
-  top: 24,
-  writingMode: 'vertical-rl',
-  transform: 'rotate(180deg)',
+const heroColNum = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.2em',
+  color: 'var(--v2-copper, #D4A373)',
+}
+const heroColName = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(28px, 3vw, 44px)',
+  lineHeight: 1.1,
+  color: 'var(--v2-cream, #EFEAE0)',
+}
+const heroColDesc = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontWeight: 600,
-  letterSpacing: '0.3em',
-  fontSize: 'clamp(12px, 1.4vw, 16px)',
-  color: 'var(--v2-navy, #2D3142)',
+  fontSize: 15,
+  lineHeight: 1.5,
+  color: 'rgba(239, 234, 224, 0.8)',
+  margin: 0,
+  maxWidth: 280,
 }
-const missionCircle = {
+const heroColCta = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
+  fontWeight: 500,
+  color: 'var(--v2-copper, #D4A373)',
+}
+const heroTop = {
+  position: 'absolute',
+  top: 'clamp(80px, 10vh, 110px)',
+  left: 0,
+  right: 0,
+  zIndex: 10,
+  padding: '0 clamp(24px, 3vw, 48px)',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: 16,
+  pointerEvents: 'none',
+}
+const heroEyebrow = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.2em',
+  color: 'var(--v2-cream, #EFEAE0)',
+  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+}
+const heroSlogan = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
+  fontWeight: 400,
+  lineHeight: 1.4,
+  color: 'var(--v2-cream, #EFEAE0)',
+  textAlign: 'right',
+  maxWidth: 220,
+  margin: 0,
+  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+}
+const heroMid = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 'clamp(80px, 10vw, 120px)',
-  height: 'clamp(80px, 10vw, 120px)',
-  borderRadius: 999,
-  background: 'var(--v2-cream, #EFEAE0)',
-}
-const crosshairH = {
-  position: 'absolute',
-  top: '50%',
-  left: '12%',
-  right: '12%',
-  height: 1,
-  background: 'rgba(45, 49, 66, 0.3)',
-  transform: 'translateY(-50%)',
-}
-const crosshairV = {
-  position: 'absolute',
-  left: '50%',
-  top: '12%',
-  bottom: '12%',
-  width: 1,
-  background: 'rgba(45, 49, 66, 0.3)',
-  transform: 'translateX(-50%)',
-}
-const b20 = {
-  position: 'absolute',
-  top: 12,
-  right: 16,
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 11,
-  letterSpacing: '0.1em',
-  color: 'rgba(45, 49, 66, 0.6)',
-}
-/* Katman 3 etiketleri navy placeholder üzerinde — okunabilirlik için açık ton */
-const collageYear = {
-  position: 'absolute',
-  zIndex: 3,
-  bottom: 16,
-  left: 16,
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(26px, 3.2vw, 32px)',
-  lineHeight: 1,
-  color: 'var(--v2-cream, #EFEAE0)',
-}
-const collageIndex = {
-  position: 'absolute',
-  zIndex: 3,
-  top: 16,
-  right: 16,
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 11,
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
-  color: 'rgba(239, 234, 224, 0.6)',
-}
-const dotsPattern = {
-  position: 'absolute',
-  zIndex: 3,
-  bottom: 18,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 96,
-  height: 16,
-  backgroundImage: 'radial-gradient(rgba(239, 234, 224, 0.5) 1px, transparent 1px)',
-  backgroundSize: '8px 8px',
-}
-
-const markersRow = {
-  position: 'relative',
-  zIndex: 2,
-  width: 'min(100%, 1100px)',
+  zIndex: 5,
+  pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
   gap: 16,
 }
-const markerLeft = { flex: 1, display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }
-const markerRight = {
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: 10,
-  minWidth: 0,
+const heroMidLine = { width: 60, height: 1, background: 'rgba(239, 234, 224, 0.4)' }
+const heroMidYear = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 13,
+  letterSpacing: '0.3em',
+  color: 'var(--v2-cream, #EFEAE0)',
+  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+  whiteSpace: 'nowrap',
 }
-const markerGrow = { flex: 1, height: 1, background: 'var(--v2-navy, #2D3142)' }
-const markerTick = { width: 1.5, height: 12, background: 'var(--v2-navy, #2D3142)', flexShrink: 0 }
-const markerYear = {
+
+/* BÖLÜM 2 — ATÖLYE ŞERİDİ */
+const atelierWrap = {
+  position: 'relative',
+  zIndex: 1,
+  background: 'var(--v2-navy, #2D3142)',
+  padding: 'clamp(64px, 8vh, 100px) clamp(24px, 5vw, 80px)',
+}
+const atelierInner = { maxWidth: 1280, margin: '0 auto' }
+const atelierHead = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'baseline',
+  flexWrap: 'wrap',
+  gap: 16,
+  marginBottom: 48,
+}
+const atelierHeadLeft = { display: 'flex', flexDirection: 'column' }
+const atelierEyebrow = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.2em',
+  color: 'var(--v2-copper, #D4A373)',
+}
+const atelierH2 = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(28px, 4vw, 48px)',
+  lineHeight: 1.15,
+  color: 'var(--v2-cream, #EFEAE0)',
+  marginTop: 12,
+  marginBottom: 0,
+  maxWidth: 600,
+}
+const atelierLede = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 16,
+  lineHeight: 1.6,
+  color: 'rgba(239, 234, 224, 0.75)',
+  maxWidth: 360,
+  margin: 0,
+}
+const atelierGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: 16,
+}
+const atelierCard = {
+  position: 'relative',
+  aspectRatio: '4 / 5',
+  overflow: 'hidden',
+}
+const atelierPhoto = {
+  position: 'absolute',
+  inset: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+}
+const atelierPhotoOverlay = {
+  position: 'absolute',
+  inset: 0,
+  background: 'linear-gradient(to top, rgba(45,49,66,0.6), transparent 60%)',
+}
+const atelierLabel = {
+  position: 'absolute',
+  bottom: 16,
+  left: 16,
+  zIndex: 2,
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
   letterSpacing: '0.15em',
-  color: 'var(--v2-navy, #2D3142)',
-  flexShrink: 0,
-}
-const markerSpacer = { width: 'clamp(280px, 36vw, 480px)', flexShrink: 0 }
-
-const descRow = {
-  width: 'min(100%, 1100px)',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: 24,
-  marginTop: 8,
-}
-const descLeft = { display: 'flex', flexDirection: 'column', gap: 6 }
-const descSmall = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  fontWeight: 400,
-  color: 'rgba(45, 49, 66, 0.65)',
-}
-const descSector = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 500,
-  fontSize: 'clamp(20px, 2.4vw, 24px)',
-  lineHeight: 1.2,
-  color: 'var(--v2-navy, #2D3142)',
-}
-const slogan = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontStyle: 'italic',
-  fontWeight: 400,
-  fontSize: 'clamp(16px, 1.8vw, 18px)',
-  lineHeight: 1.4,
-  color: 'var(--v2-navy, #2D3142)',
-  maxWidth: 280,
-  textAlign: 'right',
-  margin: 0,
-}
-
-const giant = {
-  position: 'absolute',
-  bottom: 32,
-  left: 0,
-  right: 0,
-  margin: 0,
-  textAlign: 'center',
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 800,
-  fontSize: 'clamp(80px, 14vw, 220px)',
-  letterSpacing: '-0.04em',
-  lineHeight: 0.85,
-  color: 'var(--v2-navy, #2D3142)',
-  whiteSpace: 'nowrap',
-  userSelect: 'none',
-  pointerEvents: 'none',
+  color: 'var(--v2-cream, #EFEAE0)',
 }
 const h1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
 
