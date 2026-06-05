@@ -5,7 +5,8 @@ import SEOHead from '../shared/SEOHead.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
-   Hero: split-screen 3 sektör (gerçek foto) + altında atölye şeridi.
+   Hero: asimetrik %30 krem metin / %70 navy sektör grid (gerçek foto),
+   tek ekran 100vh. Altında atölye şeridi.
    Devamı: güven şeridi → vaat → sektörler → hizmetler → referanslar
    → hikaye → copper CTA → footer (global). 3D yok, statik.
    ────────────────────────────────────────────────────────────── */
@@ -50,6 +51,12 @@ const HERO_SECTORS = [
     img: '/okul-main.jpg',
     desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
   },
+]
+
+const HERO_PLACEMENT = [
+  { gridColumn: '1', gridRow: '1 / span 2' },
+  { gridColumn: '2', gridRow: '1' },
+  { gridColumn: '2', gridRow: '2' },
 ]
 
 const ATELIER_PHOTOS = [
@@ -163,7 +170,7 @@ function ServiceIcon({ name }) {
 
 export default function HomeV2() {
   const navigate = useNavigate()
-  const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [hoveredCard, setHoveredCard] = useState(null)
   const goToSector = () => navigate('/sektorler')
 
   return (
@@ -189,75 +196,78 @@ export default function HomeV2() {
         }}
       />
 
-      {/* ─── BÖLÜM 1 — SPLIT-SCREEN SEKTÖR HERO ─────────────── */}
-      <section className="hv2-hero" style={heroWrap} aria-label="Çalıştığımız sektörler">
-        <div className="hv2-hero-cols" style={heroCols}>
-          {HERO_SECTORS.map((s, i) => {
-            const isHovered = hoveredIndex === i
-            const isDimmed = hoveredIndex !== null && hoveredIndex !== i
-            const colStyle = {
-              ...heroCol,
-              flex: isHovered ? 1.8 : isDimmed ? 0.7 : 1,
-              borderRight:
-                i < HERO_SECTORS.length - 1
-                  ? '1px solid rgba(239, 234, 224, 0.15)'
-                  : 'none',
-            }
-            return (
-              <div
-                key={s.id}
-                className="hv2-hero-col"
-                style={colStyle}
-                role="button"
-                tabIndex={0}
-                aria-label={`${s.name} sektörü üniformaları - detaylar`}
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                onClick={goToSector}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    goToSector()
-                  }
-                }}
-              >
+      {/* ─── BÖLÜM 1 — ASİMETRİK %30/%70 HERO (tek ekran) ───── */}
+      <section className="hv2-hero" style={heroWrap} aria-label="Kurumsal üniforma — sektörler">
+        {/* SOL PANEL %30 — metin */}
+        <div className="hv2-hero-left" style={heroLeft}>
+          <p style={heroEyebrow}>1980’DEN BERİ · FETHİYE</p>
+          <h1 style={heroH1}>
+            Türkiye’nin <em style={heroH1Accent}>kurumsal üniforma</em> uzmanı
+          </h1>
+          <p style={heroLede}>
+            Sağlık, otel ve okul kurumları için kendi tesisimizde üretim. Aracısız,
+            sözleşmeli, zamanında.
+          </p>
+          <div style={heroCtaGroup}>
+            <Link to="/v2/iletisim" className="hv2-hero-btn" style={heroBtn}>
+              Teklif Al →
+            </Link>
+            <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
+              Tüm sektörler →
+            </Link>
+          </div>
+        </div>
+
+        {/* SAĞ PANEL %70 — asimetrik sektör grid */}
+        <div className="hv2-hero-right" style={heroRight}>
+          <div className="hv2-hero-grid" style={heroGrid}>
+            {HERO_SECTORS.map((s, i) => {
+              const big = i === 0
+              const isHovered = hoveredCard === s.id
+              const cardStyle = { ...heroCard, ...HERO_PLACEMENT[i] }
+              return (
                 <div
-                  className="hv2-hero-photo"
-                  style={{
-                    ...heroPhoto,
-                    backgroundImage: `url(${s.img})`,
-                    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                  key={s.id}
+                  className="hv2-hero-card"
+                  style={cardStyle}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${s.name} sektörü üniformaları - detaylar`}
+                  onMouseEnter={() => setHoveredCard(s.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onClick={goToSector}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      goToSector()
+                    }
                   }}
-                  aria-hidden="true"
-                />
-                <div
-                  style={{ ...heroOverlay, ...(isHovered ? heroOverlayHover : null) }}
-                  aria-hidden="true"
-                />
-                <div style={heroColContent}>
-                  <span style={heroColNum}>{s.num}</span>
-                  <span style={heroColName}>{s.name}</span>
-                  <p style={heroColDesc}>{s.desc}</p>
-                  <span className="hv2-hero-cta" style={heroColCta}>
-                    Detayları gör →
-                  </span>
+                >
+                  <div
+                    className="hv2-hero-card-photo"
+                    style={{
+                      ...heroCardPhoto,
+                      backgroundImage: `url(${s.img})`,
+                      transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                    }}
+                    aria-hidden="true"
+                  />
+                  <div
+                    style={{
+                      ...heroCardOverlay,
+                      ...(isHovered ? heroCardOverlayHover : null),
+                    }}
+                    aria-hidden="true"
+                  />
+                  <div style={heroCardContent}>
+                    <span style={heroCardNum}>{s.num}</span>
+                    <span style={big ? heroCardNameBig : heroCardName}>{s.name}</span>
+                    {big && <p style={heroCardDesc}>{s.desc}</p>}
+                  </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Üst katman — eyebrow + SEO h1 */}
-        <div className="hv2-hero-top" style={heroTop}>
-          <span style={heroEyebrow}>GÜVENÇOĞLU TEKSTİL — 1980</span>
-          <h1 style={heroSlogan}>Türkiye’nin kurumsal üniforma uzmanı</h1>
-        </div>
-
-        {/* Orta yıl çizgisi */}
-        <div className="hv2-hero-mid" style={heroMid} aria-hidden="true">
-          <span style={heroMidLine} />
-          <span style={heroMidYear}>1980 — 2026</span>
-          <span style={heroMidLine} />
+              )
+            })}
+          </div>
         </div>
       </section>
 
@@ -473,10 +483,11 @@ export default function HomeV2() {
           transform: translateX(8px);
         }
 
-        .hv2-hero-cta { opacity: 0; transition: opacity 0.4s ease; }
-        .hv2-hero-col:hover .hv2-hero-cta,
-        .hv2-hero-col:focus-visible .hv2-hero-cta { opacity: 1; }
-        .hv2-hero-col:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; }
+        .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease; }
+        .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); }
+        .hv2-hero-link { transition: color 0.3s ease; }
+        .hv2-hero-link:hover, .hv2-hero-link:focus-visible { color: var(--v2-copper, #D4A373); }
+        .hv2-hero-card:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; }
         .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
 
         .hv2-textlink { transition: color 220ms ease; }
@@ -508,19 +519,20 @@ export default function HomeV2() {
           .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
         }
+        @media (max-width: 820px) {
+          .hv2-hero { height: auto !important; flex-direction: column !important; }
+          .hv2-hero-left { width: 100% !important; height: auto !important; padding-top: clamp(96px, 14vh, 140px) !important; }
+          .hv2-hero-right { width: 100% !important; height: auto !important; }
+          .hv2-hero-grid { display: flex !important; flex-direction: column !important; height: auto !important; gap: 12px !important; }
+          .hv2-hero-card { aspect-ratio: 16 / 10 !important; }
+        }
         @media (max-width: 720px) {
-          .hv2-hero-cols { flex-direction: column !important; height: auto !important; }
-          .hv2-hero-col { flex: none !important; min-height: 60vh !important; border-right: none !important; border-bottom: 1px solid rgba(239, 234, 224, 0.15) !important; }
-          .hv2-hero-cta { opacity: 1 !important; }
-          .hv2-hero-top { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
-          .hv2-hero-top h1 { text-align: left !important; max-width: 100% !important; }
-          .hv2-hero-mid { display: none !important; }
           .hv2-atelier-head { flex-direction: column !important; }
           .hv2-atelier-grid { grid-template-columns: 1fr !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-btn-dark, .hv2-btn-arrow, .hv2-hero-col, .hv2-hero-photo, .hv2-hero-cta,
+          .hv2-btn-dark, .hv2-btn-arrow, .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo,
           .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
             transition: none !important;
           }
@@ -544,137 +556,155 @@ const eyebrow = {
 }
 const eyebrowDark = { ...eyebrow }
 
-/* BÖLÜM 1 — SPLIT-SCREEN SEKTÖR HERO */
+/* BÖLÜM 1 — ASİMETRİK %30/%70 HERO (tek ekran, 100vh) */
 const heroWrap = {
   position: 'relative',
   zIndex: 1,
   width: '100%',
-  minHeight: '100vh',
+  height: '100vh',
   overflow: 'hidden',
-}
-const heroCols = {
   display: 'flex',
   flexDirection: 'row',
-  width: '100%',
-  height: '100vh',
 }
-const heroCol = {
+const heroLeft = {
+  width: '30%',
+  height: '100%',
+  boxSizing: 'border-box',
+  background: 'var(--v2-cream, #EFEAE0)',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  padding: 'clamp(120px, 14vh, 160px) clamp(32px, 4vw, 64px) clamp(32px, 4vw, 64px)',
+}
+const heroEyebrow = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.2em',
+  color: 'var(--v2-copper, #D4A373)',
+  margin: '0 0 24px',
+}
+const heroH1 = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(32px, 3.2vw, 52px)',
+  lineHeight: 1.15,
+  color: 'var(--v2-navy, #2D3142)',
+  margin: '0 0 24px',
+}
+const heroH1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
+const heroLede = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 'clamp(15px, 1.1vw, 17px)',
+  lineHeight: 1.6,
+  color: 'var(--v2-muted, #5A5A5A)',
+  maxWidth: 340,
+  margin: '0 0 32px',
+}
+const heroCtaGroup = { display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }
+const heroBtn = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  background: 'var(--v2-navy, #2D3142)',
+  color: 'var(--v2-cream, #EFEAE0)',
+  padding: '14px 28px',
+  borderRadius: 999,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 15,
+  fontWeight: 500,
+  textDecoration: 'none',
+  minHeight: 44,
+  boxSizing: 'border-box',
+}
+const heroLink = {
+  color: 'var(--v2-navy, #2D3142)',
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
+  textDecoration: 'underline',
+  textUnderlineOffset: 4,
+}
+const heroRight = {
+  width: '70%',
+  height: '100%',
+  boxSizing: 'border-box',
+  position: 'relative',
+  background: 'var(--v2-navy, #2D3142)',
+  padding: 'clamp(24px, 2.5vw, 48px)',
+}
+const heroGrid = {
+  display: 'grid',
+  gridTemplateColumns: '1.6fr 1fr',
+  gridTemplateRows: '1fr 1fr',
+  gap: 'clamp(12px, 1.5vw, 20px)',
+  height: '100%',
+}
+const heroCard = {
   position: 'relative',
   overflow: 'hidden',
+  borderRadius: 4,
   cursor: 'pointer',
-  flex: 1,
   minWidth: 0,
-  transition: 'flex 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+  minHeight: 0,
 }
-const heroPhoto = {
+const heroCardPhoto = {
   position: 'absolute',
   inset: 0,
   zIndex: 0,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
-  transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
 }
-const heroOverlay = {
+const heroCardOverlay = {
   position: 'absolute',
   inset: 0,
   zIndex: 1,
   background:
-    'linear-gradient(to top, rgba(45,49,66,0.85) 0%, rgba(45,49,66,0.35) 50%, rgba(45,49,66,0.55) 100%)',
-  transition: 'background 0.6s ease',
+    'linear-gradient(to top, rgba(45,49,66,0.88) 0%, rgba(45,49,66,0.25) 55%, rgba(45,49,66,0.15) 100%)',
+  transition: 'background 0.5s ease',
 }
-const heroOverlayHover = {
+const heroCardOverlayHover = {
   background:
-    'linear-gradient(to top, rgba(45,49,66,0.7) 0%, rgba(45,49,66,0.2) 50%, rgba(45,49,66,0.4) 100%)',
+    'linear-gradient(to top, rgba(45,49,66,0.75) 0%, rgba(45,49,66,0.15) 55%, rgba(45,49,66,0.1) 100%)',
 }
-const heroColContent = {
+const heroCardContent = {
   position: 'absolute',
   bottom: 0,
   left: 0,
   right: 0,
   zIndex: 2,
-  padding: 'clamp(24px, 3vw, 48px)',
+  padding: 'clamp(16px, 1.8vw, 28px)',
   display: 'flex',
   flexDirection: 'column',
-  gap: 12,
 }
-const heroColNum = {
+const heroCardNum = {
   fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
+  fontSize: 11,
   letterSpacing: '0.2em',
   color: 'var(--v2-copper, #D4A373)',
+  marginBottom: 6,
 }
-const heroColName = {
+const heroCardNameBig = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(28px, 3vw, 44px)',
+  fontSize: 'clamp(28px, 2.6vw, 44px)',
   lineHeight: 1.1,
   color: 'var(--v2-cream, #EFEAE0)',
 }
-const heroColDesc = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  lineHeight: 1.5,
-  color: 'rgba(239, 234, 224, 0.8)',
-  margin: 0,
-  maxWidth: 280,
-}
-const heroColCta = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  fontWeight: 500,
-  color: 'var(--v2-copper, #D4A373)',
-}
-const heroTop = {
-  position: 'absolute',
-  top: 'clamp(80px, 10vh, 110px)',
-  left: 0,
-  right: 0,
-  zIndex: 10,
-  padding: '0 clamp(24px, 3vw, 48px)',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: 16,
-  pointerEvents: 'none',
-}
-const heroEyebrow = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.2em',
-  color: 'var(--v2-cream, #EFEAE0)',
-  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-}
-const heroSlogan = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
+const heroCardName = {
+  fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  lineHeight: 1.4,
+  fontSize: 'clamp(20px, 1.8vw, 30px)',
+  lineHeight: 1.1,
   color: 'var(--v2-cream, #EFEAE0)',
-  textAlign: 'right',
-  maxWidth: 220,
-  margin: 0,
-  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
 }
-const heroMid = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  zIndex: 5,
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 16,
-}
-const heroMidLine = { width: 60, height: 1, background: 'rgba(239, 234, 224, 0.4)' }
-const heroMidYear = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 13,
-  letterSpacing: '0.3em',
-  color: 'var(--v2-cream, #EFEAE0)',
-  textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-  whiteSpace: 'nowrap',
+const heroCardDesc = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
+  lineHeight: 1.5,
+  color: 'rgba(239, 234, 224, 0.85)',
+  maxWidth: 320,
+  marginTop: 8,
+  marginBottom: 0,
 }
 
 /* BÖLÜM 2 — ATÖLYE ŞERİDİ */
