@@ -8,7 +8,7 @@ import SEOHead from '../shared/SEOHead.jsx'
    Hero: premium asimetrik — krem zemin, yüzen sektör görselleri +
    altta dev GUVENCOGLU wordmark. Tek ekran 100vh. Altında atölye şeridi.
    Devamı: güven şeridi → vaat → sektörler → hizmetler → referanslar
-   → hikaye → copper CTA → footer (global). 3D yok, statik.
+   → teklif formu (#teklif) → footer (global). 3D yok, statik.
    ────────────────────────────────────────────────────────────── */
 
 const SECTORS = [
@@ -191,6 +191,22 @@ export default function HomeV2() {
   const [hoveredCard, setHoveredCard] = useState(null)
   const goToSector = () => navigate('/sektorler')
 
+  const scrollToTeklif = () =>
+    document.getElementById('teklif')?.scrollIntoView({ behavior: 'smooth' })
+
+  const [form, setForm] = useState({ isim: '', telefon: '', email: '', mesaj: '' })
+  const updateField = (key) => (e) =>
+    setForm((f) => ({ ...f, [key]: e.target.value }))
+  const submitQuote = (e) => {
+    e.preventDefault()
+    const subject = `Teklif Talebi - ${form.isim || 'İsimsiz'}`
+    const body = `İsim Soyisim: ${form.isim}\nTelefon: ${form.telefon}\nE-posta: ${form.email}\nTalep: ${form.mesaj}`
+    window.location.href = `mailto:guvencoglutekstil@gmail.com?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`
+    setForm({ isim: '', telefon: '', email: '', mesaj: '' })
+  }
+
   return (
     <PageTransition>
       <SEOHead
@@ -229,9 +245,14 @@ export default function HomeV2() {
               sözleşmeli, zamanında.
             </p>
             <div style={heroCtaGroup}>
-              <Link to="/v2/iletisim" className="hv2-hero-btn" style={heroBtn}>
+              <button
+                type="button"
+                className="hv2-hero-btn"
+                style={heroBtn}
+                onClick={scrollToTeklif}
+              >
                 Teklif Al →
-              </Link>
+              </button>
               <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
                 Tüm sektörler →
               </Link>
@@ -460,57 +481,112 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {/* ─── BÖLÜM 7 — HİKAYEMİZ KISA ───────────────────────── */}
-      <section className="hv2-story" style={storyWrap} aria-labelledby="hv2-story-title">
-        <div style={storyInner} className="hv2-story-inner">
-          <div
-            style={storyMedia}
-            role="img"
-            aria-label="1980’lerde Fethiye’deki ilk atölyeden bir kare"
-          />
-          <div style={storyText}>
-            <p style={eyebrow}>HİKAYEMİZ</p>
-            <h2 id="hv2-story-title" style={storyH2}>
-              1980, Fethiye. Bir makina, bir söz.
+      {/* ─── BÖLÜM 7 — TEKLİF FORMU ─────────────────────────── */}
+      <section id="teklif" className="hv2-quote" style={quoteWrap} aria-labelledby="hv2-quote-title">
+        <div className="hv2-quote-inner" style={quoteInner}>
+          {/* SOL — içerik + direkt iletişim */}
+          <div style={quoteLeft}>
+            <p style={quoteEyebrow}>TEKLİF AL</p>
+            <h2 id="hv2-quote-title" style={quoteH2}>
+              Üniforma programınız için bir konuşma başlatalım.
             </h2>
-            <p style={storyBody}>
-              Ömer Güvenç, 1980’de Fethiye’de küçük bir atölyede ilk dikiş makinasını
-              çalıştırdı. Söz tekti: kalite. 46 yıl sonra, üçüncü kuşak aynı atölyede aynı
-              sözle çalışıyor. Bugün Türkiye genelinde 1.500’den fazla kuruma hizmet
-              veriyoruz — ama hâlâ aynı Fethiye’de, aynı atölyede.
+            <p style={quoteLede}>
+              Markanıza, sektörünüze ve ekibinize özel teklif için 48 saat içinde size
+              dönüyoruz. Acil işler için doğrudan telefon edebilir veya WhatsApp’tan
+              yazabilirsiniz.
             </p>
+            <div style={quoteContacts}>
+              <div style={quoteContactRow}>
+                <span style={quoteContactLabel}>TELEFON</span>
+                <a href="tel:+905321347602" style={quoteContactLink}>0532 134 7602</a>
+              </div>
+              <div style={quoteContactRow}>
+                <span style={quoteContactLabel}>WHATSAPP</span>
+                <a
+                  href="https://wa.me/905321347602"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={quoteContactLink}
+                >
+                  0532 134 7602
+                </a>
+              </div>
+              <div style={quoteContactRow}>
+                <span style={quoteContactLabel}>E-POSTA</span>
+                <a href="mailto:guvencoglutekstil@gmail.com" style={quoteContactLink}>
+                  guvencoglutekstil@gmail.com
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ─── BÖLÜM 8 — SON CTA BANDI ────────────────────────── */}
-      <section className="hv2-cta" style={ctaWrap} aria-labelledby="hv2-cta-title">
-        <div style={ctaInner}>
-          <h2 id="hv2-cta-title" style={ctaH2}>
-            Üniforma programınız için bir konuşma başlatalım.
-          </h2>
-          <p style={ctaLede}>
-            Markanıza, sektörünüze ve ekibinize özel teklif için 48 saat içinde size dönüyoruz.
-          </p>
-          <Link to="/v2/iletisim" className="hv2-btn-dark" style={btnDark}>
-            <span>Teklif Al</span>
-            <span className="hv2-btn-arrow" style={btnArrowDark} aria-hidden="true">→</span>
-          </Link>
+          {/* SAĞ — sade teklif formu */}
+          <form style={quoteForm} onSubmit={submitQuote}>
+            <h3 style={quoteFormTitle}>Hızlı teklif formu</h3>
+
+            <div style={quoteField}>
+              <label htmlFor="q-isim" style={quoteLabel}>İsim Soyisim</label>
+              <input
+                id="q-isim"
+                type="text"
+                className="hv2-quote-input"
+                style={quoteInput}
+                value={form.isim}
+                onChange={updateField('isim')}
+                autoComplete="name"
+              />
+            </div>
+            <div style={quoteField}>
+              <label htmlFor="q-tel" style={quoteLabel}>Telefon</label>
+              <input
+                id="q-tel"
+                type="tel"
+                className="hv2-quote-input"
+                style={quoteInput}
+                value={form.telefon}
+                onChange={updateField('telefon')}
+                autoComplete="tel"
+              />
+            </div>
+            <div style={quoteField}>
+              <label htmlFor="q-email" style={quoteLabel}>E-posta</label>
+              <input
+                id="q-email"
+                type="email"
+                className="hv2-quote-input"
+                style={quoteInput}
+                value={form.email}
+                onChange={updateField('email')}
+                autoComplete="email"
+              />
+            </div>
+            <div style={quoteField}>
+              <label htmlFor="q-mesaj" style={quoteLabel}>
+                Ne yaptırmak istiyorsunuz?
+              </label>
+              <input
+                id="q-mesaj"
+                type="text"
+                className="hv2-quote-input"
+                style={quoteInput}
+                value={form.mesaj}
+                onChange={updateField('mesaj')}
+                placeholder="Örn. 200 kişilik otel personeli üniforması"
+              />
+            </div>
+
+            <button type="submit" className="hv2-quote-submit" style={quoteSubmit}>
+              Gönder →
+            </button>
+          </form>
         </div>
       </section>
 
       <style>{`
-        .hv2-btn-dark {
-          transition: transform 280ms cubic-bezier(0.16,1,0.3,1), box-shadow 280ms ease, background 280ms ease;
-        }
-        .hv2-btn-dark:hover, .hv2-btn-dark:focus-visible {
-          transform: translateY(-2px);
-          box-shadow: 0 14px 32px rgba(26,26,26,0.18);
-        }
-        .hv2-btn-arrow { transition: transform 280ms cubic-bezier(0.16,1,0.3,1); }
-        .hv2-btn-dark:hover .hv2-btn-arrow, .hv2-btn-dark:focus-visible .hv2-btn-arrow {
-          transform: translateX(8px);
-        }
+        .hv2-quote-input { transition: border-color 0.2s ease; }
+        .hv2-quote-input:focus { border-color: var(--v2-copper, #D4A373); outline: none; }
+        .hv2-quote-submit { cursor: pointer; transition: background 0.3s ease, color 0.3s ease; }
+        .hv2-quote-submit:hover, .hv2-quote-submit:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); }
 
         .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
         .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
@@ -540,7 +616,6 @@ export default function HomeV2() {
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
         @media (max-width: 980px) {
-          .hv2-story-inner { grid-template-columns: 1fr !important; }
           .hv2-refs-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 760px) {
@@ -557,6 +632,7 @@ export default function HomeV2() {
           .hv2-hero-tag { display: none !important; }
           .hv2-wordmark { position: static !important; height: auto !important; overflow: hidden !important; }
           .hv2-wordmark-text { font-size: clamp(48px, 16vw, 90px) !important; line-height: 0.85 !important; transform: none !important; }
+          .hv2-quote-inner { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 720px) {
           .hv2-atelier-head { flex-direction: column !important; }
@@ -564,7 +640,7 @@ export default function HomeV2() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-btn-dark, .hv2-btn-arrow, .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo,
+          .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo, .hv2-quote-input, .hv2-quote-submit,
           .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
             transition: none !important;
           }
@@ -649,6 +725,8 @@ const heroBtn = {
   background: 'var(--v2-navy, #2D3142)',
   color: 'var(--v2-cream, #EFEAE0)',
   padding: '16px 36px',
+  border: 'none',
+  cursor: 'pointer',
   borderRadius: 999,
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
@@ -1107,97 +1185,99 @@ const refAuthor = {
   color: '#5A5A5A',
 }
 
-/* BÖLÜM 7 — HİKAYEMİZ */
-const storyWrap = {
+/* BÖLÜM 7 — TEKLİF FORMU */
+const quoteWrap = {
   position: 'relative',
   zIndex: 1,
   background: 'var(--v2-navy, #2D3142)',
-  color: 'var(--v2-cream, #EFEAE0)',
-  padding: 'clamp(64px, 10vw, 112px) clamp(20px, 5vw, 48px)',
+  padding: 'clamp(64px, 9vh, 110px) clamp(24px, 5vw, 80px)',
 }
-const storyInner = {
-  maxWidth: 'var(--v2-content-max, 1440px)',
+const quoteInner = {
+  maxWidth: 1100,
   margin: '0 auto',
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
-  gap: 'clamp(36px, 6vw, 80px)',
-  alignItems: 'center',
+  gap: 'clamp(40px, 5vw, 80px)',
+  alignItems: 'start',
 }
-const storyMedia = {
-  aspectRatio: '4 / 3',
-  borderRadius: 'var(--v2-r-md, 8px)',
-  border: '1px solid rgba(212, 163, 115, 0.25)',
-  background:
-    'linear-gradient(145deg, #23262f 0%, #2D3142 45%, rgba(212,163,115,0.5) 100%)',
+const quoteLeft = { display: 'flex', flexDirection: 'column' }
+const quoteEyebrow = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.2em',
+  color: 'var(--v2-copper, #D4A373)',
+  margin: 0,
 }
-const storyText = { display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 560 }
-const storyH2 = {
+const quoteH2 = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(30px, 4.4vw, 52px)',
-  lineHeight: 1.08,
-  letterSpacing: '-0.02em',
+  fontSize: 'clamp(28px, 3.5vw, 46px)',
+  lineHeight: 1.15,
   color: 'var(--v2-cream, #EFEAE0)',
-  margin: 0,
-  maxWidth: '16ch',
+  margin: '14px 0 0',
 }
-const storyBody = {
+const quoteLede = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 18,
-  lineHeight: 1.7,
-  color: 'rgba(239, 234, 224, 0.78)',
-  margin: 0,
-  maxWidth: 560,
-}
-
-/* BÖLÜM 8 — SON CTA */
-const ctaWrap = {
-  position: 'relative',
-  zIndex: 1,
-  background: 'var(--v2-copper, #D4A373)',
-  padding: 'clamp(80px, 14vw, 140px) clamp(20px, 5vw, 48px)',
-}
-const ctaInner = {
-  maxWidth: 760,
-  margin: '0 auto',
-  textAlign: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: 24,
-}
-const ctaH2 = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(32px, 5vw, 60px)',
-  lineHeight: 1.06,
-  letterSpacing: '-0.02em',
-  color: 'var(--v2-ink, #1A1A1A)',
-  margin: 0,
-  maxWidth: '18ch',
-}
-const ctaLede = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 'clamp(17px, 1.8vw, 19px)',
+  fontSize: 16,
   lineHeight: 1.6,
-  color: 'rgba(26, 26, 26, 0.82)',
-  margin: 0,
-  maxWidth: '52ch',
+  color: 'rgba(239, 234, 224, 0.8)',
+  margin: '20px 0 0',
+  maxWidth: 380,
 }
-const btnDark = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 14,
-  marginTop: 12,
-  padding: '20px 40px',
-  background: 'var(--v2-navy, #2D3142)',
+const quoteContacts = { display: 'flex', flexDirection: 'column', gap: 14, marginTop: 32 }
+const quoteContactRow = { display: 'flex', flexDirection: 'column', gap: 4 }
+const quoteContactLabel = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 11,
+  letterSpacing: '0.18em',
+  color: 'var(--v2-copper, #D4A373)',
+}
+const quoteContactLink = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 16,
   color: 'var(--v2-cream, #EFEAE0)',
   textDecoration: 'none',
-  borderRadius: 'var(--v2-r-sm, 4px)',
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 500,
-  fontSize: 'clamp(20px, 2.4vw, 26px)',
-  letterSpacing: '-0.01em',
-  minHeight: 44,
 }
-const btnArrowDark = { fontSize: 24, color: 'var(--v2-copper, #D4A373)', display: 'inline-block' }
+const quoteForm = {
+  background: 'var(--v2-cream, #EFEAE0)',
+  borderRadius: 8,
+  padding: 'clamp(24px, 3vw, 40px)',
+}
+const quoteFormTitle = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 22,
+  color: 'var(--v2-navy, #2D3142)',
+  margin: '0 0 20px',
+}
+const quoteField = { marginBottom: 16 }
+const quoteLabel = {
+  display: 'block',
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 13,
+  color: 'var(--v2-muted, #5A5A5A)',
+  marginBottom: 6,
+}
+const quoteInput = {
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '14px 16px',
+  border: '1px solid rgba(45, 49, 66, 0.2)',
+  borderRadius: 6,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 15,
+  background: '#FFFFFF',
+  color: 'var(--v2-ink, #1A1A1A)',
+}
+const quoteSubmit = {
+  width: '100%',
+  marginTop: 8,
+  padding: 15,
+  background: 'var(--v2-navy, #2D3142)',
+  color: 'var(--v2-cream, #EFEAE0)',
+  border: 'none',
+  borderRadius: 999,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 15,
+  fontWeight: 600,
+}
