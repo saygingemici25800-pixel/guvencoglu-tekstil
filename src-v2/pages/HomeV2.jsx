@@ -512,10 +512,10 @@ export default function HomeV2() {
           transform: translateX(8px);
         }
 
-        .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease; }
-        .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); }
-        .hv2-hero-link { transition: color 0.3s ease; }
-        .hv2-hero-link:hover, .hv2-hero-link:focus-visible { color: var(--v2-copper, #D4A373); }
+        .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+        .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
+        .hv2-hero-link { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .hv2-hero-link:hover, .hv2-hero-link:focus-visible { background: var(--v2-navy, #2D3142); color: var(--v2-cream, #EFEAE0); }
         .hv2-hero-card:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; }
         .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
 
@@ -549,15 +549,14 @@ export default function HomeV2() {
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 820px) {
-          .hv2-hero { height: auto !important; }
+          .hv2-hero { height: auto !important; overflow: visible !important; }
           .hv2-hero-upper { flex-direction: column !important; height: auto !important; }
-          .hv2-hero-left { width: 100% !important; height: auto !important; padding: clamp(96px, 14vh, 140px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
-          .hv2-hero-right { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
-          .hv2-hero-card { position: static !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 10 !important; z-index: auto !important; }
-          .hv2-hero-card-big { aspect-ratio: 4 / 5 !important; }
+          .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(100px, 14vh, 140px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
+          .hv2-hero-right { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 12px !important; }
+          .hv2-hero-card { position: static !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 10 !important; border-radius: 4px !important; z-index: auto !important; }
           .hv2-hero-tag { display: none !important; }
-          .hv2-wordmark { position: relative !important; height: auto !important; }
-          .hv2-wordmark-text { font-size: clamp(56px, 18vw, 120px) !important; }
+          .hv2-wordmark { position: static !important; height: auto !important; overflow: hidden !important; }
+          .hv2-wordmark-text { font-size: clamp(48px, 16vw, 90px) !important; line-height: 0.85 !important; transform: none !important; }
         }
         @media (max-width: 720px) {
           .hv2-atelier-head { flex-direction: column !important; }
@@ -602,12 +601,15 @@ const heroUpper = {
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  height: '74vh',
+  height: '72vh',
 }
 const heroLeft = {
+  position: 'relative',
+  zIndex: 5,
   width: '34%',
   height: '100%',
   boxSizing: 'border-box',
+  background: 'var(--v2-cream, #EFEAE0)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -646,21 +648,30 @@ const heroBtn = {
   alignItems: 'center',
   background: 'var(--v2-navy, #2D3142)',
   color: 'var(--v2-cream, #EFEAE0)',
-  padding: '15px 30px',
+  padding: '16px 36px',
   borderRadius: 999,
   fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
+  fontSize: 16,
+  fontWeight: 600,
+  textDecoration: 'none',
+  minHeight: 44,
+  boxSizing: 'border-box',
+  boxShadow: '0 4px 16px rgba(45, 49, 66, 0.25)',
+}
+const heroLink = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  background: 'transparent',
+  color: 'var(--v2-navy, #2D3142)',
+  border: '1.5px solid var(--v2-navy, #2D3142)',
+  padding: '12px 28px',
+  borderRadius: 999,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 14,
   fontWeight: 500,
   textDecoration: 'none',
   minHeight: 44,
   boxSizing: 'border-box',
-}
-const heroLink = {
-  color: 'var(--v2-navy, #2D3142)',
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  textDecoration: 'underline',
-  textUnderlineOffset: 4,
 }
 const heroRight = { width: '66%', height: '100%', position: 'relative' }
 const heroTag = {
@@ -744,10 +755,11 @@ const heroCardDesc = {
 }
 const heroWordmark = {
   position: 'absolute',
+  zIndex: 1,
   bottom: 0,
   left: 0,
   right: 0,
-  height: '26vh',
+  height: '22vh',
   overflow: 'hidden',
   pointerEvents: 'none',
   display: 'flex',
