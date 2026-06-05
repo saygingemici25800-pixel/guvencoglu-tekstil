@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import CTABand from '../shared/CTABand.jsx'
-import ServiceShowcase3D from '../scenes/ServiceShowcase3D.jsx'
 import { SERVICES } from '../data/services.js'
 
 export default function ServicesV2() {
@@ -105,12 +104,43 @@ export default function ServicesV2() {
               ←
             </button>
 
-            <ServiceShowcase3D
-              services={SERVICES}
-              activeIdx={activeIdx}
-              onPick={setActiveIdx}
-              height="64vh"
-            />
+            <div
+              style={{
+                height: '64vh',
+                background: 'var(--v2-navy, #2D3142)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 14,
+                textAlign: 'center',
+                padding: '0 24px',
+              }}
+            >
+              <h2
+                style={{
+                  fontFamily: 'var(--v2-font-display, serif)',
+                  fontWeight: 400,
+                  fontSize: 'clamp(36px, 6vw, 72px)',
+                  letterSpacing: '-0.02em',
+                  color: 'var(--v2-cream, #EFEAE0)',
+                  margin: 0,
+                }}
+              >
+                Hizmetlerimiz
+              </h2>
+              <p
+                style={{
+                  fontFamily: 'var(--v2-font-mono, monospace)',
+                  fontSize: 12,
+                  letterSpacing: '0.22em',
+                  color: 'var(--v2-copper, #D4A373)',
+                  margin: 0,
+                }}
+              >
+                TASARIM · KONFEKSİYON · NAKIŞ · BASKI
+              </p>
+            </div>
 
             <button
               type="button"

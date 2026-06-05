@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
-import WorkshopScene from '../scenes/WorkshopScene.jsx'
-import { STATIONS } from '../data/stations.js'
 
 export default function ProcessV2() {
   return (
@@ -45,7 +43,38 @@ export default function ProcessV2() {
         <div className="mono" style={hintStyle}>↓ AŞAĞI</div>
       </section>
 
-      <WorkshopScene stations={STATIONS} />
+      <section
+        aria-label="Üretim hattı"
+        style={{
+          background: 'var(--v2-navy, #2D3142)',
+          padding: 'clamp(64px, 10vh, 120px) clamp(24px, 5vw, 48px)',
+          textAlign: 'center',
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: 'var(--v2-font-display, serif)',
+            fontWeight: 400,
+            fontSize: 'clamp(30px, 5vw, 56px)',
+            letterSpacing: '-0.02em',
+            color: 'var(--v2-cream, #EFEAE0)',
+            margin: 0,
+          }}
+        >
+          Üretim hattımız
+        </h2>
+        <p
+          style={{
+            fontFamily: 'var(--v2-font-mono, monospace)',
+            fontSize: 12,
+            letterSpacing: '0.22em',
+            color: 'var(--v2-copper, #D4A373)',
+            marginTop: 14,
+          }}
+        >
+          7 İSTASYON · HAMMADDEDEN TESLİMATA
+        </p>
+      </section>
 
       <section className="v2-page" style={ctaStyle}>
         <p className="mono" style={{ ...tagStyle, color: 'var(--v2-copper)' }}>SIRADAKİ</p>

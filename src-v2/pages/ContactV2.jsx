@@ -1,7 +1,6 @@
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import QuoteForm from '../shared/QuoteForm.jsx'
-import LocationPin3D from '../scenes/LocationPin3D.jsx'
 
 const CONTACT = {
   phone: '0532 134 7602',
@@ -26,7 +25,7 @@ export default function ContactV2() {
           '@context': 'https://schema.org',
           '@type': 'LocalBusiness',
           name: 'Güvencoğlu Tekstil',
-          telephone: '+90 252 612 50 92',
+          telephone: '+90 532 134 7602',
           email: CONTACT.email,
           address: {
             '@type': 'PostalAddress',
@@ -62,10 +61,6 @@ export default function ContactV2() {
       <section style={mainSection}>
         <div style={mainGrid} className="v2-contact-grid">
           <aside style={leftCol}>
-            <div style={pinWrap}>
-              <LocationPin3D height={360} caption="GÜVENCOĞLU · FETHİYE" />
-            </div>
-
             <article style={infoCard}>
               <p style={infoTag}>FABRİKA</p>
               <p style={infoAddress}>{CONTACT.address}</p>

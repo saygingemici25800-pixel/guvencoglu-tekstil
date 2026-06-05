@@ -60,15 +60,3 @@ body {
   left: var(--v2-s-2);
   top: var(--v2-s-2);
 }
-
-/* V1 Bridge — guarantees the bridge gets a clean stacking context and dark backdrop
-   while Hero/GlobalCanvas render. Cream V2 surface stays untouched outside it. */
-.v1-bridge {
-  position: relative;
-  isolation: isolate;
-  background: #EFEAE0;
-  margin: 0;
-  padding: 0;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
