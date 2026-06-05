@@ -2,10 +2,10 @@ import { NavLink, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 const links = [
-  { to: '/hikayemiz', label: 'Hikayemiz' },
-  { to: '/uretim', label: 'Üretim' },
+  { to: '/', label: 'Ana Sayfa', end: true },
+  { to: '/biz-ve-is-ortaklarimiz', label: 'Biz ve İş Ortaklarımız' },
   { to: '/hizmetler', label: 'Hizmetler' },
-  { to: '/referanslar', label: 'Referanslar' },
+  { to: '/blog', label: 'Blog' },
   { to: '/iletisim', label: 'İletişim' },
   { to: '/iletisim', label: 'Teklif Al', cta: true },
 ]
@@ -144,7 +144,7 @@ export default function NavV2() {
       ) : (
         <nav style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, flexWrap: 'nowrap' }}>
           {links.map((l, i) => (
-            <NavLink key={`${l.to}-${i}`} to={l.to} style={({ isActive }) => linkStyle(isActive, l.cta)}>
+            <NavLink key={`${l.to}-${i}`} to={l.to} end={l.end} style={({ isActive }) => linkStyle(isActive, l.cta)}>
               {l.label}
             </NavLink>
           ))}
@@ -202,6 +202,7 @@ export default function NavV2() {
             <NavLink
               key={`mob-${l.to}-${i}`}
               to={l.to}
+              end={l.end}
               onClick={closeMobileMenu}
               style={({ isActive }) => ({
                 fontSize: '28px',

@@ -1,24 +1,25 @@
-import { Routes, Route } from 'react-router-dom'
 import LayoutV2 from './shared/LayoutV2.jsx'
 import HomeV2 from './pages/HomeV2.jsx'
-import StoryV2 from './pages/StoryV2.jsx'
-import ProcessV2 from './pages/ProcessV2.jsx'
-import ServicesV2 from './pages/ServicesV2.jsx'
-import ReferencesV2 from './pages/ReferencesV2.jsx'
-import ContactV2 from './pages/ContactV2.jsx'
+import BizPage from './pages/BizPage.jsx'
+import HizmetlerPage from './pages/HizmetlerPage.jsx'
+import BlogIndex from './pages/BlogIndex.jsx'
+import BlogPost from './pages/BlogPost.jsx'
+import Iletisim from './pages/Iletisim.jsx'
 
-export default function V2Routes() {
-  return (
-    <Routes>
-      <Route element={<LayoutV2 />}>
-        <Route index element={<HomeV2 />} />
-        <Route path="hikayemiz" element={<StoryV2 />} />
-        <Route path="uretim" element={<ProcessV2 />} />
-        <Route path="hizmetler" element={<ServicesV2 />} />
-        <Route path="referanslar" element={<ReferencesV2 />} />
-        <Route path="iletisim" element={<ContactV2 />} />
-        <Route path="*" element={<HomeV2 />} />
-      </Route>
-    </Routes>
-  )
-}
+/* vite-react-ssg data-router route ağacı.
+   Layout (NavV2 + Outlet + FooterV2) altında 6 route. */
+export const routes = [
+  {
+    path: '/',
+    element: <LayoutV2 />,
+    children: [
+      { index: true, element: <HomeV2 /> },
+      { path: 'biz-ve-is-ortaklarimiz', element: <BizPage /> },
+      { path: 'hizmetler', element: <HizmetlerPage /> },
+      { path: 'blog', element: <BlogIndex /> },
+      // getStaticPaths Faz 4'te eklenecek; şimdilik client-side render.
+      { path: 'blog/:slug', element: <BlogPost /> },
+      { path: 'iletisim', element: <Iletisim /> },
+    ],
+  },
+]

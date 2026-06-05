@@ -1,9 +1,10 @@
 {
   "redirects": [
     { "source": "/v2", "destination": "/", "permanent": true },
-    { "source": "/v2/:path*", "destination": "/:path*", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/v2/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/hikayemiz", "destination": "/", "permanent": true },
+    { "source": "/uretim", "destination": "/hizmetler", "permanent": true },
+    { "source": "/referanslar", "destination": "/hizmetler", "permanent": true },
+    { "source": "/sektorler", "destination": "/hizmetler", "permanent": true }
   ]
 }
