@@ -5,8 +5,8 @@ import SEOHead from '../shared/SEOHead.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
-   Hero: asimetrik %30 krem metin / %70 navy sektör grid (gerçek foto),
-   tek ekran 100vh. Altında atölye şeridi.
+   Hero: premium asimetrik — krem zemin, yüzen sektör görselleri +
+   altta dev GUVENCOGLU wordmark. Tek ekran 100vh. Altında atölye şeridi.
    Devamı: güven şeridi → vaat → sektörler → hizmetler → referanslar
    → hikaye → copper CTA → footer (global). 3D yok, statik.
    ────────────────────────────────────────────────────────────── */
@@ -53,10 +53,28 @@ const HERO_SECTORS = [
   },
 ]
 
-const HERO_PLACEMENT = [
-  { gridColumn: '1', gridRow: '1 / span 2' },
-  { gridColumn: '2', gridRow: '1' },
-  { gridColumn: '2', gridRow: '2' },
+const CARD_POS = [
+  {
+    width: 'clamp(280px, 30vw, 440px)',
+    height: 'clamp(360px, 46vh, 560px)',
+    left: '2%',
+    top: 'clamp(90px, 11vh, 130px)',
+    zIndex: 3,
+  },
+  {
+    width: 'clamp(200px, 22vw, 320px)',
+    height: 'clamp(240px, 30vh, 380px)',
+    right: '8%',
+    top: 'clamp(70px, 9vh, 110px)',
+    zIndex: 2,
+  },
+  {
+    width: 'clamp(170px, 19vw, 280px)',
+    height: 'clamp(220px, 28vh, 340px)',
+    right: '2%',
+    bottom: '4%',
+    zIndex: 2,
+  },
 ]
 
 const ATELIER_PHOTOS = [
@@ -196,39 +214,43 @@ export default function HomeV2() {
         }}
       />
 
-      {/* ─── BÖLÜM 1 — ASİMETRİK %30/%70 HERO (tek ekran) ───── */}
+      {/* ─── BÖLÜM 1 — PREMIUM ASİMETRİK HERO ──────────────── */}
       <section className="hv2-hero" style={heroWrap} aria-label="Kurumsal üniforma — sektörler">
-        {/* SOL PANEL %30 — metin */}
-        <div className="hv2-hero-left" style={heroLeft}>
-          <p style={heroEyebrow}>1980’DEN BERİ · FETHİYE</p>
-          <h1 style={heroH1}>
-            Türkiye’nin <em style={heroH1Accent}>kurumsal üniforma</em> uzmanı
-          </h1>
-          <p style={heroLede}>
-            Sağlık, otel ve okul kurumları için kendi tesisimizde üretim. Aracısız,
-            sözleşmeli, zamanında.
-          </p>
-          <div style={heroCtaGroup}>
-            <Link to="/v2/iletisim" className="hv2-hero-btn" style={heroBtn}>
-              Teklif Al →
-            </Link>
-            <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
-              Tüm sektörler →
-            </Link>
+        {/* ÜST BÖLGE — metin + yüzen sektör görselleri */}
+        <div className="hv2-hero-upper" style={heroUpper}>
+          {/* SOL %34 — metin */}
+          <div className="hv2-hero-left" style={heroLeft}>
+            <p style={heroEyebrow}>1980’DEN BERİ · FETHİYE</p>
+            <h1 style={heroH1}>
+              Türkiye’nin <em style={heroH1Accent}>kurumsal üniforma</em> uzmanı
+            </h1>
+            <p style={heroLede}>
+              Sağlık, otel ve okul kurumları için kendi tesisimizde üretim. Aracısız,
+              sözleşmeli, zamanında.
+            </p>
+            <div style={heroCtaGroup}>
+              <Link to="/v2/iletisim" className="hv2-hero-btn" style={heroBtn}>
+                Teklif Al →
+              </Link>
+              <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
+                Tüm sektörler →
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* SAĞ PANEL %70 — asimetrik sektör grid */}
-        <div className="hv2-hero-right" style={heroRight}>
-          <div className="hv2-hero-grid" style={heroGrid}>
+          {/* SAĞ %66 — krem zemin üzerinde yüzen asimetrik görseller */}
+          <div className="hv2-hero-right" style={heroRight}>
+            <span className="hv2-hero-tag" style={heroTag} aria-hidden="true">
+              1980 — 2026
+            </span>
             {HERO_SECTORS.map((s, i) => {
               const big = i === 0
               const isHovered = hoveredCard === s.id
-              const cardStyle = { ...heroCard, ...HERO_PLACEMENT[i] }
+              const cardStyle = { ...heroCard, ...CARD_POS[i] }
               return (
                 <div
                   key={s.id}
-                  className="hv2-hero-card"
+                  className={`hv2-hero-card${big ? ' hv2-hero-card-big' : ''}`}
                   style={cardStyle}
                   role="button"
                   tabIndex={0}
@@ -268,6 +290,13 @@ export default function HomeV2() {
               )
             })}
           </div>
+        </div>
+
+        {/* ALT BÖLGE — dev wordmark, alttan hafif kesik */}
+        <div className="hv2-wordmark" style={heroWordmark} aria-hidden="true">
+          <span className="hv2-wordmark-text" style={heroWordmarkText}>
+            GUVENCOGLU
+          </span>
         </div>
       </section>
 
@@ -520,11 +549,15 @@ export default function HomeV2() {
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 820px) {
-          .hv2-hero { height: auto !important; flex-direction: column !important; }
-          .hv2-hero-left { width: 100% !important; height: auto !important; padding-top: clamp(96px, 14vh, 140px) !important; }
-          .hv2-hero-right { width: 100% !important; height: auto !important; }
-          .hv2-hero-grid { display: flex !important; flex-direction: column !important; height: auto !important; gap: 12px !important; }
-          .hv2-hero-card { aspect-ratio: 16 / 10 !important; }
+          .hv2-hero { height: auto !important; }
+          .hv2-hero-upper { flex-direction: column !important; height: auto !important; }
+          .hv2-hero-left { width: 100% !important; height: auto !important; padding: clamp(96px, 14vh, 140px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
+          .hv2-hero-right { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
+          .hv2-hero-card { position: static !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 10 !important; z-index: auto !important; }
+          .hv2-hero-card-big { aspect-ratio: 4 / 5 !important; }
+          .hv2-hero-tag { display: none !important; }
+          .hv2-wordmark { position: relative !important; height: auto !important; }
+          .hv2-wordmark-text { font-size: clamp(56px, 18vw, 120px) !important; }
         }
         @media (max-width: 720px) {
           .hv2-atelier-head { flex-direction: column !important; }
@@ -556,57 +589,64 @@ const eyebrow = {
 }
 const eyebrowDark = { ...eyebrow }
 
-/* BÖLÜM 1 — ASİMETRİK %30/%70 HERO (tek ekran, 100vh) */
+/* BÖLÜM 1 — PREMIUM ASİMETRİK HERO (tek ekran 100vh) */
 const heroWrap = {
   position: 'relative',
   zIndex: 1,
   width: '100%',
   height: '100vh',
   overflow: 'hidden',
+  background: 'var(--v2-cream, #EFEAE0)',
+}
+const heroUpper = {
   display: 'flex',
   flexDirection: 'row',
+  width: '100%',
+  height: '74vh',
 }
 const heroLeft = {
-  width: '30%',
+  width: '34%',
   height: '100%',
   boxSizing: 'border-box',
-  background: 'var(--v2-cream, #EFEAE0)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  padding: 'clamp(120px, 14vh, 160px) clamp(32px, 4vw, 64px) clamp(32px, 4vw, 64px)',
+  paddingLeft: 'clamp(40px, 5vw, 96px)',
+  paddingRight: 'clamp(24px, 2vw, 40px)',
+  paddingTop: 'clamp(130px, 15vh, 170px)',
+  paddingBottom: 'clamp(24px, 3vw, 48px)',
 }
 const heroEyebrow = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 12,
-  letterSpacing: '0.2em',
+  letterSpacing: '0.25em',
   color: 'var(--v2-copper, #D4A373)',
-  margin: '0 0 24px',
+  margin: '0 0 28px',
 }
 const heroH1 = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(32px, 3.2vw, 52px)',
-  lineHeight: 1.15,
+  fontSize: 'clamp(36px, 3.4vw, 58px)',
+  lineHeight: 1.12,
   color: 'var(--v2-navy, #2D3142)',
-  margin: '0 0 24px',
+  margin: '0 0 28px',
 }
 const heroH1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
 const heroLede = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 'clamp(15px, 1.1vw, 17px)',
-  lineHeight: 1.6,
+  fontSize: 'clamp(15px, 1.05vw, 17px)',
+  lineHeight: 1.65,
   color: 'var(--v2-muted, #5A5A5A)',
-  maxWidth: 340,
-  margin: '0 0 32px',
+  maxWidth: 320,
+  margin: '0 0 36px',
 }
-const heroCtaGroup = { display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }
+const heroCtaGroup = { display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-start' }
 const heroBtn = {
   display: 'inline-flex',
   alignItems: 'center',
   background: 'var(--v2-navy, #2D3142)',
   color: 'var(--v2-cream, #EFEAE0)',
-  padding: '14px 28px',
+  padding: '15px 30px',
   borderRadius: 999,
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 15,
@@ -622,28 +662,24 @@ const heroLink = {
   textDecoration: 'underline',
   textUnderlineOffset: 4,
 }
-const heroRight = {
-  width: '70%',
-  height: '100%',
-  boxSizing: 'border-box',
-  position: 'relative',
-  background: 'var(--v2-navy, #2D3142)',
-  padding: 'clamp(24px, 2.5vw, 48px)',
-}
-const heroGrid = {
-  display: 'grid',
-  gridTemplateColumns: '1.6fr 1fr',
-  gridTemplateRows: '1fr 1fr',
-  gap: 'clamp(12px, 1.5vw, 20px)',
-  height: '100%',
+const heroRight = { width: '66%', height: '100%', position: 'relative' }
+const heroTag = {
+  position: 'absolute',
+  zIndex: 1,
+  left: '46%',
+  top: 'clamp(40px, 6vh, 76px)',
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.3em',
+  color: 'var(--v2-muted, #5A5A5A)',
+  pointerEvents: 'none',
+  whiteSpace: 'nowrap',
 }
 const heroCard = {
-  position: 'relative',
+  position: 'absolute',
   overflow: 'hidden',
-  borderRadius: 4,
+  borderRadius: 3,
   cursor: 'pointer',
-  minWidth: 0,
-  minHeight: 0,
 }
 const heroCardPhoto = {
   position: 'absolute',
@@ -659,12 +695,12 @@ const heroCardOverlay = {
   inset: 0,
   zIndex: 1,
   background:
-    'linear-gradient(to top, rgba(45,49,66,0.88) 0%, rgba(45,49,66,0.25) 55%, rgba(45,49,66,0.15) 100%)',
+    'linear-gradient(to top, rgba(45,49,66,0.85) 0%, rgba(45,49,66,0.2) 55%, transparent 100%)',
   transition: 'background 0.5s ease',
 }
 const heroCardOverlayHover = {
   background:
-    'linear-gradient(to top, rgba(45,49,66,0.75) 0%, rgba(45,49,66,0.15) 55%, rgba(45,49,66,0.1) 100%)',
+    'linear-gradient(to top, rgba(45,49,66,0.72) 0%, rgba(45,49,66,0.12) 55%, transparent 100%)',
 }
 const heroCardContent = {
   position: 'absolute',
@@ -672,7 +708,7 @@ const heroCardContent = {
   left: 0,
   right: 0,
   zIndex: 2,
-  padding: 'clamp(16px, 1.8vw, 28px)',
+  padding: 'clamp(16px, 1.5vw, 26px)',
   display: 'flex',
   flexDirection: 'column',
 }
@@ -686,14 +722,14 @@ const heroCardNum = {
 const heroCardNameBig = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(28px, 2.6vw, 44px)',
+  fontSize: 'clamp(28px, 2.6vw, 42px)',
   lineHeight: 1.1,
   color: 'var(--v2-cream, #EFEAE0)',
 }
 const heroCardName = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(20px, 1.8vw, 30px)',
+  fontSize: 'clamp(20px, 1.7vw, 28px)',
   lineHeight: 1.1,
   color: 'var(--v2-cream, #EFEAE0)',
 }
@@ -702,9 +738,33 @@ const heroCardDesc = {
   fontSize: 14,
   lineHeight: 1.5,
   color: 'rgba(239, 234, 224, 0.85)',
-  maxWidth: 320,
+  maxWidth: 300,
   marginTop: 8,
   marginBottom: 0,
+}
+const heroWordmark = {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: '26vh',
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+}
+const heroWordmarkText = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 600,
+  fontSize: 'clamp(100px, 17vw, 260px)',
+  lineHeight: 0.8,
+  letterSpacing: '-0.03em',
+  color: 'var(--v2-navy, #2D3142)',
+  textAlign: 'center',
+  whiteSpace: 'nowrap',
+  margin: 0,
+  transform: 'translateY(18%)',
 }
 
 /* BÖLÜM 2 — ATÖLYE ŞERİDİ */
