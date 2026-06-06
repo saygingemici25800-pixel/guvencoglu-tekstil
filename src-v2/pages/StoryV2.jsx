@@ -4,8 +4,8 @@ import SEOHead from '../shared/SEOHead.jsx'
 import CTABand from '../shared/CTABand.jsx'
 
 const STORY_METRICS = [
-  { value: 45, suffix: '',  label: 'Yıllık Zanaat',   hint: '1980 → bugün, kesintisiz' },
-  { value: 3,  suffix: '',  label: 'Kuşak',           hint: 'Aile · aynı tezgâh' },
+  { value: 25, suffix: '',  label: 'Yıllık Zanaat',   hint: '2001 → bugün, kesintisiz' },
+  { value: 100, suffix: '%', label: 'Kendi Üretim',   hint: 'Aracısız · kendi tesisimizde' },
   { value: 480, suffix: '+', label: 'Kurumsal Partner', hint: 'Okul · otel · sağlık · kamu' },
 ]
 
@@ -28,7 +28,7 @@ const PRINCIPLES = [
   {
     no: '04',
     title: 'Aile',
-    body: 'Karar mutfakta verilir, tezgâhta uygulanır. Üç kuşak aynı ad, aynı söz — bu da bir taahhüt.',
+    body: 'Karar mutfakta verilir, tezgâhta uygulanır. Aynı aile, aynı ad, aynı söz — bu da bir taahhüt.',
   },
 ]
 
@@ -95,14 +95,14 @@ export default function StoryV2() {
   return (
     <PageTransition>
       <SEOHead
-        title="Hikayemiz — Üç Kuşak, Tek İplik | Güvencoğlu Tekstil"
-        description="1980'de Fethiye'de küçük bir atölyede başlayan yolculuk. Üç kuşağın elinden geçen 45 yıllık zanaat hikayesi."
+        title="Hikayemiz — 2001'den Bu Yana, Tek İplik | Güvencoğlu Tekstil"
+        description="2001'de Fethiye'de küçük bir atölyede başlayan yolculuk. Çeyrek asırlık zanaat hikayesi."
         path="/v2/hikayemiz"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Organization',
           name: 'Güvencoğlu Tekstil',
-          foundingDate: '1980',
+          foundingDate: '2001',
           founder: { '@type': 'Person', name: 'Ömer Güvenç' },
           url: 'https://guvencoglutekstil.com/v2/hikayemiz',
         }}
@@ -112,13 +112,13 @@ export default function StoryV2() {
         <div style={heroInner}>
           <p style={mono}>02 / Hikayemiz</p>
           <h1 style={hero}>
-            Üç kuşak,
+            Tek atölye,
             <br />
             tek <em style={emStyle}>iplik.</em>
           </h1>
           <p style={lede}>
-            1980'de Fethiye'de tek bir dikiş makinesiyle başladık. Bugün üçüncü
-            kuşak aynı atölyede, aynı titizlikle çalışıyor. Aşağı kaydır —
+            2001'de Fethiye'de tek bir dikiş makinesiyle başladık. Bugün aynı
+            atölyede, aynı titizlikle çalışıyoruz. Aşağı kaydır —
             kronolojik tünelin içinden geç.
           </p>
           <div style={scrollHint} aria-hidden="true">
@@ -153,7 +153,7 @@ export default function StoryV2() {
             margin: 0,
           }}
         >
-          1980’den bugüne
+          2001’den bugüne
         </h2>
         <p
           style={{
@@ -173,12 +173,12 @@ export default function StoryV2() {
           <header style={principlesHeader}>
             <p style={mono}>03 / Sabit kalanlar</p>
             <h2 style={h2}>
-              45 yıldır <em style={emStyle}>değişmeyen</em>
+              Çeyrek asırdır <em style={emStyle}>değişmeyen</em>
               <br />
               dört şey.
             </h2>
             <p style={ledeNarrow}>
-              Üç kuşak boyunca makine değişti, kumaş değişti, müşteri değişti.
+              Çeyrek asır boyunca makine değişti, kumaş değişti, müşteri değişti.
               Bu dördü değişmedi.
             </p>
           </header>
@@ -214,7 +214,7 @@ export default function StoryV2() {
             <span style={hairline} aria-hidden="true" />
             <div style={attrBlock}>
               <p style={attrName}>Ömer Güvenç</p>
-              <p style={attrRole}>Kurucu · Fethiye, 1980'den beri</p>
+              <p style={attrRole}>Kurucu · Fethiye, 2001'den beri</p>
             </div>
           </footer>
         </div>

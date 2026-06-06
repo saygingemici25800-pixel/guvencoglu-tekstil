@@ -24,11 +24,11 @@ export default function Footer() {
               <span className="nav__brand-mark" aria-hidden="true">G</span>
               <div>
                 <strong>Güvençoğlu Tekstil</strong>
-                <small>Fethiye · 1980'den beri</small>
+                <small>Fethiye · 2001'den beri</small>
               </div>
             </div>
             <p>
-              Fethiye Kesikkapı'daki kendi tesisimizde 1980'den bu yana okul ve
+              Fethiye Kesikkapı'daki kendi tesisimizde 2001'den bu yana okul ve
               kurumların güvendiği üretici. Aracısız, kendi ekibimizle dikiyoruz.
             </p>
           </div>

@@ -68,7 +68,7 @@ export default function BizPage() {
     <PageTransition>
       <SEOHead
         title="Biz ve İş Ortaklarımız — Güvençoğlu Tekstil"
-        description="1980'den beri Fethiye'deki kendi üretim tesisimizde, üç kuşak aynı standartla çalışıyoruz. Sağlık, otel ve okul kurumlarının kurumsal üniforma partneri."
+        description="2001'den beri Fethiye'deki kendi üretim tesisimizde aynı standartla çalışıyoruz. Sağlık, otel ve okul kurumlarının kurumsal üniforma partneri."
         path="/biz-ve-is-ortaklarimiz"
         schema={{
           '@context': 'https://schema.org',
@@ -78,7 +78,7 @@ export default function BizPage() {
           about: {
             '@type': 'Organization',
             name: 'Güvençoğlu Tekstil',
-            foundingDate: '1980',
+            foundingDate: '2001',
             description:
               "Türkiye'nin kurumsal üniforma uzmanı. Sağlık, otel ve okul kurumları için Fethiye'deki kendi üretim tesisinde, aracısız, sözleşmeli üretim.",
             address: {
@@ -94,7 +94,7 @@ export default function BizPage() {
       {/* ─── a) GİRİŞ — metin SOL / foto SAĞ ─────────────────── */}
       <InterlockSection photo="/miras.jpg" alt="Güvençoğlu Tekstil atölyesinden bir kare">
         <span className="biz-rule" style={rule} aria-hidden="true" />
-        <p style={eyebrow}>1980’DEN BERİ · FETHİYE</p>
+        <p style={eyebrow}>2001’DEN BERİ · FETHİYE</p>
         <h1 style={h1}>
           Biz ve <em style={em}>İş Ortaklarımız</em>
         </h1>
@@ -114,11 +114,11 @@ export default function BizPage() {
         <span className="biz-rule" style={rule} aria-hidden="true" />
         <p style={eyebrow}>HİKÂYEMİZ</p>
         <h2 style={h2}>
-          Üç kuşak, <em style={em}>değişmeyen</em> standart.
+          Çeyrek asır, <em style={em}>değişmeyen</em> standart.
         </h2>
         <p style={body}>
-          1980’de Fethiye’de tek bir dikiş makinesiyle başladık. Bugün aynı atölyede
-          üçüncü kuşak çalışıyor — makine değişti, kumaş değişti, müşteri değişti;
+          2001’de Fethiye’de tek bir dikiş makinesiyle başladık. Bugün aynı atölyede
+          aynı aile çalışıyor — makine değişti, kumaş değişti, müşteri değişti;
           işin standardı değişmedi.
         </p>
         <p style={body}>

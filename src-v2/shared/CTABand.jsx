@@ -31,7 +31,7 @@ export default function CTABand() {
       </div>
 
       <div aria-hidden="true" style={cornerMark} className="v2-cta-corner">
-        <span style={cornerNum}>1980</span>
+        <span style={cornerNum}>2001</span>
         <span style={cornerArrow}>↗</span>
         <span style={cornerNum}>{new Date().getFullYear()}</span>
       </div>

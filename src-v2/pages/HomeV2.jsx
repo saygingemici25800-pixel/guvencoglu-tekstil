@@ -93,7 +93,7 @@ const SERVICES = [
 ]
 
 const STATS = [
-  { num: '46 Yıl', label: 'TECRÜBE' },
+  { num: '25 Yıl', label: 'TECRÜBE' },
   { num: '1.500+', label: 'KURUMSAL MÜŞTERİ' },
   { num: '%100', label: 'KENDİ ÜRETİM' },
   { num: '48 Saat', label: 'TEKLİF SÜRESİ' },
@@ -211,13 +211,13 @@ export default function HomeV2() {
     <PageTransition>
       <SEOHead
         title="Güvençoğlu Tekstil — Türkiye'nin kurumsal üniforma uzmanı"
-        description="Sağlık personeli, otel ekipleri ve okul üniformaları. 1980'den beri Fethiye'deki kendi üretim tesisimizde, aracısız, sözleşmeli üretim ve teslimat. 48 saatte teklif."
+        description="Sağlık personeli, otel ekipleri ve okul üniformaları. 2001'den beri Fethiye'deki kendi üretim tesisimizde, aracısız, sözleşmeli üretim ve teslimat. 48 saatte teklif."
         path="/v2"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Organization',
           name: 'Güvençoğlu Tekstil',
-          foundingDate: '1980',
+          foundingDate: '2001',
           url: 'https://guvencoglutekstil.com/v2',
           description:
             "Türkiye'nin kurumsal üniforma uzmanı. Sağlık, otel ve okul üniformaları için kendi üretim tesisinde sözleşmeli üretim.",
@@ -236,7 +236,7 @@ export default function HomeV2() {
         <div className="hv2-hero-upper" style={heroUpper}>
           {/* SOL %34 — metin */}
           <div className="hv2-hero-left" style={heroLeft}>
-            <p style={heroEyebrow}>1980’DEN BERİ · FETHİYE</p>
+            <p style={heroEyebrow}>2001’DEN BERİ · FETHİYE</p>
             <h1 style={heroH1}>
               Türkiye’nin <em style={heroH1Accent}>kurumsal üniforma</em> uzmanı
             </h1>
@@ -262,7 +262,7 @@ export default function HomeV2() {
           {/* SAĞ %66 — krem zemin üzerinde yüzen asimetrik görseller */}
           <div className="hv2-hero-right" style={heroRight}>
             <span className="hv2-hero-tag" style={heroTag} aria-hidden="true">
-              1980 — 2026
+              2001 — 2026
             </span>
             {HERO_SECTORS.map((s, i) => {
               const big = i === 0
@@ -328,7 +328,7 @@ export default function HomeV2() {
             <div style={atelierHeadLeft}>
               <span style={atelierEyebrow}>KENDİ ÜRETİM TESİSİMİZ</span>
               <h2 id="hv2-atelier-title" style={atelierH2}>
-                1980’den beri kendi atölyemizde, aracısız üretim.
+                2001’den beri kendi atölyemizde, aracısız üretim.
               </h2>
             </div>
             <p style={atelierLede}>
@@ -377,12 +377,12 @@ export default function HomeV2() {
             günkü konforu, markanızın görünümü ve sürdürülebilir bir tedarik zinciri demektir.
           </p>
           <p style={prose}>
-            Güvençoğlu Tekstil, 1980’den beri kendi üretim tesisinde, aracısız çalışıyor.
+            Güvençoğlu Tekstil, 2001’den beri kendi üretim tesisinde, aracısız çalışıyor.
             Sağlık kurumlarından otellere, okullardan üretim tesislerine kadar 1.500’den fazla
             kurumun üniforma programını yönetiyoruz.
           </p>
           <p style={prose}>
-            Sözleşmeli üretim, sözleşmeli teslimat, sözleşmeli kalite. 46 yıllık güvencemizle.
+            Sözleşmeli üretim, sözleşmeli teslimat, sözleşmeli kalite. Çeyrek asırlık güvencemizle.
           </p>
           <Link to="/v2/hikayemiz" className="hv2-textlink" style={textLink}>
             Bizi Daha Yakından Tanıyın <span aria-hidden="true">→</span>
@@ -463,8 +463,8 @@ export default function HomeV2() {
               Biz ve <em style={emDark}>İş Ortaklarımız</em>
             </h2>
             <p style={bizTeaserBody}>
-              1980’den beri Fethiye’deki kendi üretim tesisimizde, üç kuşak aynı
-              standartla çalışıyoruz. Aracı yok, sözleşmeli üretim ve teslimat var.
+              2001’den beri Fethiye’deki kendi üretim tesisimizde, aynı titizlikle
+              çalışıyoruz. Aracı yok, sözleşmeli üretim ve teslimat var.
             </p>
             <p style={bizTeaserBody}>
               Sağlık, otel ve okul kurumlarının kurumsal üniforma programını uzun

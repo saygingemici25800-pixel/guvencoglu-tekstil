@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const STATS = [
-  { value: 45,    suffix: '',    label: 'Yıllık Deneyim', hint: 'Kesintisiz üretim',       mono: '1980 →' },
+  { value: 25,    suffix: '',    label: 'Yıllık Deneyim', hint: 'Kesintisiz üretim',       mono: '2001 →' },
   { value: 8000,  suffix: ' m²', label: 'Üretim Alanı',   hint: 'Fethiye fabrikası',       mono: 'TR · MUĞLA' },
   { value: 120,   suffix: '+',   label: 'Uzman Ekip',     hint: 'Kesim → nakış → kalite',  mono: 'KADRO' },
   { value: 18,    suffix: '',    label: 'İhracat Ülkesi', hint: 'Avrupa & MENA hattı',     mono: 'GLOBAL' },
@@ -77,7 +77,7 @@ export default function ImpactStats() {
         <header style={headerStyle}>
           <p style={tag}>03 / Rakamlar</p>
           <h2 style={h2}>
-            <em style={emStyle}>45 yıl</em> üretmenin
+            <em style={emStyle}>Çeyrek asır</em> üretmenin
             <br />
             damıttığı şey.
           </h2>

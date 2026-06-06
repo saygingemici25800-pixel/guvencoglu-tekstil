@@ -9,7 +9,7 @@ export default function FoundersQuote() {
         <blockquote style={blockquote}>
           <span aria-hidden="true" style={openMark}>“</span>
           <p style={quoteText}>
-            Bir iplik, <em style={emStyle}>üç kuşak.</em>
+            Bir iplik, <em style={emStyle}>çeyrek asır.</em>
             <br />
             Aynı tezgâhta, aynı söz:
             <br />
@@ -21,7 +21,7 @@ export default function FoundersQuote() {
           <span style={hairline} aria-hidden="true" />
           <div style={attrText}>
             <p style={attrName}>Ömer Güvenç</p>
-            <p style={attrRole}>Kurucu · 1980'den beri</p>
+            <p style={attrRole}>Kurucu · 2001'den beri</p>
           </div>
           <Link to="/v2/hikayemiz" style={attrLink} className="v2-quote-link">
             Hikayenin tamamı <span aria-hidden="true">→</span>

@@ -50,7 +50,7 @@ export default function Nav() {
             <span className="nav__brand-mark" aria-hidden="true">G</span>
             <span className="nav__brand-text">
               <span>Güvençoğlu Tekstil</span>
-              <small>Fethiye · 1980'den beri</small>
+              <small>Fethiye · 2001'den beri</small>
             </span>
           </a>
 
@@ -102,7 +102,7 @@ export default function Nav() {
             <span className="nav__brand-mark" aria-hidden="true">G</span>
             <span className="nav__brand-text">
               <span>Güvençoğlu Tekstil</span>
-              <small>Fethiye · 1980'den beri</small>
+              <small>Fethiye · 2001'den beri</small>
             </span>
           </span>
           <button

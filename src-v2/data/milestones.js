@@ -1,28 +1,28 @@
 /* Story timeline milestones — replace with verified history. */
 export const MILESTONES = [
   {
-    year: '1980',
+    year: '2001',
     mono: 'KURULUŞ',
     title: 'İlk dikiş',
     description:
       'Ömer Güvenç, Fethiye\'de küçük bir atölyede ilk makinasını çalıştırır. Tek müşteri, tek model, tek söz: kalite.',
   },
   {
-    year: '1995',
+    year: '2008',
     mono: 'BÜYÜME',
     title: 'Kendi tesisimiz',
     description:
       'Atölye genişler, Kesikkapı\'daki bugünkü üretim tesisine taşınılır. Aile şirketi profesyonel bir kadroya dönüşür.',
   },
   {
-    year: '2008',
+    year: '2014',
     mono: 'ENDÜSTRİYEL',
     title: 'Endüstriyel hat',
     description:
       'Otomatik kesim ve seri dikim hatları kurulur. Aynı el işçiliği, on katı kapasite. Bölge dışına ilk siparişler.',
   },
   {
-    year: '2015',
+    year: '2019',
     mono: 'NAKIŞ & BASKI',
     title: 'Nakış ve baskı',
     description:
@@ -30,9 +30,9 @@ export const MILESTONES = [
   },
   {
     year: '2024',
-    mono: 'ÜÇÜNCÜ KUŞAK',
-    title: 'Üçüncü kuşak',
+    mono: 'YENİ DÖNEM',
+    title: 'Dijital dönem',
     description:
-      'Aile üçüncü kuşağa devreder. 45 yıllık zanaat, dijital süreç ve sürdürülebilir kumaş seçimiyle yeni döneme girer.',
+      'Çeyrek asırlık zanaat, dijital süreç ve sürdürülebilir kumaş seçimiyle yeni döneme girer.',
   },
 ]

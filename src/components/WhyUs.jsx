@@ -70,7 +70,7 @@ export default function WhyUs() {
         <div className={`section-head reveal ${headVisible ? 'visible' : ''}`} ref={headRef}>
           <span className="eyebrow">Neden Biz</span>
           <h2 id="neden-biz-title">
-            45 Yıllık Tecrübenin <span className="accent">Aracısız Avantajı.</span>
+            Çeyrek Asırlık Tecrübenin <span className="accent">Aracısız Avantajı.</span>
           </h2>
           <p>
             Güvençoğlu Tekstil; geleneksel ustalığı modern üretim disipliniyle birleştirir.
@@ -89,11 +89,11 @@ export default function WhyUs() {
                 <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
               </svg>
             </div>
-            <h3>1980'den Bu Yana Fethiye'nin Forma Adresi.</h3>
+            <h3>2001'den Bu Yana Fethiye'nin Forma Adresi.</h3>
             <p>
-              45 yıldır Kesikkapı'daki tesisimizde üretim yapıyoruz. Babadan oğula geçen
-              ustalık, bugünün üretim teknolojisiyle birleşince ortaya hem dayanıklı hem
-              kalıbı oturan formalar çıkıyor.
+              Çeyrek asırdır Kesikkapı'daki tesisimizde üretim yapıyoruz. Yıllar içinde
+              biriken ustalık, bugünün üretim teknolojisiyle birleşince ortaya hem dayanıklı
+              hem kalıbı oturan formalar çıkıyor.
             </p>
             <div className="feature-meta">
               <div>

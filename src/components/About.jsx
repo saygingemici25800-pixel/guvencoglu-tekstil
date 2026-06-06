@@ -15,7 +15,7 @@ export default function About() {
           >
             <div className="about__visual-stamp">
               <div>
-                <strong>1980</strong>
+                <strong>2001</strong>
                 <span>Kuruluş yılı</span>
               </div>
               <div className="v-line" aria-hidden="true" />
@@ -39,7 +39,7 @@ export default function About() {
               ref={bodyRef}
             >
               <p>
-                1980 yılında Fethiye'de <strong>Ömer Güvenç</strong> tarafından küçük bir
+                2001 yılında Fethiye'de <strong>Ömer Güvenç</strong> tarafından küçük bir
                 terzihane olarak kurulan Güvençoğlu Tekstil, bugün bölgenin en köklü
                 tekstil üreticilerinden biridir. Kesikkapı'daki tesisimizde
                 kesim, dikim, baskı ve nakış süreçlerinin tamamı kendi ekibimiz
