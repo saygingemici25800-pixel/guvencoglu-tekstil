@@ -1,63 +1,36 @@
-import { useEffect } from 'react'
+import { Head } from 'vite-react-ssg'
+
+/* SEOHead — SSG-uyumlu. Meta/JSON-LD'yi vite-react-ssg <Head> (react-helmet
+   sarmalayıcı) ile render eder; prerender sırasında statik HTML <head>'ine
+   basılır. Prop arayüzü korunur: title, description, path, ogImage, schema. */
 
 const ORIGIN = 'https://guvencoglutekstil.com'
 
-function upsertMeta(attr, value, content) {
-  let el = document.head.querySelector(`meta[${attr}="${value}"]`)
-  if (!el) {
-    el = document.createElement('meta')
-    el.setAttribute(attr, value)
-    document.head.appendChild(el)
-  }
-  el.setAttribute('content', content)
-  return el
-}
-
-function upsertLink(rel, href) {
-  let el = document.head.querySelector(`link[rel="${rel}"]`)
-  if (!el) {
-    el = document.createElement('link')
-    el.setAttribute('rel', rel)
-    document.head.appendChild(el)
-  }
-  el.setAttribute('href', href)
-  return el
-}
-
 export default function SEOHead({ title, description, path, ogImage, schema }) {
-  useEffect(() => {
-    document.documentElement.lang = 'tr'
-    if (title) document.title = title
+  const url = `${ORIGIN}${path || ''}`
 
-    const url = `${ORIGIN}${path || ''}`
-    if (description) upsertMeta('name', 'description', description)
-    upsertLink('canonical', url)
+  return (
+    <Head>
+      <html lang="tr" />
+      {title && <title>{title}</title>}
+      {description && <meta name="description" content={description} />}
+      <link rel="canonical" href={url} />
 
-    if (title) upsertMeta('property', 'og:title', title)
-    if (description) upsertMeta('property', 'og:description', description)
-    upsertMeta('property', 'og:url', url)
-    upsertMeta('property', 'og:type', 'website')
-    upsertMeta('property', 'og:locale', 'tr_TR')
-    if (ogImage) upsertMeta('property', 'og:image', ogImage)
+      {title && <meta property="og:title" content={title} />}
+      {description && <meta property="og:description" content={description} />}
+      <meta property="og:url" content={url} />
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="tr_TR" />
+      {ogImage && <meta property="og:image" content={ogImage} />}
 
-    upsertMeta('name', 'twitter:card', 'summary_large_image')
-    if (title) upsertMeta('name', 'twitter:title', title)
-    if (description) upsertMeta('name', 'twitter:description', description)
-    if (ogImage) upsertMeta('name', 'twitter:image', ogImage)
+      <meta name="twitter:card" content="summary_large_image" />
+      {title && <meta name="twitter:title" content={title} />}
+      {description && <meta name="twitter:description" content={description} />}
+      {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-    let schemaEl = document.head.querySelector('script[data-v2-schema]')
-    if (schema) {
-      if (!schemaEl) {
-        schemaEl = document.createElement('script')
-        schemaEl.type = 'application/ld+json'
-        schemaEl.setAttribute('data-v2-schema', 'true')
-        document.head.appendChild(schemaEl)
-      }
-      schemaEl.textContent = JSON.stringify(schema)
-    } else if (schemaEl) {
-      schemaEl.remove()
-    }
-  }, [title, description, path, ogImage, schema])
-
-  return null
+      {schema && (
+        <script type="application/ld+json">{JSON.stringify(schema)}</script>
+      )}
+    </Head>
+  )
 }
