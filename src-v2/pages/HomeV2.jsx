@@ -453,6 +453,40 @@ export default function HomeV2() {
         </div>
       </section>
 
+      {/* ─── BÖLÜM 5.5 — BİZ VE İŞ ORTAKLARIMIZ TEASER (interlocking) ─ */}
+      <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
+        <div className="hv2-bizteaser-row" style={bizTeaserRow}>
+          <div className="hv2-bizteaser-text" style={bizTeaserText}>
+            <span style={bizTeaserRule} aria-hidden="true" />
+            <p style={eyebrowDark}>BİZ KİMİZ</p>
+            <h2 id="hv2-bizteaser-title" style={bizTeaserTitle}>
+              Biz ve <em style={emDark}>İş Ortaklarımız</em>
+            </h2>
+            <p style={bizTeaserBody}>
+              1980’den beri Fethiye’deki kendi üretim tesisimizde, üç kuşak aynı
+              standartla çalışıyoruz. Aracı yok, sözleşmeli üretim ve teslimat var.
+            </p>
+            <p style={bizTeaserBody}>
+              Sağlık, otel ve okul kurumlarının kurumsal üniforma programını uzun
+              yıllar birlikte yürütüyoruz.
+            </p>
+            <Link
+              to="/biz-ve-is-ortaklarimiz"
+              className="hv2-bizteaser-btn"
+              style={bizTeaserBtn}
+            >
+              Daha Fazla <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <div
+            className="hv2-bizteaser-photo"
+            style={bizTeaserPhoto}
+            role="img"
+            aria-label="Fethiye'deki üretim tesisimizden sağlık üniforması üretimi"
+          />
+        </div>
+      </section>
+
       {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR ───────────── */}
       <section className="hv2-refs" style={refsWrap} aria-labelledby="hv2-refs-title">
         <div style={refsInner}>
@@ -615,8 +649,23 @@ export default function HomeV2() {
 
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
+        .hv2-bizteaser-btn { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .hv2-bizteaser-btn:hover, .hv2-bizteaser-btn:focus-visible {
+          background: var(--v2-navy, #2D3142); color: var(--v2-cream, #EFEAE0);
+        }
+        .hv2-bizteaser-btn span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
+        .hv2-bizteaser-btn:hover span, .hv2-bizteaser-btn:focus-visible span { transform: translateX(5px); }
+
         @media (max-width: 980px) {
           .hv2-refs-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 860px) {
+          .hv2-bizteaser-row { flex-direction: column !important; }
+          .hv2-bizteaser-text {
+            margin: 0 !important; width: 100% !important; box-shadow: none !important;
+            padding: clamp(28px, 7vw, 40px) clamp(22px, 6vw, 36px) clamp(28px, 6vw, 36px) !important;
+          }
+          .hv2-bizteaser-photo { width: 100% !important; min-height: clamp(240px, 54vw, 360px) !important; }
         }
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -641,7 +690,8 @@ export default function HomeV2() {
 
         @media (prefers-reduced-motion: reduce) {
           .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo, .hv2-quote-input, .hv2-quote-submit,
-          .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta {
+          .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta,
+          .hv2-bizteaser-btn, .hv2-bizteaser-btn span {
             transition: none !important;
           }
         }
@@ -1130,6 +1180,86 @@ const serviceSub = {
   lineHeight: 1.5,
   color: 'rgba(239, 234, 224, 0.62)',
   margin: 0,
+}
+
+/* BÖLÜM 5.5 — BİZ VE İŞ ORTAKLARIMIZ TEASER (interlocking) */
+const bizTeaserWrap = {
+  position: 'relative',
+  zIndex: 1,
+  background: 'var(--v2-cream, #EFEAE0)',
+  borderTop: '1px solid rgba(45, 49, 66, 0.1)',
+  padding: 'clamp(56px, 8vw, 96px) clamp(20px, 5vw, 48px)',
+}
+const bizTeaserRow = {
+  maxWidth: 1180,
+  margin: '0 auto',
+  display: 'flex',
+  alignItems: 'center',
+}
+const bizTeaserText = {
+  flex: '1 1 46%',
+  position: 'relative',
+  zIndex: 2,
+  background: 'var(--v2-surface-elevated, #FFFFFF)',
+  padding: 'clamp(32px, 3.4vw, 52px)',
+  marginRight: '-6%',
+  boxShadow: '0 22px 56px rgba(45, 49, 66, 0.12)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  boxSizing: 'border-box',
+}
+const bizTeaserRule = {
+  display: 'block',
+  width: 44,
+  height: 1,
+  background: 'var(--v2-copper, #D4A373)',
+  marginBottom: 20,
+}
+const bizTeaserTitle = {
+  fontFamily: 'var(--v2-font-display, serif)',
+  fontWeight: 400,
+  fontSize: 'clamp(26px, 2.4vw, 32px)',
+  lineHeight: 1.12,
+  letterSpacing: '-0.015em',
+  color: 'var(--v2-navy, #2D3142)',
+  margin: '12px 0 18px',
+}
+const bizTeaserBody = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 16,
+  lineHeight: 1.65,
+  color: 'var(--v2-muted, #5A5A5A)',
+  margin: '0 0 14px',
+  maxWidth: '44ch',
+  textAlign: 'left',
+}
+const bizTeaserBtn = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 10,
+  marginTop: 14,
+  border: '1px solid var(--v2-navy, #2D3142)',
+  color: 'var(--v2-navy, #2D3142)',
+  background: 'transparent',
+  padding: '14px 28px',
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 13,
+  fontWeight: 600,
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  textDecoration: 'none',
+  minHeight: 44,
+  boxSizing: 'border-box',
+}
+const bizTeaserPhoto = {
+  flex: '1 1 56%',
+  alignSelf: 'stretch',
+  minHeight: 'clamp(320px, 42vh, 460px)',
+  backgroundImage: 'url(/saglik-main.jpg)',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
 }
 
 /* BÖLÜM 6 — REFERANSLAR */
