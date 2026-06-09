@@ -41,20 +41,31 @@ const TRUST_METRICS = [
   },
 ]
 
-/* Interlocking bölüm — metin paneli + foto paneli */
-function InterlockSection({ photo, alt, reverse, children }) {
+/* Editorial eyebrow — copper kısa çizgi + uppercase etiket (yan yana) */
+function Eyebrow({ children }) {
+  return (
+    <span style={eyebrowRow}>
+      <span style={eyebrowDash} aria-hidden="true" />
+      <span style={eyebrowLabel}>{children}</span>
+    </span>
+  )
+}
+
+/* Interlocking bölüm — geniş foto arka katman + üstüne binen beyaz metin kartı.
+   Asimetri: textStyle/photoStyle ile bölüm başına genişlik + dikey offset. */
+function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children }) {
   return (
     <section
       className={`biz-il${reverse ? ' biz-il-rev' : ''}`}
       style={ilSection}
     >
       <div className="biz-il-row" style={ilRow}>
-        <div className="biz-il-text" style={ilText}>
+        <div className="biz-il-text" style={{ ...ilText, ...textStyle }}>
           {children}
         </div>
         <div
           className="biz-il-photo"
-          style={{ ...ilPhoto, backgroundImage: `url(${photo})` }}
+          style={{ ...ilPhoto, ...photoStyle, backgroundImage: `url(${photo})` }}
           role="img"
           aria-label={alt}
         />
@@ -91,10 +102,14 @@ export default function BizPage() {
         }}
       />
 
-      {/* ─── a) GİRİŞ — metin SOL / foto SAĞ ─────────────────── */}
-      <InterlockSection photo="/miras.jpg" alt="Güvençoğlu Tekstil atölyesinden bir kare">
-        <span className="biz-rule" style={rule} aria-hidden="true" />
-        <p style={eyebrow}>2001’DEN BERİ · FETHİYE</p>
+      {/* ─── a) GİRİŞ — metin SOL / foto SAĞ — kart aşağı kayık ── */}
+      <InterlockSection
+        photo="/miras.jpg"
+        alt="Güvençoğlu Tekstil atölyesinden bir kare"
+        textStyle={ilTextA}
+        photoStyle={ilPhotoA}
+      >
+        <Eyebrow>2001’DEN BERİ · FETHİYE</Eyebrow>
         <h1 style={h1}>
           Biz ve <em style={em}>İş Ortaklarımız</em>
         </h1>
@@ -110,9 +125,10 @@ export default function BizPage() {
         photo="/atolye-uretim.jpg"
         alt="Fethiye'deki kendi üretim tesisimizden üretim hattı"
         reverse
+        textStyle={ilTextB}
+        photoStyle={ilPhotoB}
       >
-        <span className="biz-rule" style={rule} aria-hidden="true" />
-        <p style={eyebrow}>HİKÂYEMİZ</p>
+        <Eyebrow>HİKÂYEMİZ</Eyebrow>
         <h2 style={h2}>
           Çeyrek asır, <em style={em}>değişmeyen</em> standart.
         </h2>
@@ -232,12 +248,15 @@ export default function BizPage() {
           .biz-il-row { flex-direction: column !important; }
           .biz-il-rev .biz-il-row { flex-direction: column !important; }
           .biz-il-text {
+            flex: 1 1 auto !important;
             margin: 0 !important;
             width: 100% !important;
+            transform: none !important;
             box-shadow: none !important;
             padding: clamp(28px, 7vw, 40px) clamp(22px, 6vw, 36px) clamp(8px, 3vw, 16px) !important;
           }
           .biz-il-photo {
+            flex: 1 1 auto !important;
             width: 100% !important;
             min-height: clamp(260px, 56vw, 380px) !important;
           }
@@ -264,6 +283,27 @@ export default function BizPage() {
    ────────────────────────────────────────────────────────────── */
 
 const PAGE_BG = 'var(--v2-cream, #EFEAE0)'
+
+/* inline eyebrow — copper kısa çizgi + uppercase etiket */
+const eyebrowRow = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 14,
+  margin: '0 0 20px',
+}
+const eyebrowDash = {
+  width: 34,
+  height: 1,
+  background: 'var(--v2-copper, #D4A373)',
+  flexShrink: 0,
+}
+const eyebrowLabel = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.22em',
+  textTransform: 'uppercase',
+  color: 'var(--v2-copper, #D4A373)',
+}
 
 const rule = {
   display: 'block',
@@ -330,33 +370,56 @@ const body = {
 /* INTERLOCKING bölüm */
 const ilSection = {
   background: PAGE_BG,
-  padding: 'clamp(48px, 8vw, 104px) clamp(24px, 6vw, 96px)',
+  padding: 'clamp(56px, 9vw, 128px) clamp(24px, 6vw, 96px)',
+  overflow: 'visible',
 }
 const ilRow = {
   maxWidth: 1280,
   margin: '0 auto',
   display: 'flex',
   alignItems: 'center',
+  position: 'relative',
 }
+/* taban metin kartı — genişlik + yatay overlap + dikey offset variant'tan gelir */
 const ilText = {
-  flex: '1 1 48%',
   position: 'relative',
   zIndex: 2,
   background: 'var(--v2-surface-elevated, #FFFFFF)',
-  padding: 'clamp(40px, 4vw, 64px)',
-  marginRight: '-7%',
-  boxShadow: '0 24px 60px rgba(45, 49, 66, 0.12)',
+  padding: 'clamp(36px, 3.6vw, 60px)',
+  boxShadow: '0 24px 50px -28px rgba(45, 49, 66, 0.45)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
 }
 const ilPhoto = {
-  flex: '1 1 56%',
+  zIndex: 1,
   alignSelf: 'stretch',
   minHeight: 'clamp(380px, 50vh, 560px)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
+}
+
+/* a) Giriş — foto geniş sağda (~62%), kart dar solda, AŞAĞI kayık, %10 binme */
+const ilTextA = {
+  flex: '0 1 46%',
+  marginRight: '-10%',
+  transform: 'translateY(52px)',
+}
+const ilPhotoA = {
+  flex: '0 1 62%',
+  minHeight: 'clamp(400px, 52vh, 580px)',
+}
+/* b) Hikâye — foto solda (~56%), kart genişçe sağda, YUKARI kayık, %12 binme
+   (a'dan farklı genişlik + ters offset → rijit mirror değil) */
+const ilTextB = {
+  flex: '0 1 51%',
+  marginLeft: '-12%',
+  transform: 'translateY(-44px)',
+}
+const ilPhotoB = {
+  flex: '0 1 56%',
+  minHeight: 'clamp(440px, 56vh, 620px)',
 }
 
 /* c) GÜVEN BLOĞU */

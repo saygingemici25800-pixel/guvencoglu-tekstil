@@ -457,8 +457,10 @@ export default function HomeV2() {
       <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
         <div className="hv2-bizteaser-row" style={bizTeaserRow}>
           <div className="hv2-bizteaser-text" style={bizTeaserText}>
-            <span style={bizTeaserRule} aria-hidden="true" />
-            <p style={eyebrowDark}>BİZ KİMİZ</p>
+            <span style={bizTeaserEyebrow}>
+              <span style={bizTeaserDash} aria-hidden="true" />
+              <span style={eyebrowDark}>BİZ KİMİZ</span>
+            </span>
             <h2 id="hv2-bizteaser-title" style={bizTeaserTitle}>
               Biz ve <em style={emDark}>İş Ortaklarımız</em>
             </h2>
@@ -662,10 +664,11 @@ export default function HomeV2() {
         @media (max-width: 860px) {
           .hv2-bizteaser-row { flex-direction: column !important; }
           .hv2-bizteaser-text {
-            margin: 0 !important; width: 100% !important; box-shadow: none !important;
+            flex: 1 1 auto !important; margin: 0 !important; width: 100% !important;
+            transform: none !important; box-shadow: none !important;
             padding: clamp(28px, 7vw, 40px) clamp(22px, 6vw, 36px) clamp(28px, 6vw, 36px) !important;
           }
-          .hv2-bizteaser-photo { width: 100% !important; min-height: clamp(240px, 54vw, 360px) !important; }
+          .hv2-bizteaser-photo { flex: 1 1 auto !important; width: 100% !important; min-height: clamp(240px, 54vw, 360px) !important; }
         }
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -1197,24 +1200,30 @@ const bizTeaserRow = {
   alignItems: 'center',
 }
 const bizTeaserText = {
-  flex: '1 1 46%',
+  flex: '0 1 44%',
   position: 'relative',
   zIndex: 2,
   background: 'var(--v2-surface-elevated, #FFFFFF)',
   padding: 'clamp(32px, 3.4vw, 52px)',
-  marginRight: '-6%',
-  boxShadow: '0 22px 56px rgba(45, 49, 66, 0.12)',
+  marginRight: '-9%',
+  transform: 'translateY(34px)',
+  boxShadow: '0 24px 50px -28px rgba(45, 49, 66, 0.45)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   boxSizing: 'border-box',
 }
-const bizTeaserRule = {
-  display: 'block',
-  width: 44,
+const bizTeaserEyebrow = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 14,
+  marginBottom: 18,
+}
+const bizTeaserDash = {
+  width: 34,
   height: 1,
   background: 'var(--v2-copper, #D4A373)',
-  marginBottom: 20,
+  flexShrink: 0,
 }
 const bizTeaserTitle = {
   fontFamily: 'var(--v2-font-display, serif)',
@@ -1253,9 +1262,10 @@ const bizTeaserBtn = {
   boxSizing: 'border-box',
 }
 const bizTeaserPhoto = {
-  flex: '1 1 56%',
+  flex: '0 1 60%',
+  zIndex: 1,
   alignSelf: 'stretch',
-  minHeight: 'clamp(320px, 42vh, 460px)',
+  minHeight: 'clamp(340px, 46vh, 500px)',
   backgroundImage: 'url(/saglik-main.jpg)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
