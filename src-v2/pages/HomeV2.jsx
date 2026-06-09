@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
+import Reveal from '../shared/Reveal.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
@@ -323,7 +324,7 @@ export default function HomeV2() {
 
       {/* ─── BÖLÜM 2 — ATÖLYE ŞERİDİ ─────────────────────────── */}
       <section className="hv2-atelier" style={atelierWrap} aria-labelledby="hv2-atelier-title">
-        <div style={atelierInner}>
+        <Reveal style={atelierInner}>
           <div className="hv2-atelier-head" style={atelierHead}>
             <div style={atelierHeadLeft}>
               <span style={atelierEyebrow}>KENDİ ÜRETİM TESİSİMİZ</span>
@@ -351,24 +352,24 @@ export default function HomeV2() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 2 — GÜVEN ŞERİDİ ─────────────────────────── */}
       <section className="hv2-trust" style={trustWrap} aria-label="Rakamlarla Güvençoğlu">
-        <div style={trustGrid} className="hv2-trust-grid">
+        <Reveal style={trustGrid} className="hv2-trust-grid">
           {STATS.map((s) => (
             <div key={s.label} style={trustCell}>
               <span style={trustNum}>{s.num}</span>
               <span style={trustLabel}>{s.label}</span>
             </div>
           ))}
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 3 — VAAT / SÖZ ───────────────────────────── */}
       <section className="hv2-promise" style={promiseWrap} aria-labelledby="hv2-promise-title">
-        <div style={promiseInner}>
+        <Reveal style={promiseInner}>
           <h2 id="hv2-promise-title" style={promiseH2}>
             Söz verdiğimiz iş, söz verdiğimiz tarihte teslim.
           </h2>
@@ -387,12 +388,12 @@ export default function HomeV2() {
           <Link to="/v2/hikayemiz" className="hv2-textlink" style={textLink}>
             Bizi Daha Yakından Tanıyın <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 4 — SEKTÖRLER ÖNİZLEME ───────────────────── */}
       <section className="hv2-sectors" style={sectorsWrap} aria-labelledby="hv2-sectors-title">
-        <div style={sectorsInner}>
+        <Reveal style={sectorsInner}>
           <header style={sectionHead}>
             <p style={eyebrowDark}>ÇALIŞTIĞIMIZ SEKTÖRLER</p>
             <h2 id="hv2-sectors-title" style={h2Dark}>
@@ -422,12 +423,12 @@ export default function HomeV2() {
           <Link to="/v2/hizmetler" className="hv2-textlink" style={textLink}>
             Diğer sektörler <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 5 — HİZMETLER ÖNİZLEME ───────────────────── */}
       <section className="hv2-services" style={servicesWrap} aria-labelledby="hv2-services-title">
-        <div style={servicesInner}>
+        <Reveal style={servicesInner}>
           <header style={sectionHead}>
             <p style={eyebrow}>HİZMETLERİMİZ</p>
             <h2 id="hv2-services-title" style={h2Light}>
@@ -450,12 +451,12 @@ export default function HomeV2() {
           <Link to="/v2/hizmetler" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
             Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 5.5 — BİZ VE İŞ ORTAKLARIMIZ TEASER (interlocking) ─ */}
       <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
-        <div className="hv2-bizteaser-row" style={bizTeaserRow}>
+        <Reveal className="hv2-bizteaser-row" style={bizTeaserRow}>
           <div className="hv2-bizteaser-text" style={bizTeaserText}>
             <span style={bizTeaserEyebrow}>
               <span style={bizTeaserDash} aria-hidden="true" />
@@ -486,12 +487,12 @@ export default function HomeV2() {
             role="img"
             aria-label="Fethiye'deki üretim tesisimizden sağlık üniforması üretimi"
           />
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR ───────────── */}
       <section className="hv2-refs" style={refsWrap} aria-labelledby="hv2-refs-title">
-        <div style={refsInner}>
+        <Reveal style={refsInner}>
           <header style={sectionHead}>
             <p style={eyebrowDark}>REFERANSLARIMIZ</p>
             <h2 id="hv2-refs-title" style={h2Dark}>
@@ -514,7 +515,7 @@ export default function HomeV2() {
           <Link to="/v2/referanslar" className="hv2-textlink" style={textLink}>
             Tüm Referanslarımız <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── BÖLÜM 7 — TEKLİF FORMU ─────────────────────────── */}

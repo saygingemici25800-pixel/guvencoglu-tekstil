@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
+import Reveal from '../shared/Reveal.jsx'
 import { CLIENT_SECTORS, CLIENTS } from '../data/clients.js'
 
 /* ──────────────────────────────────────────────────────────────
@@ -59,7 +60,7 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children
       className={`biz-il${reverse ? ' biz-il-rev' : ''}`}
       style={ilSection}
     >
-      <div className="biz-il-row" style={ilRow}>
+      <Reveal className="biz-il-row" style={ilRow}>
         <div className="biz-il-text" style={{ ...ilText, ...textStyle }}>
           {children}
         </div>
@@ -69,7 +70,7 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children
           role="img"
           aria-label={alt}
         />
-      </div>
+      </Reveal>
     </section>
   )
 }
@@ -147,15 +148,15 @@ export default function BizPage() {
       {/* ─── c) GÜVEN BLOĞU — düz krem, 3 metrik, foto yok ───── */}
       <section style={trustWrap} aria-labelledby="biz-trust-title">
         <div style={trustInner}>
-          <header style={trustHead}>
+          <Reveal as="header" style={trustHead}>
             <span style={rule} aria-hidden="true" />
             <p style={eyebrow}>NEDEN GÜVENÇOĞLU</p>
             <h2 id="biz-trust-title" style={h2}>
               Sözümüzü <em style={em}>rakamlar</em> tutar.
             </h2>
-          </header>
+          </Reveal>
 
-          <div className="biz-trust-grid" style={trustGrid}>
+          <Reveal className="biz-trust-grid" style={trustGrid} delay={120}>
             {TRUST_METRICS.map((m) => (
               <div key={m.label} style={trustCell}>
                 <span style={trustNum}>{m.num}</span>
@@ -163,14 +164,14 @@ export default function BizPage() {
                 <span style={trustHint}>{m.hint}</span>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ─── d) İŞ ORTAKLARI / REFERANSLAR — sektörel grid ───── */}
       <section style={refsWrap} aria-labelledby="biz-refs-title">
         <div style={refsInner}>
-          <header style={refsHead}>
+          <Reveal as="header" style={refsHead}>
             <span style={rule} aria-hidden="true" />
             <p style={eyebrow}>İŞ ORTAKLARIMIZ</p>
             <h2 id="biz-refs-title" style={h2}>
@@ -180,9 +181,9 @@ export default function BizPage() {
               Bir kez başlayan ilişki ortalama altı yıl sürüyor. Sektörlere göre,
               birlikte çalıştığımız kurumlardan bir seçki:
             </p>
-          </header>
+          </Reveal>
 
-          <div className="biz-refs-grid" style={refsGrid}>
+          <Reveal className="biz-refs-grid" style={refsGrid} delay={120}>
             {SECTOR_GROUPS.map((g) => (
               <article key={g.id} style={refCard}>
                 <div style={refCardTop}>
@@ -198,13 +199,13 @@ export default function BizPage() {
                 </ul>
               </article>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ─── e) CTA BANT — "Projenizi konuşalım" → /iletisim ─── */}
       <section style={ctaWrap} aria-labelledby="biz-cta-title">
-        <div style={ctaInner}>
+        <Reveal style={ctaInner}>
           <span style={ruleLight} aria-hidden="true" />
           <h2 id="biz-cta-title" style={ctaTitle}>
             Projenizi konuşalım.
@@ -216,7 +217,7 @@ export default function BizPage() {
           <Link to="/iletisim" className="biz-outline-light" style={outlineBtnLight}>
             İletişime Geçin <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       <style>{`
