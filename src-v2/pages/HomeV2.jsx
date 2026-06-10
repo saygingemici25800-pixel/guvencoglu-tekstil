@@ -213,7 +213,7 @@ export default function HomeV2() {
       <SEOHead
         title="Güvençoğlu Tekstil — Türkiye'nin kurumsal üniforma uzmanı"
         description="Sağlık personeli, otel ekipleri ve okul üniformaları. 2001'den beri Fethiye'deki kendi üretim tesisimizde, aracısız, sözleşmeli üretim ve teslimat. 48 saatte teklif."
-        path="/v2"
+        path="/"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Organization',
