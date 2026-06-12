@@ -68,11 +68,11 @@ function Eyebrow({ children }) {
 
 /* Interlocking bölüm — geniş foto + üstüne binen beyaz kart, Reveal'lı.
    reverse → desktop'ta foto sola (row-reverse), kart sağa biner. */
-function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children }) {
+function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, textured, children }) {
   return (
     <section className={`hz-il${reverse ? ' hz-il-rev' : ''}`} style={ilSection}>
       <Reveal className="hz-il-row" style={ilRow}>
-        <div className="hz-il-text" style={{ ...ilText, ...textStyle }}>
+        <div className={`hz-il-text${textured ? ' fabric-hover' : ''}`} style={{ ...ilText, ...textStyle }}>
           {children}
         </div>
         <div
@@ -184,6 +184,7 @@ export default function HizmetlerPage() {
             reverse={reverse}
             textStyle={reverse ? ilTextRight : ilTextLeft}
             photoStyle={ilPhotoSector}
+            textured
           >
             <Eyebrow>{s.label.toLocaleUpperCase('tr-TR')}</Eyebrow>
             <h3 style={sectorTitle}>{s.label} kurumları</h3>
@@ -241,8 +242,11 @@ export default function HizmetlerPage() {
             Markanıza, sektörünüze ve ekibinize özel teklif için 48 saat içinde
             dönüyoruz.
           </p>
-          <Link to="/iletisim" className="hz-outline-light" style={outlineBtnLight}>
-            İletişime Geçin <span aria-hidden="true">→</span>
+          <Link to="/iletisim" className="hz-outline-light cta-swap-btn" style={outlineBtnLight}>
+            <span className="cta-swap">
+              <span className="cta-swap-top">İletişime Geçin →</span>
+              <span className="cta-swap-bot">0532 134 7602</span>
+            </span>
           </Link>
         </Reveal>
       </section>
@@ -259,8 +263,6 @@ export default function HizmetlerPage() {
           color: var(--v2-navy, #2D3142);
           border-color: var(--v2-cream, #EFEAE0);
         }
-        .hz-outline-light span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
-        .hz-outline-light:hover span, .hz-outline-light:focus-visible span { transform: translateX(5px); }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
         @media (max-width: 860px) {

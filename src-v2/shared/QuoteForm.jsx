@@ -275,6 +275,7 @@ export default function QuoteForm() {
                   ) : (
                     <input type={f.type} {...common} />
                   )}
+                  <span className="v2-form-underline" aria-hidden="true" />
                   {error && (
                     <p id={`${inputId}-err`} style={errorText} role="alert">{error}</p>
                   )}
@@ -328,13 +329,26 @@ export default function QuoteForm() {
           border-color: #D4A373 !important;
           background: rgba(212, 163, 115, 0.08);
         }
+        .v2-form-underline {
+          display: block;
+          height: 2px;
+          margin-top: 6px;
+          background: var(--v2-copper, #D4A373);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .v2-form-input:focus + .v2-form-underline,
+        .v2-form-input:focus-visible + .v2-form-underline {
+          transform: scaleX(1);
+        }
         .v2-form-next {
           transition: background 240ms ease;
         }
         .v2-form-next:hover,
         .v2-form-next:focus-visible {
           background: #F5F5F0;
-          color: #0A2463;
+          color: #2D3142;
         }
         .v2-form-next:hover .v2-form-next-arrow,
         .v2-form-next:focus-visible .v2-form-next-arrow {
@@ -356,6 +370,7 @@ export default function QuoteForm() {
         @media (prefers-reduced-motion: reduce) {
           .v2-form-option,
           .v2-form-input,
+          .v2-form-underline,
           .v2-form-next,
           .v2-form-next-arrow,
           .v2-form-back { transition: none !important; }
@@ -373,7 +388,7 @@ export default function QuoteForm() {
 
 const formWrap = {
   position: 'relative',
-  background: 'var(--v2-navy, #0A2463)',
+  background: 'var(--v2-navy, #2D3142)',
   color: '#F5F5F0',
   padding: '48px',
   borderRadius: 8,
@@ -568,7 +583,7 @@ const nextBtn = {
   fontSize: 17,
   fontWeight: 500,
   background: 'var(--v2-copper, #D4A373)',
-  color: 'var(--v2-navy, #0A2463)',
+  color: 'var(--v2-navy, #2D3142)',
   border: 'none',
   padding: '16px 28px',
   borderRadius: 4,
@@ -584,7 +599,7 @@ const nextBtnArrow = {
   display: 'inline-block',
 }
 const successWrap = {
-  background: 'var(--v2-navy, #0A2463)',
+  background: 'var(--v2-navy, #2D3142)',
   color: '#F5F5F0',
   padding: 'clamp(32px, 6vw, 64px) clamp(20px, 5vw, 48px)',
   borderRadius: 8,

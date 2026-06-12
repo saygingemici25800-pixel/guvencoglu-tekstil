@@ -82,7 +82,7 @@ export default function FooterV2() {
             flexWrap: 'wrap',
           }}
         >
-          <span className="mono">© 2001 — {new Date().getFullYear()} Güvencoğlu Tekstil</span>
+          <span className="mono">© 2001–{new Date().getFullYear()} Güvençoğlu Tekstil</span>
           <span className="mono">v2.0</span>
         </div>
       </div>

@@ -214,8 +214,11 @@ export default function BizPage() {
             Markanıza, sektörünüze ve ekibinize özel teklif için 48 saat içinde
             dönüyoruz.
           </p>
-          <Link to="/iletisim" className="biz-outline-light" style={outlineBtnLight}>
-            İletişime Geçin <span aria-hidden="true">→</span>
+          <Link to="/iletisim" className="biz-outline-light cta-swap-btn" style={outlineBtnLight}>
+            <span className="cta-swap">
+              <span className="cta-swap-top">İletişime Geçin →</span>
+              <span className="cta-swap-bot">0532 134 7602</span>
+            </span>
           </Link>
         </Reveal>
       </section>
@@ -234,14 +237,6 @@ export default function BizPage() {
           background: var(--v2-cream, #EFEAE0);
           color: var(--v2-navy, #2D3142);
           border-color: var(--v2-cream, #EFEAE0);
-        }
-        .biz-outline span, .biz-outline-light span {
-          display: inline-block;
-          transition: transform 260ms cubic-bezier(0.16,1,0.3,1);
-        }
-        .biz-outline:hover span, .biz-outline:focus-visible span,
-        .biz-outline-light:hover span, .biz-outline-light:focus-visible span {
-          transform: translateX(5px);
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 

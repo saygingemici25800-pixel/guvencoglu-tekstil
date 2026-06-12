@@ -248,11 +248,14 @@ export default function HomeV2() {
             <div style={heroCtaGroup}>
               <button
                 type="button"
-                className="hv2-hero-btn"
+                className="hv2-hero-btn cta-swap-btn"
                 style={heroBtn}
                 onClick={scrollToTeklif}
               >
-                Teklif Al →
+                <span className="cta-swap">
+                  <span className="cta-swap-top">Teklif Al →</span>
+                  <span className="cta-swap-bot">0532 134 7602</span>
+                </span>
               </button>
               <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
                 Tüm sektörler →
@@ -403,7 +406,7 @@ export default function HomeV2() {
 
           <div style={sectorsGrid} className="hv2-sectors-grid">
             {SECTORS.map((c) => (
-              <Link key={c.title} to={c.to} className="hv2-sector-card" style={sectorCard}>
+              <Link key={c.title} to={c.to} className="hv2-sector-card fabric-hover" style={sectorCard}>
                 <div
                   style={sectorMedia}
                   role="img"
