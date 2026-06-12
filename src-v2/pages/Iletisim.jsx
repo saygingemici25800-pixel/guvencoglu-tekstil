@@ -1,13 +1,12 @@
-import { useRef, useState, useId } from 'react'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
-import QuoteForm from '../shared/QuoteForm.jsx'
+import TeklifForm from '../shared/TeklifForm.jsx'
 import Reveal from '../shared/Reveal.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    Iletisim — /iletisim tam sayfası (Faz 4)
    Kaynak: ContactV2.jsx içeriği taşındı; palet/path/schema güncellendi.
-   Layout: sol NAP kartı · sağ QuoteForm · altta tam genişlik harita.
+   Layout: sol NAP kartı · sağ TeklifForm · altta tam genişlik harita.
    ≤860px tek sütun. İnterlocking YOK — okunabilirlik öncelik.
    3D/Canvas YOK. Palet sabit: navy #2D3142, copper #D4A373,
    cream #EFEAE0, ink #1A1A1A, muted #5A5A5A.
@@ -37,37 +36,11 @@ function Eyebrow({ children }) {
 }
 
 export default function Iletisim() {
-  const [kvkk, setKvkk] = useState(false)
-  const [kvkkError, setKvkkError] = useState(false)
-  const kvkkRef = useRef(null)
-  const uid = useId()
-  const kvkkId = `${uid}-kvkk`
-  const kvkkErrId = `${uid}-kvkk-err`
-
-  // QuoteForm'a dokunmadan: yalnızca SON adımdaki "Talebi Gönder" submit'ini
-  // capture fazında yakala. Onay yoksa formun kendi handler'ına ulaşmadan durdur
-  // (preventDefault + stopPropagation). Ara adımların "Devam" submit'i serbest.
-  function handleFormCapture(e) {
-    const submitter = e.nativeEvent?.submitter
-    const isFinal = submitter && /gönder/i.test(submitter.textContent || '')
-    if (isFinal && !kvkk) {
-      e.preventDefault()
-      e.stopPropagation()
-      setKvkkError(true)
-      if (kvkkRef.current) kvkkRef.current.focus()
-    }
-  }
-
-  function toggleKvkk(e) {
-    setKvkk(e.target.checked)
-    if (e.target.checked) setKvkkError(false)
-  }
-
   return (
     <PageTransition>
       <SEOHead
         title="İletişim — Güvençoğlu Tekstil"
-        description="Fethiye merkezli Güvençoğlu Tekstil ile iletişime geçin: adres, telefon, WhatsApp, e-posta ve 4 adımlık teklif formu. Pzt–Cmt 08:30–19:00."
+        description="Fethiye merkezli Güvençoğlu Tekstil ile iletişime geçin: adres, telefon, WhatsApp, e-posta ve hızlı teklif formu. Pzt–Cmt 08:30–19:00."
         path="/iletisim"
         schema={{
           '@context': 'https://schema.org',
@@ -109,7 +82,7 @@ export default function Iletisim() {
         </Reveal>
       </section>
 
-      {/* ─── ANA İÇERİK — sol NAP · sağ QuoteForm ────────────────── */}
+      {/* ─── ANA İÇERİK — sol NAP · sağ TeklifForm ───────────────── */}
       <section style={mainSection}>
         <div style={mainGrid} className="ilt-grid">
           {/* SOL — NAP kartı */}
@@ -156,39 +129,9 @@ export default function Iletisim() {
             </ul>
           </Reveal>
 
-          {/* SAĞ — QuoteForm (shared) + KVKK onayı */}
+          {/* SAĞ — sade teklif formu (native required KVKK onayı) */}
           <Reveal style={rightCol} delay={120}>
-            {/* onSubmitCapture: yalnızca final submit'i KVKK ile geçitler */}
-            <div onSubmitCapture={handleFormCapture} style={formGate}>
-              <QuoteForm />
-
-              <div style={kvkkWrap}>
-                <label htmlFor={kvkkId} style={kvkkLabel} className="ilt-kvkk-label">
-                  <input
-                    ref={kvkkRef}
-                    id={kvkkId}
-                    type="checkbox"
-                    checked={kvkk}
-                    onChange={toggleKvkk}
-                    required
-                    aria-invalid={kvkkError ? 'true' : 'false'}
-                    aria-describedby={kvkkError ? kvkkErrId : undefined}
-                    style={kvkkBox}
-                    className="ilt-kvkk-box"
-                  />
-                  <span style={kvkkText}>
-                    Teklif talebimi değerlendirebilmeniz için paylaştığım ad,
-                    iletişim ve proje bilgilerinin Güvençoğlu Tekstil tarafından bu
-                    amaçla işlenmesini kabul ediyorum.
-                  </span>
-                </label>
-                {kvkkError && (
-                  <p id={kvkkErrId} style={kvkkErr} role="alert">
-                    Talebi göndermek için onay kutusunu işaretle.
-                  </p>
-                )}
-              </div>
-            </div>
+            <TeklifForm theme="navy" consent title="Hızlı teklif formu" />
           </Reveal>
         </div>
       </section>
@@ -215,10 +158,6 @@ export default function Iletisim() {
           outline: 2px solid var(--v2-copper, #D4A373);
           outline-offset: 4px;
           border-radius: 2px;
-        }
-        .ilt-kvkk-box:focus-visible {
-          outline: 2px solid var(--v2-copper, #D4A373);
-          outline-offset: 3px;
         }
         @media (max-width: 860px) {
           .ilt-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
@@ -318,13 +257,6 @@ const rightCol = {
   minWidth: 0,
   maxWidth: '100%',
 }
-const formGate = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 20,
-  minWidth: 0,
-  maxWidth: '100%',
-}
 const infoCard = {
   background: 'transparent',
   padding: '24px 0',
@@ -407,45 +339,6 @@ const contactLink = {
   maxWidth: '100%',
 }
 const extLink = { fontSize: 12, opacity: 0.6, flexShrink: 0 }
-
-/* KVKK onay bloğu — formun ALTINDA */
-const kvkkWrap = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  padding: '20px clamp(4px, 2vw, 8px)',
-  maxWidth: '100%',
-  boxSizing: 'border-box',
-}
-const kvkkLabel = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  gap: 12,
-  cursor: 'pointer',
-  maxWidth: '100%',
-}
-const kvkkBox = {
-  width: 20,
-  height: 20,
-  marginTop: 2,
-  flexShrink: 0,
-  accentColor: 'var(--v2-copper, #D4A373)',
-  cursor: 'pointer',
-}
-const kvkkText = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  lineHeight: 1.6,
-  color: 'var(--v2-muted, #5A5A5A)',
-  maxWidth: '60ch',
-}
-const kvkkErr = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 13,
-  lineHeight: 1.5,
-  color: '#B23B2E',
-  margin: '0 0 0 32px',
-}
 
 /* HARİTA */
 const mapSection = {

@@ -1,7 +1,7 @@
 /* V2 Design Tokens — scoped under .v2-root to avoid V1 collision */
 .v2-root {
   /* Palette */
-  --v2-navy: #2D3142;        /* anthracite (was #0A2463) */
+  --v2-navy: #2D3142;        /* anthracite */
   --v2-copper: #D4A373;
   --v2-cream: #EFEAE0;       /* light beige (was #F5F5F0) */
   --v2-ink: #0B0F1A;

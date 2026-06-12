@@ -22,10 +22,10 @@ Okunan 6 skill'den damıtılmış kurallar:
 ## 1. Tasarım Sistemi (V2)
 
 ### Palet
-- **Lacivert (Anchor):** `#0A2463` — güven, kurumsal, derinlik
+- **Antrasit (Anchor):** `#2D3142` — güven, kurumsal, derinlik
 - **Bakır (Accent):** `#D4A373` — sıcaklık, el işçiliği, premium
-- **Krem (Surface):** `#F5F5F0` — kumaş hissi, sayfa zemini
-- **Mürekkep (Text):** `#0B0F1A` (dark mode) / `#0A2463` (light mode)
+- **Krem (Surface):** `#EFEAE0` — kumaş hissi, sayfa zemini
+- **Mürekkep (Text):** `#1A1A1A` — secondary/light mode
 - **Sis (Muted):** `#8A8F9E` — secondary text
 
 ### Tipografi

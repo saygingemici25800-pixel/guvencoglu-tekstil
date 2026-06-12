@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
+import TeklifForm from '../shared/TeklifForm.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
@@ -194,19 +195,6 @@ export default function HomeV2() {
 
   const scrollToTeklif = () =>
     document.getElementById('teklif')?.scrollIntoView({ behavior: 'smooth' })
-
-  const [form, setForm] = useState({ isim: '', telefon: '', email: '', mesaj: '' })
-  const updateField = (key) => (e) =>
-    setForm((f) => ({ ...f, [key]: e.target.value }))
-  const submitQuote = (e) => {
-    e.preventDefault()
-    const subject = `Teklif Talebi - ${form.isim || 'İsimsiz'}`
-    const body = `İsim Soyisim: ${form.isim}\nTelefon: ${form.telefon}\nE-posta: ${form.email}\nTalep: ${form.mesaj}`
-    window.location.href = `mailto:guvencoglutekstil@gmail.com?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`
-    setForm({ isim: '', telefon: '', email: '', mesaj: '' })
-  }
 
   return (
     <PageTransition>
@@ -560,74 +548,12 @@ export default function HomeV2() {
             </div>
           </div>
 
-          {/* SAĞ — sade teklif formu */}
-          <form style={quoteForm} onSubmit={submitQuote}>
-            <h3 style={quoteFormTitle}>Hızlı teklif formu</h3>
-
-            <div style={quoteField}>
-              <label htmlFor="q-isim" style={quoteLabel}>İsim Soyisim</label>
-              <input
-                id="q-isim"
-                type="text"
-                className="hv2-quote-input"
-                style={quoteInput}
-                value={form.isim}
-                onChange={updateField('isim')}
-                autoComplete="name"
-              />
-            </div>
-            <div style={quoteField}>
-              <label htmlFor="q-tel" style={quoteLabel}>Telefon</label>
-              <input
-                id="q-tel"
-                type="tel"
-                className="hv2-quote-input"
-                style={quoteInput}
-                value={form.telefon}
-                onChange={updateField('telefon')}
-                autoComplete="tel"
-              />
-            </div>
-            <div style={quoteField}>
-              <label htmlFor="q-email" style={quoteLabel}>E-posta</label>
-              <input
-                id="q-email"
-                type="email"
-                className="hv2-quote-input"
-                style={quoteInput}
-                value={form.email}
-                onChange={updateField('email')}
-                autoComplete="email"
-              />
-            </div>
-            <div style={quoteField}>
-              <label htmlFor="q-mesaj" style={quoteLabel}>
-                Ne yaptırmak istiyorsunuz?
-              </label>
-              <input
-                id="q-mesaj"
-                type="text"
-                className="hv2-quote-input"
-                style={quoteInput}
-                value={form.mesaj}
-                onChange={updateField('mesaj')}
-                placeholder="Örn. 200 kişilik otel personeli üniforması"
-              />
-            </div>
-
-            <button type="submit" className="hv2-quote-submit" style={quoteSubmit}>
-              Gönder →
-            </button>
-          </form>
+          {/* SAĞ — sade teklif formu (paylaşılan TeklifForm, cream tema) */}
+          <TeklifForm theme="cream" title="Hızlı teklif formu" />
         </div>
       </section>
 
       <style>{`
-        .hv2-quote-input { transition: border-color 0.2s ease; }
-        .hv2-quote-input:focus { border-color: var(--v2-copper, #D4A373); outline: none; }
-        .hv2-quote-submit { cursor: pointer; transition: background 0.3s ease, color 0.3s ease; }
-        .hv2-quote-submit:hover, .hv2-quote-submit:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); }
-
         .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
         .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
         .hv2-hero-link { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
@@ -696,7 +622,7 @@ export default function HomeV2() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo, .hv2-quote-input, .hv2-quote-submit,
+          .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo,
           .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta,
           .hv2-bizteaser-btn, .hv2-bizteaser-btn span {
             transition: none !important;
@@ -1381,47 +1307,4 @@ const quoteContactLink = {
   fontSize: 16,
   color: 'var(--v2-cream, #EFEAE0)',
   textDecoration: 'none',
-}
-const quoteForm = {
-  background: 'var(--v2-cream, #EFEAE0)',
-  borderRadius: 8,
-  padding: 'clamp(24px, 3vw, 40px)',
-}
-const quoteFormTitle = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 22,
-  color: 'var(--v2-navy, #2D3142)',
-  margin: '0 0 20px',
-}
-const quoteField = { marginBottom: 16 }
-const quoteLabel = {
-  display: 'block',
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 13,
-  color: 'var(--v2-muted, #5A5A5A)',
-  marginBottom: 6,
-}
-const quoteInput = {
-  width: '100%',
-  boxSizing: 'border-box',
-  padding: '14px 16px',
-  border: '1px solid rgba(45, 49, 66, 0.2)',
-  borderRadius: 6,
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  background: '#FFFFFF',
-  color: 'var(--v2-ink, #1A1A1A)',
-}
-const quoteSubmit = {
-  width: '100%',
-  marginTop: 8,
-  padding: 15,
-  background: 'var(--v2-navy, #2D3142)',
-  color: 'var(--v2-cream, #EFEAE0)',
-  border: 'none',
-  borderRadius: 999,
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  fontWeight: 600,
 }
