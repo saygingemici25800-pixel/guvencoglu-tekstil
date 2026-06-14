@@ -28,9 +28,12 @@
   --bg-elev: #ffffff;
   --bg-deep: #ebe6db;
 
-  --font-display: 'Montserrat', 'Helvetica Neue', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-accent: 'Playfair Display', 'Times New Roman', serif;
+  /* V1 fontlari (Montserrat/Playfair/Inter) index.html'den kaldirildi; bu eski
+     degiskenler artik V2 fontlarina isaret eder ki olu V1 kurallari yuklenmeyen
+     bir font istemesin (V2 tipografisi degismez). */
+  --font-display: 'Fraunces', 'Times New Roman', serif;
+  --font-body: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  --font-accent: 'Fraunces', 'Times New Roman', serif;
 
   --s-1: 0.25rem;
   --s-2: 0.5rem;
