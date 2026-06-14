@@ -6,5 +6,19 @@
     { "source": "/uretim", "destination": "/hizmetler", "permanent": true },
     { "source": "/referanslar", "destination": "/hizmetler", "permanent": true },
     { "source": "/sektorler", "destination": "/hizmetler", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/((?!assets/).*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
   ]
 }
