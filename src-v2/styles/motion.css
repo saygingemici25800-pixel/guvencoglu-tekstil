@@ -58,7 +58,7 @@ html.lenis body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url(/atolye-renk.webp);
+  background-image: url(/fabric-texture.webp);
   background-size: cover;
   background-position: center;
   mix-blend-mode: multiply;
