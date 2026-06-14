@@ -9,7 +9,7 @@
    Build bu script'i ÇAĞIRMAZ — üretilen .webp dosyaları repo'ya commit'lenir. */
 
 import sharp from 'sharp'
-import { statSync } from 'node:fs'
+import { statSync, existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const PUBLIC = 'public'
@@ -34,6 +34,11 @@ let afterTotal = 0
 
 for (const { file, width } of JOBS) {
   const src = join(PUBLIC, file)
+  // Orijinal JPG'ler ilk turdan sonra silindi → kaynak yoksa atla (re-runnable).
+  if (!existsSync(src)) {
+    console.log(`  ${file.padEnd(20)} (kaynak yok, atlandı)`)
+    continue
+  }
   const out = join(PUBLIC, file.replace(/\.(jpe?g|png)$/i, '.webp'))
   const before = Number(kb(src))
   const meta = await sharp(src).metadata()
@@ -50,7 +55,30 @@ for (const { file, width } of JOBS) {
   )
 }
 
-console.log(
-  `\n[optimize-images] ${JOBS.length} görsel: ${beforeTotal} KB → ${afterTotal} KB ` +
-    `(%${Math.round((1 - afterTotal / beforeTotal) * 100)} azalma)`,
-)
+if (beforeTotal > 0) {
+  console.log(
+    `\n[optimize-images] ${JOBS.length} görsel: ${beforeTotal} KB → ${afterTotal} KB ` +
+      `(%${Math.round((1 - afterTotal / beforeTotal) * 100)} azalma)`,
+  )
+}
+
+// ── WebP yeniden sıkıştırma (kaynak .jpg silinmiş; mevcut .webp'den, in-place) ──
+// okul-main portre + detaylı → 1600px/q80'de büyük kaldı; 1280px/q72 ile ~300KB.
+const RECOMPRESS = [{ file: 'okul-main.webp', width: 1280, quality: 72 }]
+
+for (const { file, width, quality } of RECOMPRESS) {
+  const path = join(PUBLIC, file)
+  if (!existsSync(path)) continue
+  const before = Number(kb(path))
+  const meta = await sharp(path).metadata()
+  // Aynı dosyaya yazacağımız için önce belleğe oku (read/write çakışmasını önle).
+  const buf = readFileSync(path)
+  await sharp(buf)
+    .resize({ width, withoutEnlargement: true })
+    .webp({ quality })
+    .toFile(path)
+  console.log(
+    `  ${file.padEnd(20)} ${meta.width}px → ${Math.min(width, meta.width)}px  ` +
+      `q${quality}  ${before} KB → ${Number(kb(path))} KB`,
+  )
+}
