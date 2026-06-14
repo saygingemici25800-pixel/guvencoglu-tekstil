@@ -18,7 +18,7 @@ const SECTORS = [
   {
     id: 'saglik',
     label: 'Sağlık',
-    photo: '/saglik-main.jpg',
+    photo: '/saglik-main.webp',
     alt: 'Sağlık personeli üniforması',
     desc: 'Hastane, klinik, eczane, laboratuvar ve diş kliniklerinin personeli için hijyenik, dayanıklı ve kurumsal medikal kıyafetler.',
     items: [
@@ -31,7 +31,7 @@ const SECTORS = [
   {
     id: 'otel',
     label: 'Otel',
-    photo: '/otel-main.jpg',
+    photo: '/otel-main.webp',
     alt: 'Otel personeli üniforması',
     desc: 'Resepsiyondan mutfağa, housekeeping’den spa’ya kadar otel ekiplerinin tüm departmanları için kurumsal kıyafet.',
     items: [
@@ -44,7 +44,7 @@ const SECTORS = [
   {
     id: 'okul',
     label: 'Okul',
-    photo: '/okul-main.jpg',
+    photo: '/okul-main.webp',
     alt: 'Okul üniforması',
     desc: 'Anaokulundan liseye, kolej ve özel okullar için dayanıklı, rahat ve kurum kimliğine uygun üniformalar.',
     items: [
@@ -112,7 +112,7 @@ export default function HizmetlerPage() {
 
       {/* ─── 1) GİRİŞ — interlocking (h1) ─────────────────────── */}
       <InterlockSection
-        photo="/atolye-uretim.jpg"
+        photo="/atolye-uretim.webp"
         alt="Fethiye'deki kendi üretim tesisimizden üretim hattı"
         textStyle={ilTextIntro}
         photoStyle={ilPhotoIntro}

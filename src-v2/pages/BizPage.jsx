@@ -105,7 +105,7 @@ export default function BizPage() {
 
       {/* ─── a) GİRİŞ — metin SOL / foto SAĞ — kart aşağı kayık ── */}
       <InterlockSection
-        photo="/miras.jpg"
+        photo="/miras.webp"
         alt="Güvençoğlu Tekstil atölyesinden bir kare"
         textStyle={ilTextA}
         photoStyle={ilPhotoA}
@@ -123,7 +123,7 @@ export default function BizPage() {
 
       {/* ─── b) HİKÂYE / MİRAS — foto SOL / metin SAĞ (ritim döner) ─ */}
       <InterlockSection
-        photo="/atolye-uretim.jpg"
+        photo="/atolye-uretim.webp"
         alt="Fethiye'deki kendi üretim tesisimizden üretim hattı"
         reverse
         textStyle={ilTextB}

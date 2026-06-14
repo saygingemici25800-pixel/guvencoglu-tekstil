@@ -36,21 +36,21 @@ const HERO_SECTORS = [
     id: 'saglik',
     num: '01',
     name: 'Sağlık',
-    img: '/saglik-main.jpg',
+    img: '/saglik-main.webp',
     desc: 'Hastane, klinik, eczane ve laboratuvar personeli için hijyenik, dayanıklı üniformalar.',
   },
   {
     id: 'otel',
     num: '02',
     name: 'Otel',
-    img: '/otel-main.jpg',
+    img: '/otel-main.webp',
     desc: "Resepsiyondan mutfağa, housekeeping'den spa'ya otel ekipleri için kurumsal kıyafet.",
   },
   {
     id: 'okul',
     num: '03',
     name: 'Okul',
-    img: '/okul-main.jpg',
+    img: '/okul-main.webp',
     desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
   },
 ]
@@ -80,9 +80,9 @@ const CARD_POS = [
 ]
 
 const ATELIER_PHOTOS = [
-  { img: '/atolye-uretim.jpg', label: 'ÜRETİM' },
-  { img: '/atolye-zanaat.jpg', label: 'ZANAAT' },
-  { img: '/atolye-renk.jpg', label: 'RENK & KUMAŞ' },
+  { img: '/atolye-uretim.webp', label: 'ÜRETİM' },
+  { img: '/atolye-zanaat.webp', label: 'ZANAAT' },
+  { img: '/atolye-renk.webp', label: 'RENK & KUMAŞ' },
 ]
 
 const SERVICES = [
@@ -1196,7 +1196,7 @@ const bizTeaserPhoto = {
   zIndex: 1,
   alignSelf: 'stretch',
   minHeight: 'clamp(340px, 46vh, 500px)',
-  backgroundImage: 'url(/saglik-main.jpg)',
+  backgroundImage: 'url(/saglik-main.webp)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
