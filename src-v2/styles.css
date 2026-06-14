@@ -8,7 +8,7 @@
    ============================================================ */
 
 :root {
-  --navy: #0A2463;
+  --navy: #2D3142;
   --navy-900: #07194a;
   --navy-700: #143488;
   --copper: #D4A373;
@@ -72,7 +72,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
-  background: #0A2463;
+  background: #2D3142;
 }
 
 @media (prefers-reduced-motion: reduce) {
