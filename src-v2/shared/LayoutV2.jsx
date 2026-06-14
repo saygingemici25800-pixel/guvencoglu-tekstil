@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
 import Lenis from 'lenis'
 import NavV2 from './NavV2.jsx'
@@ -42,9 +41,10 @@ export default function LayoutV2() {
       <a href="#v2-main" className="skip-link">İçeriğe atla</a>
       <NavV2 />
       <main id="v2-main">
-        <AnimatePresence mode="wait" initial={false}>
-          <Outlet key={location.pathname} />
-        </AnimatePresence>
+        {/* key={pathname} → route değişiminde Outlet remount olur; PageTransition'ın
+            saf-CSS clip-path giriş geçişi bu remount'la tetiklenir (framer-motion
+            gerekmez). AnimatePresence no-op'tu (CSS exit yok), kaldırıldı. */}
+        <Outlet key={location.pathname} />
       </main>
 
       {/* Floating WhatsApp — tüm sayfalarda, nav'ın altında (z-index 40 < 50) */}
