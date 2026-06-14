@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
@@ -52,30 +52,6 @@ const HERO_SECTORS = [
     name: 'Okul',
     img: '/okul-main.webp',
     desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
-  },
-]
-
-const CARD_POS = [
-  {
-    width: 'clamp(280px, 30vw, 440px)',
-    height: 'clamp(360px, 46vh, 560px)',
-    left: '2%',
-    top: 'clamp(90px, 11vh, 130px)',
-    zIndex: 3,
-  },
-  {
-    width: 'clamp(200px, 22vw, 320px)',
-    height: 'clamp(240px, 30vh, 380px)',
-    right: '8%',
-    top: 'clamp(70px, 9vh, 110px)',
-    zIndex: 2,
-  },
-  {
-    width: 'clamp(170px, 19vw, 280px)',
-    height: 'clamp(220px, 28vh, 340px)',
-    right: '2%',
-    bottom: '4%',
-    zIndex: 2,
   },
 ]
 
@@ -188,11 +164,67 @@ function ServiceIcon({ name }) {
   }
 }
 
-export default function HomeV2() {
-  const navigate = useNavigate()
-  const [hoveredCard, setHoveredCard] = useState(null)
-  const goToSector = () => navigate('/sektorler')
+/* BlurReveal — Reveal'in SSG-safe one-shot + IntersectionObserver mantığı,
+   ek olarak filter blur(10px→0) ile "stagger blur-in". idle = SSR/no-JS GÖRÜNÜR
+   (opacity 1, blur 0 — statik HTML'e gizli içerik gömülmez); JS layout-effect ile
+   paint'ten önce gizler, viewport'a girince bir kez açar. delay = index*200ms
+   ile kademeli. prefers-reduced-motion → hiç gizlemez (anında görünür). */
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
+const SPRING = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
+function BlurReveal({ delay = 0, duration = 760, y = 16, blur = 10, className, style, children }) {
+  const ref = useRef(null)
+  const [state, setState] = useState('idle')
+
+  useIsoLayoutEffect(() => {
+    const node = ref.current
+    if (!node) return
+    if (
+      !('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return // animasyon yok → görünür kal
+    }
+    setState('hidden')
+    const vh = window.innerHeight || document.documentElement.clientHeight
+    const rect = node.getBoundingClientRect()
+    if (rect.top < vh * 0.95 && rect.bottom > 0) {
+      const raf = requestAnimationFrame(() => setState('shown'))
+      return () => cancelAnimationFrame(raf)
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setState('shown')
+          io.disconnect()
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  const animated = state !== 'idle'
+  const hidden = state === 'hidden'
+  const revealStyle = {
+    opacity: hidden ? 0 : 1,
+    transform: hidden ? `translateY(${y}px)` : 'none',
+    filter: hidden ? `blur(${blur}px)` : 'blur(0px)',
+    transition: animated
+      ? `opacity ${duration}ms ${SPRING} ${delay}ms, transform ${duration}ms ${SPRING} ${delay}ms, filter ${duration}ms ${SPRING} ${delay}ms`
+      : undefined,
+    willChange: animated ? 'opacity, transform, filter' : undefined,
+  }
+
+  return (
+    <div ref={ref} className={className} style={{ ...revealStyle, ...style }}>
+      {children}
+    </div>
+  )
+}
+
+export default function HomeV2() {
   const scrollToTeklif = () =>
     document.getElementById('teklif')?.scrollIntoView({ behavior: 'smooth' })
 
@@ -251,57 +283,34 @@ export default function HomeV2() {
             </div>
           </div>
 
-          {/* SAĞ %66 — krem zemin üzerinde yüzen asimetrik görseller */}
-          <div className="hv2-hero-right" style={heroRight}>
-            <span className="hv2-hero-tag" style={heroTag} aria-hidden="true">
-              2001 — 2026
-            </span>
-            {HERO_SECTORS.map((s, i) => {
-              const big = i === 0
-              const isHovered = hoveredCard === s.id
-              const cardStyle = { ...heroCard, ...CARD_POS[i] }
-              return (
-                <div
-                  key={s.id}
-                  className={`hv2-hero-card${big ? ' hv2-hero-card-big' : ''}`}
-                  style={cardStyle}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${s.name} sektörü üniformaları - detaylar`}
-                  onMouseEnter={() => setHoveredCard(s.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  onClick={goToSector}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      goToSector()
-                    }
-                  }}
+          {/* SAĞ %66 — 3 kartlı asimetrik grid galeri (stagger blur-in) */}
+          <div className="hv2-hero-gallery" style={heroGallery} aria-label="Sektör görselleri">
+            {HERO_SECTORS.map((s, i) => (
+              <BlurReveal
+                key={s.id}
+                delay={i * 200}
+                className={`hv2-hg-card hv2-hg-${i + 1}`}
+                style={galleryCard}
+              >
+                <Link
+                  to="/sektorler"
+                  className="hv2-hg-link"
+                  style={galleryLink}
+                  aria-label={`${s.name} sektörü üniformaları`}
                 >
-                  <div
-                    className="hv2-hero-card-photo"
-                    style={{
-                      ...heroCardPhoto,
-                      backgroundImage: `url(${s.img})`,
-                      transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                    }}
+                  <span
+                    className="hv2-hg-photo"
+                    style={{ ...heroCardPhoto, backgroundImage: `url(${s.img})` }}
                     aria-hidden="true"
                   />
-                  <div
-                    style={{
-                      ...heroCardOverlay,
-                      ...(isHovered ? heroCardOverlayHover : null),
-                    }}
-                    aria-hidden="true"
-                  />
-                  <div style={heroCardContent}>
+                  <span style={heroCardOverlay} aria-hidden="true" />
+                  <span style={heroCardContent}>
                     <span style={heroCardNum}>{s.num}</span>
-                    <span style={big ? heroCardNameBig : heroCardName}>{s.name}</span>
-                    {big && <p style={heroCardDesc}>{s.desc}</p>}
-                  </div>
-                </div>
-              )
-            })}
+                    <span style={i === 0 ? heroCardNameBig : heroCardName}>{s.name}</span>
+                  </span>
+                </Link>
+              </BlurReveal>
+            ))}
           </div>
         </div>
 
@@ -558,7 +567,13 @@ export default function HomeV2() {
         .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
         .hv2-hero-link { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         .hv2-hero-link:hover, .hv2-hero-link:focus-visible { background: var(--v2-navy, #2D3142); color: var(--v2-cream, #EFEAE0); }
-        .hv2-hero-card:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; }
+        .hv2-hg-photo { will-change: transform; }
+        .hv2-hg-card:hover .hv2-hg-photo, .hv2-hg-link:focus-visible .hv2-hg-photo { transform: scale(1.05); }
+        .hv2-hg-link:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; border-radius: 16px; }
+        /* Asimetrik yerleşim: sol uzun kart (aşağı kayık) + sağda iki kısa kart */
+        .hv2-hg-1 { grid-column: 1; grid-row: 1 / 3; margin-top: clamp(16px, 3vh, 40px); }
+        .hv2-hg-2 { grid-column: 2; grid-row: 1; }
+        .hv2-hg-3 { grid-column: 2; grid-row: 2; }
         .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
 
         .hv2-textlink { transition: color 220ms ease; }
@@ -609,9 +624,8 @@ export default function HomeV2() {
           .hv2-hero { height: auto !important; overflow: visible !important; }
           .hv2-hero-upper { flex-direction: column !important; height: auto !important; }
           .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(100px, 14vh, 140px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
-          .hv2-hero-right { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 12px !important; }
-          .hv2-hero-card { position: static !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 10 !important; border-radius: 4px !important; z-index: auto !important; }
-          .hv2-hero-tag { display: none !important; }
+          .hv2-hero-gallery { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
+          .hv2-hg-card { grid-column: auto !important; grid-row: auto !important; margin-top: 0 !important; width: 100% !important; aspect-ratio: 16 / 10 !important; border-radius: 10px !important; }
           .hv2-wordmark { position: static !important; height: auto !important; overflow: hidden !important; }
           .hv2-wordmark-text { font-size: clamp(48px, 16vw, 90px) !important; line-height: 0.85 !important; transform: none !important; }
           .hv2-quote-inner { grid-template-columns: 1fr !important; }
@@ -622,7 +636,7 @@ export default function HomeV2() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hv2-hero-btn, .hv2-hero-link, .hv2-hero-card-photo,
+          .hv2-hero-btn, .hv2-hero-link, .hv2-hg-photo,
           .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta,
           .hv2-bizteaser-btn, .hv2-bizteaser-btn span {
             transition: none !important;
@@ -734,24 +748,31 @@ const heroLink = {
   minHeight: 44,
   boxSizing: 'border-box',
 }
-const heroRight = { width: '66%', height: '100%', position: 'relative' }
-const heroTag = {
-  position: 'absolute',
+const heroGallery = {
+  position: 'relative',
   zIndex: 1,
-  left: '46%',
-  top: 'clamp(40px, 6vh, 76px)',
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.3em',
-  color: 'var(--v2-muted, #5A5A5A)',
-  pointerEvents: 'none',
-  whiteSpace: 'nowrap',
+  width: '66%',
+  height: '100%',
+  boxSizing: 'border-box',
+  display: 'grid',
+  gridTemplateColumns: '1.05fr 0.95fr',
+  gridTemplateRows: '1.15fr 0.85fr',
+  gap: 'clamp(12px, 1.1vw, 18px)',
+  padding: 'clamp(96px, 12vh, 140px) clamp(28px, 3.2vw, 60px) clamp(28px, 4vh, 56px) clamp(8px, 1vw, 16px)',
 }
-const heroCard = {
-  position: 'absolute',
+const galleryCard = {
+  position: 'relative',
   overflow: 'hidden',
-  borderRadius: 3,
-  cursor: 'pointer',
+  borderRadius: 16,
+  boxShadow: '0 26px 55px -30px rgba(45, 49, 66, 0.5)',
+  minWidth: 0,
+  minHeight: 0,
+}
+const galleryLink = {
+  position: 'absolute',
+  inset: 0,
+  display: 'block',
+  textDecoration: 'none',
 }
 const heroCardPhoto = {
   position: 'absolute',
@@ -769,10 +790,6 @@ const heroCardOverlay = {
   background:
     'linear-gradient(to top, rgba(45,49,66,0.85) 0%, rgba(45,49,66,0.2) 55%, transparent 100%)',
   transition: 'background 0.5s ease',
-}
-const heroCardOverlayHover = {
-  background:
-    'linear-gradient(to top, rgba(45,49,66,0.72) 0%, rgba(45,49,66,0.12) 55%, transparent 100%)',
 }
 const heroCardContent = {
   position: 'absolute',
@@ -804,15 +821,6 @@ const heroCardName = {
   fontSize: 'clamp(20px, 1.7vw, 28px)',
   lineHeight: 1.1,
   color: 'var(--v2-cream, #EFEAE0)',
-}
-const heroCardDesc = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  lineHeight: 1.5,
-  color: 'rgba(239, 234, 224, 0.85)',
-  maxWidth: 300,
-  marginTop: 8,
-  marginBottom: 0,
 }
 const heroWordmark = {
   position: 'absolute',
