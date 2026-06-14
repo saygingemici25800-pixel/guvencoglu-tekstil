@@ -38,7 +38,7 @@ export function getPostBySlug(slug) {
 export const SECTOR_LABELS = {
   saglik: 'Sağlık',
   otel: 'Otel',
-  okul: 'Okul',
+  okul: 'Okul/Kurumsal',
   genel: 'Genel',
 }
 
