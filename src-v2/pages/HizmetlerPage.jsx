@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
-import { STATIONS } from '../data/stations.js'
 import { SERVICES } from '../data/services.js'
 
 /* ──────────────────────────────────────────────────────────────
@@ -10,7 +9,7 @@ import { SERVICES } from '../data/services.js'
    Mevcut desen: BizPage interlocking (geniş foto arka katman + üstüne
    binen beyaz kart, ~%10 binme, gölge 0 24px 50px -28px, dikey offset
    asimetri, ritim sol/sağ dönüşümlü) + <Reveal> (one-shot).
-   İçerik kaynağı: STATIONS (üretim adımları) · SERVICES (hizmet kalemleri).
+   İçerik kaynağı: SERVICES (hizmet kalemleri).
    Sektörler EŞİT AĞIRLIK (sağlık/otel/okul aynı genişlik). 3D yok.
    ────────────────────────────────────────────────────────────── */
 
@@ -128,39 +127,7 @@ export default function HizmetlerPage() {
         </p>
       </InterlockSection>
 
-      {/* ─── 2) ÜRETİM SÜRECİ — numaralı adım şeridi (STATIONS) ── */}
-      <section style={stepWrap} aria-labelledby="hz-step-title">
-        <div style={stepInner}>
-          <Reveal as="header" style={stepHead}>
-            <Eyebrow>ÜRETİM SÜRECİ</Eyebrow>
-            <h2 id="hz-step-title" style={h2Light}>
-              Hammaddeden teslimata, <em style={em}>yedi</em> adım.
-            </h2>
-            <p style={ledeLight}>
-              Bir kumaş parçası fabrika kapısından çıkana kadar yedi ayrı elden,
-              yedi ayrı kontrolden geçer. Her adım kendi tesisimizde.
-            </p>
-          </Reveal>
-
-          <ol style={stepGrid} className="hz-step-grid">
-            {STATIONS.map((s, i) => (
-              <Reveal
-                as="li"
-                key={s.id}
-                style={stepCard}
-                delay={Math.min(i * 70, 360)}
-              >
-                <span style={stepNum}>{String(i + 1).padStart(2, '0')}</span>
-                <span style={stepMono}>{s.mono}</span>
-                <h3 style={stepTitle}>{s.title}</h3>
-                <p style={stepDesc}>{s.description}</p>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ─── 3) SEKTÖREL ÇÖZÜMLER — 3 interlock, EŞİT ağırlık ─── */}
+      {/* ─── 2) SEKTÖREL ÇÖZÜMLER — 3 interlock, EŞİT ağırlık ─── */}
       <section style={sectorsWrap} aria-labelledby="hz-sectors-title">
         <Reveal style={sectorsHead}>
           <Eyebrow>SEKTÖREL ÇÖZÜMLER</Eyebrow>
@@ -201,19 +168,19 @@ export default function HizmetlerPage() {
         )
       })}
 
-      {/* ─── 4) HİZMET KALEMLERİ — SERVICES grid (sade) ───────── */}
+      {/* ─── 3) HİZMET KALEMLERİ — SERVICES grid (premium, sakin) ─ */}
       <section style={svcWrap} aria-labelledby="hz-svc-title">
         <div style={svcInner}>
           <Reveal as="header" style={svcHead}>
             <Eyebrow>HİZMET KALEMLERİ</Eyebrow>
             <h2 id="hz-svc-title" style={h2}>
-              Altı hat, <em style={em}>tek çatı</em> altında.
+              Beş hat, <em style={em}>tek çatı</em> altında.
             </h2>
           </Reveal>
 
           <Reveal style={svcGrid} className="hz-svc-grid" delay={120}>
             {SERVICES.map((s) => (
-              <article key={s.id} style={svcCard}>
+              <article key={s.id} className="hz-svc-card" style={svcCard}>
                 <span style={svcNo}>{s.no}</span>
                 <h3 style={svcTitle}>{s.title}</h3>
                 <p style={svcTagline}>{s.tagline}</p>
@@ -231,7 +198,7 @@ export default function HizmetlerPage() {
         </div>
       </section>
 
-      {/* ─── 5) CTA BANT — navy → /iletisim ──────────────────── */}
+      {/* ─── 4) CTA BANT — navy → /iletisim ──────────────────── */}
       <section style={ctaWrap} aria-labelledby="hz-cta-title">
         <Reveal style={ctaInner}>
           <span style={ctaRule} aria-hidden="true" />
@@ -265,6 +232,16 @@ export default function HizmetlerPage() {
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
+        /* Hizmet kartları — sakin premium: yumuşak katmanlı gölge + zarif hover yükselme */
+        .hz-svc-card {
+          box-shadow: 0 1px 2px rgba(45, 49, 66, 0.04), 0 18px 40px -26px rgba(45, 49, 66, 0.3);
+          transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 340ms ease;
+        }
+        .hz-svc-card:hover, .hz-svc-card:focus-within {
+          transform: translateY(-5px);
+          box-shadow: 0 4px 10px rgba(45, 49, 66, 0.06), 0 30px 60px -30px rgba(45, 49, 66, 0.42);
+        }
+
         @media (max-width: 860px) {
           .hz-il-row, .hz-il-rev .hz-il-row { flex-direction: column !important; }
           .hz-il-text {
@@ -280,16 +257,14 @@ export default function HizmetlerPage() {
             width: 100% !important;
             min-height: clamp(260px, 56vw, 380px) !important;
           }
-          .hz-step-grid { grid-template-columns: 1fr !important; }
           .hz-svc-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 861px) and (max-width: 1100px) {
-          .hz-step-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hz-svc-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hz-outline-light, .hz-outline-light span { transition: none !important; }
+          .hz-outline-light, .hz-outline-light span, .hz-svc-card { transition: none !important; }
         }
       `}</style>
     </PageTransition>
@@ -336,7 +311,6 @@ const h2 = {
   margin: '0 0 22px',
   maxWidth: '20ch',
 }
-const h2Light = { ...h2, color: 'var(--v2-cream, #EFEAE0)' }
 const sectorTitle = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
@@ -353,15 +327,6 @@ const lede = {
   color: 'var(--v2-ink, #1A1A1A)',
   margin: 0,
   maxWidth: '46ch',
-  textAlign: 'left',
-}
-const ledeLight = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 17,
-  lineHeight: 1.65,
-  color: 'rgba(239, 234, 224, 0.78)',
-  margin: 0,
-  maxWidth: '52ch',
   textAlign: 'left',
 }
 const body = {
@@ -439,67 +404,6 @@ const sectorDot = {
   marginTop: 9,
 }
 
-/* 2) ÜRETİM SÜRECİ — adım şeridi (navy) */
-const stepWrap = {
-  background: NAVY_BG,
-  padding: 'clamp(64px, 9vw, 120px) clamp(24px, 6vw, 96px)',
-}
-const stepInner = {
-  maxWidth: 1280,
-  margin: '0 auto',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 'clamp(40px, 5vw, 64px)',
-}
-const stepHead = { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }
-const stepGrid = {
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-  gap: 'clamp(20px, 2.4vw, 32px)',
-}
-const stepCard = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: 10,
-  paddingTop: 22,
-  borderTop: '1px solid rgba(212, 163, 115, 0.4)',
-}
-const stepNum = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 500,
-  fontSize: 'clamp(44px, 5vw, 68px)',
-  lineHeight: 1,
-  letterSpacing: '-0.03em',
-  color: 'var(--v2-copper, #D4A373)',
-  marginBottom: 4,
-}
-const stepMono = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 11,
-  letterSpacing: '0.18em',
-  textTransform: 'uppercase',
-  color: 'rgba(239, 234, 224, 0.55)',
-}
-const stepTitle = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(20px, 2vw, 25px)',
-  lineHeight: 1.15,
-  color: 'var(--v2-cream, #EFEAE0)',
-  margin: '2px 0 0',
-}
-const stepDesc = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  lineHeight: 1.6,
-  color: 'rgba(239, 234, 224, 0.7)',
-  margin: 0,
-}
-
 /* 3) SEKTÖREL — bölüm başlığı */
 const sectorsWrap = {
   background: CREAM_BG,
@@ -532,28 +436,33 @@ const svcHead = { display: 'flex', flexDirection: 'column', alignItems: 'flex-st
 const svcGrid = {
   width: '100%',
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 'clamp(18px, 2.2vw, 28px)',
+  alignItems: 'stretch',
 }
 const svcCard = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 12,
-  padding: 'clamp(26px, 2.6vw, 36px)',
+  gap: 14,
+  height: '100%',
+  boxSizing: 'border-box',
+  padding: 'clamp(30px, 3vw, 44px)',
   background: 'var(--v2-surface-elevated, #FFFFFF)',
-  border: '1px solid rgba(45, 49, 66, 0.12)',
+  borderRadius: 16,
 }
 const svcNo = {
   fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.16em',
+  fontSize: 13,
+  letterSpacing: '0.2em',
   color: 'var(--v2-copper, #D4A373)',
+  marginBottom: 2,
 }
 const svcTitle = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(22px, 2.2vw, 28px)',
-  lineHeight: 1.1,
+  fontSize: 'clamp(23px, 2.2vw, 30px)',
+  lineHeight: 1.08,
+  letterSpacing: '-0.01em',
   color: 'var(--v2-navy, #2D3142)',
   margin: 0,
 }
@@ -562,21 +471,22 @@ const svcTagline = {
   fontSize: 16,
   lineHeight: 1.55,
   color: 'var(--v2-ink, #1A1A1A)',
-  margin: '0 0 6px',
+  margin: 0,
 }
 const svcFeatList = {
   listStyle: 'none',
   margin: 0,
-  padding: '14px 0 0',
+  marginTop: 'auto',
+  padding: '20px 0 0',
   borderTop: '1px solid rgba(45, 49, 66, 0.1)',
   display: 'flex',
   flexDirection: 'column',
-  gap: 10,
+  gap: 11,
 }
 const svcFeatItem = {
   display: 'flex',
   alignItems: 'flex-start',
-  gap: 10,
+  gap: 11,
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 15,
   lineHeight: 1.5,

@@ -1,20 +1,7 @@
 export const SERVICES = [
   {
-    id: 'konfeksiyon',
-    no: '01',
-    title: 'Konfeksiyon',
-    tagline: 'Kesim → dikim → kalite, tek çatı altında.',
-    body: 'Okul forması, kurumsal üniforma, iş elbisesi ve özel beden konfeksiyon. Pamuklu, polyester, karışım kumaşlarda — kendi tesisimizde, aracısız.',
-    features: [
-      'Numune onayından seri üretime',
-      'Beden dağılımı: XS – 5XL',
-      'Renk, kumaş ve aksesuar seçimi',
-      '200 – 200.000 adet kapasite',
-    ],
-  },
-  {
     id: 'nakis',
-    no: '02',
+    no: '01',
     title: 'Nakış',
     tagline: 'Logo, amblem, isim — 12+ renk derinliği.',
     body: 'Bilgisayarlı nakış makinelerinde polyester ipliği ile uzun ömürlü uygulama. Yıkamaya, ütüye, sürtünmeye dayanıklı.',
@@ -27,7 +14,7 @@ export const SERVICES = [
   },
   {
     id: 'baski',
-    no: '03',
+    no: '02',
     title: 'Baskı',
     tagline: 'Dijital, transfer, sublimasyon.',
     body: 'Pamuklu, polyester ve karışım kumaşlara renk garantili baskı. Küçük seriden büyük adetlere optimize hat.',
@@ -40,7 +27,7 @@ export const SERVICES = [
   },
   {
     id: 'ozeltasarim',
-    no: '04',
+    no: '03',
     title: 'Özel Tasarım',
     tagline: 'Markaya özel patern, model, kalıp.',
     body: 'Sıfırdan tasarım veya mevcut modelin yeniden yorumlanması. Model çizimi, kalıp, numune ve onay döngüsü.',
@@ -53,7 +40,7 @@ export const SERVICES = [
   },
   {
     id: 'toplu',
-    no: '05',
+    no: '04',
     title: 'Toplu Üretim',
     tagline: 'Seri kapasitesi: 500 – 200.000 adet.',
     body: 'Büyük adet için optimize edilmiş üretim hattı. Üretim planlama, hammadde tedariği, kalite kontrol — kesintisiz akış.',
@@ -66,7 +53,7 @@ export const SERVICES = [
   },
   {
     id: 'b2b',
-    no: '06',
+    no: '05',
     title: 'B2B Çözüm',
     tagline: 'Markaya özel etiket, tedarik, white-label.',
     body: 'Markaya özel etiket, ambalaj, ürün geliştirme. Bayi/distribütör için stoklu ya da siparişe özel üretim.',
