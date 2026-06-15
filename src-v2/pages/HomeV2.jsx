@@ -443,7 +443,7 @@ export default function HomeV2() {
           <p style={prose}>
             Sözleşmeli üretim, sözleşmeli teslimat, sözleşmeli kalite. Çeyrek asırlık güvencemizle.
           </p>
-          <Link to="/v2/hikayemiz" className="hv2-textlink" style={textLink}>
+          <Link to="/v2/hikayemiz" className="hv2-textlink" style={promiseCta}>
             Bizi Daha Yakından Tanıyın <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
@@ -1146,7 +1146,7 @@ const promiseH2 = {
   fontSize: 'clamp(30px, 4.4vw, 52px)',
   lineHeight: 1.1,
   letterSpacing: '-0.02em',
-  color: 'var(--v2-ink, #1A1A1A)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: '0 0 8px',
   maxWidth: '18ch',
 }
@@ -1154,7 +1154,7 @@ const prose = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 18,
   lineHeight: 1.7,
-  color: 'var(--v2-ink, #1A1A1A)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: 0,
   maxWidth: 680,
 }
@@ -1170,6 +1170,13 @@ const textLink = {
   textDecoration: 'none',
 }
 const textLinkCopper = { ...textLink, color: 'var(--v2-copper, #D4A373)' }
+/* Vaat/Söz bölümü CTA — 60-30-10'da TEK copper vurgu (rest'te copper + alt çizgi) */
+const promiseCta = {
+  ...textLink,
+  color: 'var(--v2-copper, #D4A373)',
+  borderBottom: '1.5px solid var(--v2-copper, #D4A373)',
+  paddingBottom: 4,
+}
 
 /* BÖLÜM 4 — SEKTÖRLER */
 const sectorsWrap = {
