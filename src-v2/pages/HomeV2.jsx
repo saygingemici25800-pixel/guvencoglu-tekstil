@@ -810,7 +810,7 @@ const heroLeft = {
   background: 'var(--v2-cream, #EFEAE0)',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   paddingLeft: 'clamp(40px, 5vw, 96px)',
   paddingRight: 'clamp(24px, 2vw, 40px)',
   paddingTop: 'clamp(130px, 15vh, 170px)',

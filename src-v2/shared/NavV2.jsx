@@ -68,6 +68,79 @@ export default function NavV2() {
 
   return (
     <>
+    {/* Logo — header pill DIŞINDA, sayfanın sol üst köşesi (tam görünür, kesilmez) */}
+    <Link
+      to="/"
+      aria-label="Ana Sayfa"
+      style={{
+        position: 'fixed',
+        top: '16px',
+        left: 'clamp(16px, 3vw, 28px)',
+        zIndex: 51,
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <img
+        src="/logo-tekstil.png"
+        alt="Güvençoğlu Tekstil"
+        style={{
+          height: isMobile ? '46px' : '58px',
+          width: 'auto',
+          objectFit: 'contain',
+          display: 'block',
+        }}
+      />
+    </Link>
+
+    {/* Telefon — sağ üst köşe (header hizasında), tel: link */}
+    <a
+      href="tel:+905321347602"
+      aria-label="Telefonla ara: 0532 134 7602"
+      className="nav-phone"
+      style={{
+        position: 'fixed',
+        top: '20px',
+        right: 'clamp(16px, 3vw, 28px)',
+        zIndex: 51,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        height: 44,
+        padding: '0 16px',
+        borderRadius: 999,
+        background: scrolled ? 'rgba(245, 245, 240, 0.95)' : 'rgba(245, 245, 240, 0.7)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid var(--v2-line)',
+        color: 'var(--v2-navy)',
+        textDecoration: 'none',
+        fontFamily: 'var(--v2-font-body)',
+        fontSize: 14,
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
+        transition: 'background 200ms ease, color 200ms ease',
+      }}
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+      </svg>
+      <span className="nav-phone-label">0532 134 7602</span>
+    </a>
+
     <header
       style={{
         position: 'fixed',
@@ -89,24 +162,6 @@ export default function NavV2() {
         border: '1px solid var(--v2-line)',
       }}
     >
-      <Link
-        to="/"
-        aria-label="Ana Sayfa"
-        style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}
-      >
-        <img
-          src="/logo-tekstil.png"
-          alt="Güvençoğlu Tekstil"
-          style={{
-            height: isMobile ? '40px' : '48px',
-            width: 'auto',
-            objectFit: 'contain',
-            display: 'block',
-            flexShrink: 0,
-          }}
-        />
-      </Link>
-
       {isMobile ? (
         <button
           type="button"
@@ -211,6 +266,12 @@ export default function NavV2() {
         <style>{`@keyframes navv2-fade-in { from { opacity: 0 } to { opacity: 1 } }`}</style>
       </div>
     )}
+
+    <style>{`
+      .nav-phone:hover, .nav-phone:focus-visible { background: var(--v2-navy) !important; color: var(--v2-cream) !important; }
+      .nav-phone:focus-visible { outline: 2px solid var(--v2-copper); outline-offset: 3px; }
+      @media (max-width: 960px) { .nav-phone-label { display: none; } }
+    `}</style>
   </>
   )
 }
