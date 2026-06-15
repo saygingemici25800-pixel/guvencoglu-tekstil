@@ -63,17 +63,29 @@ export default function BlogIndex() {
                 delay={Math.min(i * 80, 320)}
               >
                 <Link to={`/blog/${p.slug}`} className="blog-card" style={card}>
-                  <div style={cardMeta}>
-                    <span style={sectorTag}>
-                      {SECTOR_LABELS[p.frontmatter.sector] || p.frontmatter.sector}
+                  {p.frontmatter.cover ? (
+                    <span className="blog-cover" style={coverWrap}>
+                      <img
+                        src={p.frontmatter.cover}
+                        alt=""
+                        loading="lazy"
+                        style={coverImg}
+                      />
                     </span>
-                    <span style={cardDate}>{formatTrDate(p.frontmatter.date)}</span>
+                  ) : null}
+                  <div style={cardBody}>
+                    <div style={cardMeta}>
+                      <span style={sectorTag}>
+                        {SECTOR_LABELS[p.frontmatter.sector] || p.frontmatter.sector}
+                      </span>
+                      <span style={cardDate}>{formatTrDate(p.frontmatter.date)}</span>
+                    </div>
+                    <h2 style={cardTitle}>{p.frontmatter.title}</h2>
+                    <p style={cardDesc}>{p.frontmatter.description}</p>
+                    <span style={cardCta} className="blog-card-cta">
+                      Oku <span aria-hidden="true">→</span>
+                    </span>
                   </div>
-                  <h2 style={cardTitle}>{p.frontmatter.title}</h2>
-                  <p style={cardDesc}>{p.frontmatter.description}</p>
-                  <span style={cardCta} className="blog-card-cta">
-                    Oku <span aria-hidden="true">→</span>
-                  </span>
                 </Link>
               </Reveal>
             ))}
@@ -82,17 +94,22 @@ export default function BlogIndex() {
       </section>
 
       <style>{`
-        .blog-card { transition: transform 300ms cubic-bezier(0.16,1,0.3,1), box-shadow 300ms ease; }
+        .blog-card {
+          box-shadow: 0 1px 2px rgba(45, 49, 66, 0.04), 0 18px 40px -26px rgba(45, 49, 66, 0.3);
+          transition: transform 320ms cubic-bezier(0.22,1,0.36,1), box-shadow 320ms ease;
+        }
         .blog-card:hover, .blog-card:focus-visible {
           transform: translateY(-5px);
-          box-shadow: 0 22px 48px -24px rgba(45,49,66,0.45);
+          box-shadow: 0 4px 10px rgba(45, 49, 66, 0.06), 0 30px 60px -30px rgba(45, 49, 66, 0.42);
         }
+        .blog-cover img { transition: transform 600ms cubic-bezier(0.22,1,0.36,1); }
+        .blog-card:hover .blog-cover img, .blog-card:focus-visible .blog-cover img { transform: scale(1.045); }
         .blog-card-cta span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
         .blog-card:hover .blog-card-cta span, .blog-card:focus-visible .blog-card-cta span { transform: translateX(5px); }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
         @media (max-width: 860px) { .blog-grid { grid-template-columns: 1fr !important; } }
         @media (prefers-reduced-motion: reduce) {
-          .blog-card, .blog-card-cta span { transition: none !important; }
+          .blog-card, .blog-card-cta span, .blog-cover img { transition: none !important; }
         }
       `}</style>
     </PageTransition>
@@ -156,13 +173,28 @@ const cardWrap = { display: 'flex' }
 const card = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 14,
   width: '100%',
-  padding: 'clamp(28px, 3vw, 40px)',
+  height: '100%',
   background: 'var(--v2-surface-elevated, #FFFFFF)',
-  border: '1px solid rgba(45, 49, 66, 0.12)',
+  borderRadius: 16,
+  overflow: 'hidden',
   textDecoration: 'none',
   color: 'inherit',
+}
+const coverWrap = {
+  display: 'block',
+  width: '100%',
+  aspectRatio: '16 / 9',
+  overflow: 'hidden',
+  background: 'rgba(45, 49, 66, 0.06)',
+}
+const coverImg = { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+const cardBody = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+  flex: 1,
+  padding: 'clamp(24px, 2.6vw, 34px)',
 }
 const cardMeta = { display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }
 const sectorTag = {
