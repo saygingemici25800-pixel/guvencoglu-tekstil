@@ -224,6 +224,60 @@ function BlurReveal({ delay = 0, duration = 760, y = 16, blur = 10, className, s
   )
 }
 
+/* FadeIn — BlurReveal ile aynı SSG-safe one-shot IO mantığı; opacity + translate(x,y),
+   ayarlanabilir delay/duration (koreografi için: foto hızlı/kısa delay, yazı yavaş/uzun).
+   idle = SSR/no-JS GÖRÜNÜR (statik HTML'e opacity:0 kilitlenmez). reduced-motion → idle kalır. */
+function FadeIn({ as: Tag = 'div', delay = 0, duration = 600, x = 0, y = 0, className, style, children, ...rest }) {
+  const ref = useRef(null)
+  const [state, setState] = useState('idle')
+
+  useIsoLayoutEffect(() => {
+    const node = ref.current
+    if (!node) return
+    if (
+      !('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return // animasyon yok → görünür kal
+    }
+    setState('hidden')
+    const vh = window.innerHeight || document.documentElement.clientHeight
+    const rect = node.getBoundingClientRect()
+    if (rect.top < vh * 0.95 && rect.bottom > 0) {
+      const raf = requestAnimationFrame(() => setState('shown'))
+      return () => cancelAnimationFrame(raf)
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setState('shown')
+          io.disconnect()
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  const animated = state !== 'idle'
+  const hidden = state === 'hidden'
+  const revealStyle = {
+    opacity: hidden ? 0 : 1,
+    transform: hidden ? `translate(${x}px, ${y}px)` : 'none',
+    transition: animated
+      ? `opacity ${duration}ms ${SPRING} ${delay}ms, transform ${duration}ms ${SPRING} ${delay}ms`
+      : undefined,
+    willChange: animated ? 'opacity, transform' : undefined,
+  }
+
+  return (
+    <Tag ref={ref} className={className} style={{ ...revealStyle, ...style }} {...rest}>
+      {children}
+    </Tag>
+  )
+}
+
 export default function HomeV2() {
   const scrollToTeklif = () =>
     document.getElementById('teklif')?.scrollIntoView({ behavior: 'smooth' })
@@ -458,10 +512,11 @@ export default function HomeV2() {
         </Reveal>
       </section>
 
-      {/* ─── BÖLÜM 5.5 — BİZ VE İŞ ORTAKLARIMIZ TEASER (interlocking) ─ */}
+      {/* ─── BÖLÜM 5.5 — BİZ TEASER: SOL yazı / SAĞ 2 overlap foto ─── */}
       <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
-        <Reveal className="hv2-bizteaser-row" style={bizTeaserRow}>
-          <div className="hv2-bizteaser-text" style={bizTeaserText}>
+        <div className="hv2-bt-row" style={btRow}>
+          {/* SOL — yazı (soldan, YAVAŞ; fotolardan sonra) */}
+          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={-28}>
             <span style={bizTeaserEyebrow}>
               <span style={bizTeaserDash} aria-hidden="true" />
               <span style={eyebrowDark}>BİZ KİMİZ</span>
@@ -477,21 +532,59 @@ export default function HomeV2() {
               Sağlık, otel ve okul kurumlarının kurumsal üniforma programını uzun
               yıllar birlikte yürütüyoruz.
             </p>
-            <Link
-              to="/biz-ve-is-ortaklarimiz"
-              className="hv2-bizteaser-btn"
-              style={bizTeaserBtn}
-            >
+            <Link to="/biz-ve-is-ortaklarimiz" className="hv2-bizteaser-btn" style={bizTeaserBtn}>
               Daha Fazla <span aria-hidden="true">→</span>
             </Link>
+          </FadeIn>
+
+          {/* SAĞ — 2 overlap foto (HIZLI, sırayla) — placeholder */}
+          <div className="hv2-bt-stack" style={btStack}>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={0} duration={420} y={22}>
+              <img src="/miras.webp" alt="placeholder" loading="lazy" style={btImg} />
+            </FadeIn>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={260} duration={420} y={22}>
+              <img src="/atolye-uretim.webp" alt="placeholder" loading="lazy" style={btImg} />
+            </FadeIn>
           </div>
-          <div
-            className="hv2-bizteaser-photo"
-            style={bizTeaserPhoto}
-            role="img"
-            aria-label="Fethiye'deki üretim tesisimizden sağlık üniforması üretimi"
-          />
-        </Reveal>
+        </div>
+      </section>
+
+      {/* ─── BÖLÜM 5.6 — HİKAYEMİZ (ayna): SOL 2 overlap foto / SAĞ yazı ─ */}
+      <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-hik-title">
+        <div className="hv2-hik-row" style={btRow}>
+          {/* SOL — 2 overlap foto (HIZLI, sırayla) — placeholder */}
+          <div className="hv2-bt-stack" style={btStack}>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, right: 0 }} delay={0} duration={420} y={22}>
+              <img src="/atolye-zanaat.webp" alt="placeholder" loading="lazy" style={btImg} />
+            </FadeIn>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, left: 0 }} delay={260} duration={420} y={22}>
+              <img src="/atolye-renk.webp" alt="placeholder" loading="lazy" style={btImg} />
+            </FadeIn>
+          </div>
+
+          {/* SAĞ — yazı (sağdan, YAVAŞ; fotolardan sonra) */}
+          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={28}>
+            <span style={bizTeaserEyebrow}>
+              <span style={bizTeaserDash} aria-hidden="true" />
+              <span style={eyebrowDark}>HİKAYEMİZ</span>
+            </span>
+            <h2 id="hv2-hik-title" style={bizTeaserTitle}>
+              Çeyrek asır, <em style={emDark}>değişmeyen</em> standart.
+            </h2>
+            <p style={bizTeaserBody}>
+              2001’de Fethiye’de tek bir dikiş makinesiyle başladık. Bugün aynı
+              atölyede aynı aile çalışıyor — makine değişti, kumaş değişti; işin
+              standardı değişmedi.
+            </p>
+            <p style={bizTeaserBody}>
+              Aynı kumaş tedarikçisiyle yirmi yılı aşkın çalışıyor, kritik dikişleri
+              hâlâ insan eliyle bitiriyoruz.
+            </p>
+            <Link to="/biz-ve-is-ortaklarimiz" className="hv2-textlink" style={textLink}>
+              Hikayenin tamamı →
+            </Link>
+          </FadeIn>
+        </div>
       </section>
 
       {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR ───────────── */}
@@ -631,13 +724,19 @@ export default function HomeV2() {
           .hv2-refs-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 860px) {
-          .hv2-bizteaser-row { flex-direction: column !important; }
-          .hv2-bizteaser-text {
-            flex: 1 1 auto !important; margin: 0 !important; width: 100% !important;
-            transform: none !important; box-shadow: none !important;
-            padding: clamp(28px, 7vw, 40px) clamp(22px, 6vw, 36px) clamp(28px, 6vw, 36px) !important;
+          /* Overlap kalkar, dikey stack; iki bölümde de FOTO önce, yazı sonra */
+          .hv2-bt-row { flex-direction: column-reverse !important; gap: clamp(24px, 6vw, 36px) !important; }
+          .hv2-hik-row { flex-direction: column !important; gap: clamp(24px, 6vw, 36px) !important; }
+          .hv2-bt-text { flex: 1 1 auto !important; width: 100% !important; }
+          .hv2-bt-stack {
+            flex: 1 1 auto !important; width: 100% !important; min-height: 0 !important;
+            display: flex !important; flex-direction: column !important; gap: 14px !important;
           }
-          .hv2-bizteaser-photo { flex: 1 1 auto !important; width: 100% !important; min-height: clamp(240px, 54vw, 360px) !important; }
+          .hv2-bt-ph {
+            position: static !important; width: 100% !important; height: auto !important;
+            aspect-ratio: 16 / 10 !important;
+          }
+          .hv2-bt-ph2 { border: none !important; }
         }
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -1185,26 +1284,49 @@ const bizTeaserWrap = {
   borderTop: '1px solid rgba(45, 49, 66, 0.1)',
   padding: 'clamp(56px, 8vw, 96px) clamp(20px, 5vw, 48px)',
 }
-const bizTeaserRow = {
+const btRow = {
   maxWidth: 1180,
   margin: '0 auto',
   display: 'flex',
   alignItems: 'center',
+  gap: 'clamp(28px, 4vw, 64px)',
 }
-const bizTeaserText = {
-  flex: '0 1 44%',
-  position: 'relative',
-  zIndex: 2,
-  background: 'var(--v2-surface-elevated, #FFFFFF)',
-  padding: 'clamp(32px, 3.4vw, 52px)',
-  marginRight: '-9%',
-  transform: 'translateY(34px)',
-  boxShadow: '0 24px 50px -28px rgba(45, 49, 66, 0.45)',
+const btText = {
+  flex: '0 1 42%',
+  minWidth: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+}
+/* 2 overlap foto yığını — biri büyük (üst köşe), biri kayık (alt köşe, kremle çerçeveli) */
+const btStack = {
+  flex: '0 1 54%',
+  minWidth: 0,
+  position: 'relative',
+  minHeight: 'clamp(360px, 48vh, 520px)',
+}
+const photoMain = {
+  position: 'absolute',
+  top: 0,
+  width: '72%',
+  height: '84%',
+  borderRadius: 14,
+  overflow: 'hidden',
+  boxShadow: '0 22px 48px -26px rgba(45, 49, 66, 0.42)',
+}
+const photoOver = {
+  position: 'absolute',
+  bottom: 0,
+  width: '52%',
+  height: '58%',
+  borderRadius: 14,
+  overflow: 'hidden',
+  border: '5px solid var(--v2-cream, #EFEAE0)',
+  boxShadow: '0 28px 56px -28px rgba(45, 49, 66, 0.5)',
+  zIndex: 2,
   boxSizing: 'border-box',
 }
+const btImg = { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
 const bizTeaserEyebrow = {
   display: 'flex',
   alignItems: 'center',
@@ -1253,17 +1375,6 @@ const bizTeaserBtn = {
   minHeight: 44,
   boxSizing: 'border-box',
 }
-const bizTeaserPhoto = {
-  flex: '0 1 60%',
-  zIndex: 1,
-  alignSelf: 'stretch',
-  minHeight: 'clamp(340px, 46vh, 500px)',
-  backgroundImage: 'url(/saglik-main.webp)',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-}
-
 /* BÖLÜM 6 — REFERANSLAR */
 const refsWrap = {
   position: 'relative',
