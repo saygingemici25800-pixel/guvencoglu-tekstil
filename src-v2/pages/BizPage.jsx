@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
@@ -10,37 +11,12 @@ import { CLIENT_SECTORS, CLIENTS } from '../data/clients.js'
    tarafta beyaz metin paneli, diğer tarafta tek foto paneli; metin
    paneli fotoğrafın içine ~7% taşar. Bölümler arası sol/sağ ritmi
    döner. Mobilde dikey stack (metin üstte, foto altta), overlap yok.
-   5 bölüm: Giriş · Hikâye/Miras · Güven bloğu · İş Ortakları · CTA.
-   3D/Canvas/scroll-anim YOK.
+   4 bölüm: Giriş · Hikâye/Miras · İş Ortakları (flip-card) · CTA.
+   Scroll-anim YOK; referans flip-card'ı saf-CSS 3D (framer-motion yok).
    ────────────────────────────────────────────────────────────── */
 
-// Sektör grupları — ReferencesV2 / clients.js içeriğinden türetilir.
-const SECTOR_GROUPS = CLIENT_SECTORS.map((s) => ({
-  id: s.id,
-  label: s.label,
-  count: s.count,
-  examples: CLIENTS.filter((c) => c.sector === s.id)
-    .slice(0, 3)
-    .map((c) => c.name),
-}))
-
-const TRUST_METRICS = [
-  {
-    num: '25.000+',
-    label: 'AYLIK ÜRETİM KAPASİTESİ',
-    hint: 'Kendi tesisimizde, parça / ay',
-  },
-  {
-    num: '%98',
-    label: 'ZAMANINDA TESLİMAT',
-    hint: 'Söz verilen tarihte, sözleşmeli',
-  },
-  {
-    num: '3 Aşama',
-    label: 'KALİTE KONTROL',
-    hint: 'Kesim · dikim · paketleme öncesi',
-  },
-]
+// Sektör id → okunabilir etiket (flip-card ön yüz copper etiketi için).
+const SECTOR_LABEL = Object.fromEntries(CLIENT_SECTORS.map((s) => [s.id, s.label]))
 
 /* Editorial eyebrow — copper kısa çizgi + uppercase etiket (yan yana) */
 function Eyebrow({ children }) {
@@ -72,6 +48,33 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children
         />
       </Reveal>
     </section>
+  )
+}
+
+/* Flip-card referans — saf CSS 3D çevirme (rotateY 180, preserve-3d, backface
+   hidden, ~500ms). Masaüstü hover; mobil/klavye için tap/Enter ile state (button).
+   reduced-motion → CSS ile flip kapalı, iki yüz alt alta statik görünür. */
+function FlipCard({ name, sector, note, since }) {
+  const [flipped, setFlipped] = useState(false)
+  return (
+    <button
+      type="button"
+      className={`biz-flip${flipped ? ' is-flipped' : ''}`}
+      style={flipCard}
+      aria-pressed={flipped}
+      onClick={() => setFlipped((f) => !f)}
+    >
+      <span className="biz-flip-inner" style={flipInner}>
+        <span className="biz-flip-front" style={flipFront}>
+          <span style={flipSector}>{sector}</span>
+          <span style={flipName}>{name}</span>
+        </span>
+        <span className="biz-flip-back" style={flipBack}>
+          <span style={flipNote}>{note}</span>
+          <span style={flipSince}>{since} yılından beri</span>
+        </span>
+      </span>
+    </button>
   )
 }
 
@@ -145,30 +148,7 @@ export default function BizPage() {
         </p>
       </InterlockSection>
 
-      {/* ─── c) GÜVEN BLOĞU — düz krem, 3 metrik, foto yok ───── */}
-      <section style={trustWrap} aria-labelledby="biz-trust-title">
-        <div style={trustInner}>
-          <Reveal as="header" style={trustHead}>
-            <span style={rule} aria-hidden="true" />
-            <p style={eyebrow}>NEDEN GÜVENÇOĞLU</p>
-            <h2 id="biz-trust-title" style={h2}>
-              Sözümüzü <em style={em}>rakamlar</em> tutar.
-            </h2>
-          </Reveal>
-
-          <Reveal className="biz-trust-grid" style={trustGrid} delay={120}>
-            {TRUST_METRICS.map((m) => (
-              <div key={m.label} style={trustCell}>
-                <span style={trustNum}>{m.num}</span>
-                <span style={trustLabel}>{m.label}</span>
-                <span style={trustHint}>{m.hint}</span>
-              </div>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ─── d) İŞ ORTAKLARI / REFERANSLAR — sektörel grid ───── */}
+      {/* ─── c) İŞ ORTAKLARI / REFERANSLAR — flip-card grid ───── */}
       <section style={refsWrap} aria-labelledby="biz-refs-title">
         <div style={refsInner}>
           <Reveal as="header" style={refsHead}>
@@ -178,26 +158,21 @@ export default function BizPage() {
               Sağlık, otel ve okul kurumlarının <em style={em}>partneri</em>.
             </h2>
             <p style={body}>
-              Bir kez başlayan ilişki ortalama altı yıl sürüyor. Sektörlere göre,
-              birlikte çalıştığımız kurumlardan bir seçki:
+              Bir kez başlayan ilişki ortalama altı yıl sürüyor. Birlikte
+              çalıştığımız kurumlardan bir seçki — kartın üzerine gelin (ya da
+              dokunun), kısa hikâyesi açılsın.
             </p>
           </Reveal>
 
           <Reveal className="biz-refs-grid" style={refsGrid} delay={120}>
-            {SECTOR_GROUPS.map((g) => (
-              <article key={g.id} style={refCard}>
-                <div style={refCardTop}>
-                  <h3 style={refCardTitle}>{g.label}</h3>
-                  <span style={refCardCount}>{g.count} kurum</span>
-                </div>
-                <ul style={refList}>
-                  {g.examples.map((name) => (
-                    <li key={name} style={refListItem}>
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              </article>
+            {CLIENTS.map((c) => (
+              <FlipCard
+                key={c.id}
+                name={c.name}
+                sector={SECTOR_LABEL[c.sector] || c.sector}
+                note={c.note}
+                since={c.since}
+              />
             ))}
           </Reveal>
         </div>
@@ -240,6 +215,12 @@ export default function BizPage() {
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
+        /* Flip-card referans — saf CSS 3D çevirme (hover masaüstü / .is-flipped tap) */
+        .biz-flip { -webkit-tap-highlight-color: transparent; }
+        .biz-flip:hover .biz-flip-inner,
+        .biz-flip.is-flipped .biz-flip-inner { transform: rotateY(180deg); }
+        .biz-flip:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 3px; border-radius: 14px; }
+
         @media (max-width: 860px) {
           .biz-il-row { flex-direction: column !important; }
           .biz-il-rev .biz-il-row { flex-direction: column !important; }
@@ -256,7 +237,6 @@ export default function BizPage() {
             width: 100% !important;
             min-height: clamp(260px, 56vw, 380px) !important;
           }
-          .biz-trust-grid { grid-template-columns: 1fr !important; }
           .biz-refs-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 861px) and (max-width: 1080px) {
@@ -267,6 +247,16 @@ export default function BizPage() {
           .biz-outline, .biz-outline-light, .biz-outline span, .biz-outline-light span {
             transition: none !important;
           }
+          /* Flip kapalı — iki yüz alt alta statik görünür (erişilebilir) */
+          .biz-flip { min-height: 0 !important; }
+          .biz-flip-inner { position: static !important; transform: none !important; transition: none !important; }
+          .biz-flip-front, .biz-flip-back {
+            position: static !important;
+            transform: none !important;
+            -webkit-backface-visibility: visible !important;
+            backface-visibility: visible !important;
+          }
+          .biz-flip-back { margin-top: 10px; }
         }
       `}</style>
     </PageTransition>
@@ -418,55 +408,82 @@ const ilPhotoB = {
   minHeight: 'clamp(440px, 56vh, 620px)',
 }
 
-/* c) GÜVEN BLOĞU */
-const trustWrap = {
-  background: PAGE_BG,
-  padding: 'clamp(56px, 9vw, 112px) clamp(24px, 6vw, 96px)',
-  borderTop: '1px solid rgba(45, 49, 66, 0.1)',
-}
-const trustInner = {
-  maxWidth: 1180,
-  margin: '0 auto',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 'clamp(40px, 5vw, 64px)',
-  alignItems: 'flex-start',
-}
-const trustHead = { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }
-const trustGrid = {
+/* c) FLIP-CARD REFERANS — saf CSS 3D çevirme */
+const flipCard = {
+  position: 'relative',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+  border: 'none',
+  margin: 0,
+  padding: 0,
+  background: 'transparent',
+  cursor: 'pointer',
   width: '100%',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: 'clamp(28px, 4vw, 56px)',
+  minHeight: 'clamp(172px, 22vh, 200px)',
+  perspective: '1100px',
+  fontFamily: 'inherit',
+  textAlign: 'left',
 }
-const trustCell = {
+const flipInner = {
+  position: 'absolute',
+  inset: 0,
+  transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
+  transformStyle: 'preserve-3d',
+}
+const flipFace = {
+  position: 'absolute',
+  inset: 0,
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  gap: 12,
-  alignItems: 'flex-start',
-  paddingTop: 28,
-  borderTop: '2px solid var(--v2-copper, #D4A373)',
+  padding: 'clamp(22px, 2.3vw, 30px)',
+  borderRadius: 14,
+  overflow: 'hidden',
+  WebkitBackfaceVisibility: 'hidden',
+  backfaceVisibility: 'hidden',
 }
-const trustNum = {
+const flipFront = {
+  ...flipFace,
+  background: 'var(--v2-surface-elevated, #FFFFFF)',
+  boxShadow: '0 1px 2px rgba(45, 49, 66, 0.04), 0 16px 36px -26px rgba(45, 49, 66, 0.3)',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+}
+const flipBack = {
+  ...flipFace,
+  background: 'var(--v2-navy, #2D3142)',
+  transform: 'rotateY(180deg)',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: 12,
+}
+const flipSector = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 11,
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  color: 'var(--v2-copper, #D4A373)',
+}
+const flipName = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(40px, 5vw, 60px)',
-  lineHeight: 1,
-  letterSpacing: '-0.025em',
+  fontSize: 'clamp(20px, 2vw, 26px)',
+  lineHeight: 1.12,
+  letterSpacing: '-0.01em',
   color: 'var(--v2-navy, #2D3142)',
 }
-const trustLabel = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.16em',
-  textTransform: 'uppercase',
-  color: 'var(--v2-ink, #1A1A1A)',
-}
-const trustHint = {
+const flipNote = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 15,
-  lineHeight: 1.6,
-  color: 'var(--v2-muted, #5A5A5A)',
+  lineHeight: 1.55,
+  color: 'var(--v2-cream, #EFEAE0)',
+}
+const flipSince = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 11,
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  color: 'rgba(212, 163, 115, 0.95)',
 }
 
 /* d) İŞ ORTAKLARI / REFERANSLAR */
@@ -490,53 +507,7 @@ const refsGrid = {
   gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 'clamp(18px, 2.4vw, 28px)',
 }
-const refCard = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 18,
-  padding: 'clamp(24px, 2.6vw, 34px)',
-  background: 'var(--v2-surface-elevated, #FFFFFF)',
-  border: '1px solid rgba(45, 49, 66, 0.12)',
-}
-const refCardTop = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  alignItems: 'flex-start',
-}
-const refCardTitle = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(20px, 2vw, 25px)',
-  lineHeight: 1.15,
-  color: 'var(--v2-navy, #2D3142)',
-  margin: 0,
-}
-const refCardCount = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
-  color: 'var(--v2-copper, #D4A373)',
-}
-const refList = {
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 10,
-  borderTop: '1px solid rgba(45, 49, 66, 0.1)',
-  paddingTop: 18,
-}
-const refListItem = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 16,
-  lineHeight: 1.5,
-  color: 'var(--v2-ink, #1A1A1A)',
-}
-
-/* e) CTA BANT */
+/* d) CTA BANT */
 const ctaWrap = {
   background: 'var(--v2-navy, #2D3142)',
   padding: 'clamp(64px, 10vw, 120px) clamp(24px, 6vw, 96px)',
