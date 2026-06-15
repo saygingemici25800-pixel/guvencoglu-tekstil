@@ -6,8 +6,7 @@ const links = [
   { to: '/biz-ve-is-ortaklarimiz', label: 'Biz ve İş Ortaklarımız' },
   { to: '/hizmetler', label: 'Hizmetler' },
   { to: '/blog', label: 'Blog' },
-  { to: '/iletisim', label: 'İletişim' },
-  { to: '/iletisim', label: 'Teklif Al', cta: true },
+  { to: '/iletisim', label: 'Temas' },
 ]
 
 export default function NavV2() {
@@ -109,38 +108,30 @@ export default function NavV2() {
       </Link>
 
       {isMobile ? (
-        <>
-          <NavLink
-            to="/iletisim"
-            style={({ isActive }) => linkStyle(isActive, true)}
-          >
-            Teklif Al
-          </NavLink>
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Menüyü aç"
-            aria-expanded={mobileMenuOpen}
-            style={{
-              flexShrink: 0,
-              width: 32,
-              height: 32,
-              padding: 0,
-              border: 'none',
-              background: 'transparent',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 5,
-            }}
-          >
-            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
-            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
-            <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
-          </button>
-        </>
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Menüyü aç"
+          aria-expanded={mobileMenuOpen}
+          style={{
+            flexShrink: 0,
+            width: 32,
+            height: 32,
+            padding: 0,
+            border: 'none',
+            background: 'transparent',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 5,
+          }}
+        >
+          <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+          <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+          <span style={{ width: 22, height: 2, background: 'var(--v2-navy)', borderRadius: 1 }} />
+        </button>
       ) : (
         <nav style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, flexWrap: 'nowrap' }}>
           {links.map((l, i) => (
