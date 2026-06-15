@@ -293,10 +293,10 @@ export default function HomeV2() {
                 style={galleryCard}
               >
                 <Link
-                  to="/sektorler"
+                  to="/hizmetler"
                   className="hv2-hg-link"
                   style={galleryLink}
-                  aria-label={`${s.name} sektörü üniformaları`}
+                  aria-label={`${s.name} koleksiyonu`}
                 >
                   <span
                     className="hv2-hg-photo"
@@ -307,6 +307,10 @@ export default function HomeV2() {
                   <span style={heroCardContent}>
                     <span style={heroCardNum}>{s.num}</span>
                     <span style={i === 0 ? heroCardNameBig : heroCardName}>{s.name}</span>
+                  </span>
+                  {/* Kart içi ortalanmış parlayan "Koleksiyon" butonu (saf CSS shine sweep) */}
+                  <span className="hv2-shiny" style={shinyBtn}>
+                    <span className="hv2-shiny-label" style={shinyLabel}>Koleksiyon</span>
                   </span>
                 </Link>
               </BlurReveal>
@@ -574,6 +578,26 @@ export default function HomeV2() {
         .hv2-hg-1 { grid-column: 1; grid-row: 1 / 3; margin-top: clamp(16px, 3vh, 40px); }
         .hv2-hg-2 { grid-column: 2; grid-row: 1; }
         .hv2-hg-3 { grid-column: 2; grid-row: 2; }
+        /* Kart içi "Koleksiyon" butonu — saf CSS shine sweep (ShinyButton taklidi) */
+        .hv2-shiny::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 55%;
+          height: 100%;
+          z-index: 0;
+          pointer-events: none;
+          background: linear-gradient(100deg, transparent 0%, rgba(239, 234, 224, 0.55) 50%, transparent 100%);
+          transform: skewX(-18deg) translateX(-220%);
+          animation: hv2-shine 3s ease-in-out infinite;
+        }
+        @keyframes hv2-shine {
+          0% { transform: skewX(-18deg) translateX(-220%); }
+          55%, 100% { transform: skewX(-18deg) translateX(340%); }
+        }
+        .hv2-shiny { transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1); }
+        .hv2-hg-card:hover .hv2-shiny, .hv2-hg-link:focus-visible .hv2-shiny { transform: scale(1.06); }
         .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
 
         .hv2-textlink { transition: color 220ms ease; }
@@ -641,6 +665,8 @@ export default function HomeV2() {
           .hv2-bizteaser-btn, .hv2-bizteaser-btn span {
             transition: none !important;
           }
+          .hv2-shiny { transition: none !important; }
+          .hv2-shiny::before { animation: none !important; }
         }
       `}</style>
     </PageTransition>
@@ -771,8 +797,36 @@ const galleryCard = {
 const galleryLink = {
   position: 'absolute',
   inset: 0,
-  display: 'block',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   textDecoration: 'none',
+}
+const shinyBtn = {
+  position: 'relative',
+  zIndex: 3,
+  overflow: 'hidden',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '9px 20px',
+  borderRadius: 999,
+  background: 'rgba(45, 49, 66, 0.42)',
+  WebkitBackdropFilter: 'blur(6px)',
+  backdropFilter: 'blur(6px)',
+  border: '1px solid rgba(239, 234, 224, 0.45)',
+  boxShadow: '0 6px 20px rgba(45, 49, 66, 0.3)',
+}
+const shinyLabel = {
+  position: 'relative',
+  zIndex: 1,
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: 'var(--v2-cream, #EFEAE0)',
+  whiteSpace: 'nowrap',
 }
 const heroCardPhoto = {
   position: 'absolute',
