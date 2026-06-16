@@ -17,17 +17,17 @@ const SECTORS = [
   {
     title: 'Sağlık personeli kıyafetleri',
     sub: 'Hastane, klinik, eczane, laboratuvar, diş',
-    to: '/v2/hizmetler',
+    to: '/hizmetler',
   },
   {
     title: 'Otel personeli kıyafetleri',
     sub: 'Resepsiyon, restoran, housekeeping, spa, mutfak',
-    to: '/v2/hizmetler',
+    to: '/hizmetler',
   },
   {
     title: 'Okul üniformaları',
     sub: 'Anaokulu, ilkokul, ortaokul, lise, kolej',
-    to: '/v2/hizmetler',
+    to: '/hizmetler',
   },
 ]
 
@@ -335,7 +335,7 @@ export default function HomeV2() {
                   <span className="cta-swap-bot">0532 134 7602</span>
                 </span>
               </button>
-              <Link to="/sektorler" className="hv2-hero-link" style={heroLink}>
+              <Link to="/hizmetler" className="hv2-hero-link" style={heroLink}>
                 Tüm sektörler →
               </Link>
             </div>
@@ -447,7 +447,7 @@ export default function HomeV2() {
           <p style={prose}>
             Sözleşmeli üretim, sözleşmeli teslimat, sözleşmeli kalite. Çeyrek asırlık güvencemizle.
           </p>
-          <Link to="/v2/hikayemiz" className="hv2-textlink" style={promiseCta}>
+          <Link to="/biz-ve-is-ortaklarimiz" className="hv2-textlink" style={promiseCta}>
             Bizi Daha Yakından Tanıyın <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
@@ -482,7 +482,7 @@ export default function HomeV2() {
             ))}
           </div>
 
-          <Link to="/v2/hizmetler" className="hv2-textlink" style={textLink}>
+          <Link to="/hizmetler" className="hv2-textlink" style={textLink}>
             Diğer sektörler <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
@@ -510,7 +510,7 @@ export default function HomeV2() {
             ))}
           </div>
 
-          <Link to="/v2/hizmetler" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
+          <Link to="/hizmetler" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
             Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
@@ -613,7 +613,7 @@ export default function HomeV2() {
             ))}
           </div>
 
-          <Link to="/v2/referanslar" className="hv2-textlink" style={textLink}>
+          <Link to="/biz-ve-is-ortaklarimiz" className="hv2-textlink" style={textLink}>
             Tüm Referanslarımız <span aria-hidden="true">→</span>
           </Link>
         </Reveal>

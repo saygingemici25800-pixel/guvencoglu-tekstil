@@ -4,15 +4,15 @@ const cols = [
   {
     title: 'Yolculuk',
     items: [
-      { label: 'Hikayemiz', to: '/hikayemiz' },
-      { label: 'Üretim Süreci', to: '/uretim' },
+      { label: 'Hikayemiz', to: '/biz-ve-is-ortaklarimiz' },
+      { label: 'Üretim Süreci', to: '/hizmetler' },
       { label: 'Hizmetler', to: '/hizmetler' },
     ],
   },
   {
     title: 'Kurum',
     items: [
-      { label: 'Referanslar', to: '/referanslar' },
+      { label: 'Referanslar', to: '/biz-ve-is-ortaklarimiz' },
       { label: 'İletişim', to: '/iletisim' },
     ],
   },
