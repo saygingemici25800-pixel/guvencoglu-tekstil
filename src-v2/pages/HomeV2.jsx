@@ -622,8 +622,8 @@ export default function HomeV2() {
       {/* ─── BÖLÜM 7 — TEKLİF FORMU ─────────────────────────── */}
       <section id="teklif" className="hv2-quote" style={quoteWrap} aria-labelledby="hv2-quote-title">
         <div className="hv2-quote-inner" style={quoteInner}>
-          {/* SOL — içerik + direkt iletişim */}
-          <div style={quoteLeft}>
+          {/* SOL — içerik + direkt iletişim (koyu zemin → açık vurgu scope'u) */}
+          <div className="hv2-quote-left" style={quoteLeft}>
             <p style={quoteEyebrow}>TEKLİF AL</p>
             <h2 id="hv2-quote-title" style={quoteH2}>
               Üniforma programınız için bir konuşma başlatalım.
@@ -701,7 +701,19 @@ export default function HomeV2() {
         .hv2-textlink span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
         .hv2-textlink:hover span, .hv2-textlink:focus-visible span { transform: translateX(6px); }
         .hv2-textlink:hover, .hv2-textlink:focus-visible { color: var(--v2-copper, #D4A373); }
-        .hv2-textlink-copper:hover, .hv2-textlink-copper:focus-visible { color: var(--v2-navy, #2D3142); }
+        .hv2-textlink-copper:hover, .hv2-textlink-copper:focus-visible { color: var(--v2-cream, #EFEAE0); text-decoration: underline; text-underline-offset: 4px; }
+
+        /* KOYU (navy) zeminli bölümlerde vurgu = açık ton: kırmızı (#9A0002) navy
+           üzerinde okunmuyor. Bu scope'larda --v2-copper'ı kreme çevir → eyebrow,
+           link, ikon, sayı-etiketi otomatik krem olur (gövde metni zaten muted, bu
+           yüzden eyebrow ayrışır). hv2-quote'ta yalnızca SOL kolon; sağdaki
+           TeklifForm açık kart olduğu için kırmızı vurgusunu korur. */
+        .v2-home .hv2-atelier,
+        .v2-home .hv2-trust,
+        .v2-home .hv2-services,
+        .v2-home .hv2-quote-left {
+          --v2-copper: #EFEAE0;
+        }
 
         .hv2-sector-card { transition: transform 300ms cubic-bezier(0.16,1,0.3,1), box-shadow 300ms ease; }
         .hv2-sector-card:hover, .hv2-sector-card:focus-visible {
@@ -1080,7 +1092,8 @@ const atelierLabel = {
   letterSpacing: '0.15em',
   color: 'var(--v2-cream, #EFEAE0)',
 }
-const h1Accent = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
+// Yalnızca KOYU (navy) hizmetler bölümünde kullanılıyor → krem italik (navy görünmez).
+const h1Accent = { fontStyle: 'italic', color: 'var(--v2-cream, #EFEAE0)' }
 
 /* BÖLÜM 2 — GÜVEN ŞERİDİ */
 const trustWrap = {
