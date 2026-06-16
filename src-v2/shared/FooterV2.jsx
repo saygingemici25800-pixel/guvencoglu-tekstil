@@ -24,6 +24,9 @@ export default function FooterV2() {
       style={{
         background: 'var(--v2-navy)',
         color: 'var(--v2-cream)',
+        // Footer koyu kalır → kırmızı vurgu (global --v2-copper) navy üstünde okunmaz;
+        // bu yüzden footer içinde vurgu = krem (em + başlıklar kreme döner).
+        '--v2-copper': '#EFEAE0',
         padding: '96px 32px 48px',
         marginTop: 128,
       }}

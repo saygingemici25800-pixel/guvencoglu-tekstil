@@ -305,10 +305,9 @@ export default function HomeV2() {
         }}
       />
 
-      {/* Ana sayfaya ÖZEL vurgu override: copper → Cherry Cola kırmızı (#9A0002).
-          Global --v2-copper token'ı değişmez; yalnızca bu ağaçta inline override
-          edilir → diğer sayfalar copper kalır, nav (HomeV2 dışında) etkilenmez. */}
-      <div className="v2-home" style={{ '--v2-copper': '#9A0002' }}>
+      {/* Vurgu artık global token (--v2-copper: #9A0002) ile tüm sitede kırmızı;
+          home-scope override'a gerek yok. Wrapper sadece yapısal. */}
+      <div className="v2-home">
       {/* ─── BÖLÜM 1 — PREMIUM ASİMETRİK HERO ──────────────── */}
       <section className="hv2-hero" style={heroWrap} aria-label="Kurumsal üniforma — sektörler">
         {/* ÜST BÖLGE — metin + yüzen sektör görselleri */}
@@ -665,7 +664,7 @@ export default function HomeV2() {
 
       <style>{`
         .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
-        .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
+        .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-cream, #EFEAE0); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
         .hv2-hero-link { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         .hv2-hero-link:hover, .hv2-hero-link:focus-visible { background: var(--v2-navy, #2D3142); color: var(--v2-cream, #EFEAE0); }
         .hv2-hg-photo { will-change: transform; }
@@ -701,19 +700,9 @@ export default function HomeV2() {
         .hv2-textlink span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
         .hv2-textlink:hover span, .hv2-textlink:focus-visible span { transform: translateX(6px); }
         .hv2-textlink:hover, .hv2-textlink:focus-visible { color: var(--v2-copper, #D4A373); }
-        .hv2-textlink-copper:hover, .hv2-textlink-copper:focus-visible { color: var(--v2-cream, #EFEAE0); text-decoration: underline; text-underline-offset: 4px; }
-
-        /* KOYU (navy) zeminli bölümlerde vurgu = açık ton: kırmızı (#9A0002) navy
-           üzerinde okunmuyor. Bu scope'larda --v2-copper'ı kreme çevir → eyebrow,
-           link, ikon, sayı-etiketi otomatik krem olur (gövde metni zaten muted, bu
-           yüzden eyebrow ayrışır). hv2-quote'ta yalnızca SOL kolon; sağdaki
-           TeklifForm açık kart olduğu için kırmızı vurgusunu korur. */
-        .v2-home .hv2-atelier,
-        .v2-home .hv2-trust,
-        .v2-home .hv2-services,
-        .v2-home .hv2-quote-left {
-          --v2-copper: #EFEAE0;
-        }
+        /* Tüm bölümler artık açık (krem) zemin → vurgu kırmızı; copper-link hover'da
+           ince alt çizgi (renk kırmızı kalır). */
+        .hv2-textlink-copper:hover, .hv2-textlink-copper:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 
         .hv2-sector-card { transition: transform 300ms cubic-bezier(0.16,1,0.3,1), box-shadow 300ms ease; }
         .hv2-sector-card:hover, .hv2-sector-card:focus-visible {
@@ -830,7 +819,7 @@ const heroLeft = {
   justifyContent: 'flex-start',
   paddingLeft: 'clamp(40px, 5vw, 96px)',
   paddingRight: 'clamp(24px, 2vw, 40px)',
-  paddingTop: 'clamp(130px, 15vh, 170px)',
+  paddingTop: 'clamp(100px, 12vh, 140px)',
   paddingBottom: 'clamp(24px, 3vw, 48px)',
 }
 const heroEyebrow = {
@@ -998,7 +987,7 @@ const heroWordmark = {
   bottom: 0,
   left: 0,
   right: 0,
-  height: '22vh',
+  height: '28vh',
   overflow: 'hidden',
   pointerEvents: 'none',
   display: 'flex',
@@ -1015,14 +1004,14 @@ const heroWordmarkText = {
   textAlign: 'center',
   whiteSpace: 'nowrap',
   margin: 0,
-  transform: 'translateY(18%)',
+  transform: 'translateY(8%)',
 }
 
 /* BÖLÜM 2 — ATÖLYE ŞERİDİ */
 const atelierWrap = {
   position: 'relative',
   zIndex: 1,
-  background: 'var(--v2-navy, #2D3142)',
+  background: 'var(--v2-cream, #EFEAE0)',
   padding: 'clamp(64px, 8vh, 100px) clamp(24px, 5vw, 80px)',
 }
 const atelierInner = { maxWidth: 1280, margin: '0 auto' }
@@ -1046,7 +1035,7 @@ const atelierH2 = {
   fontWeight: 400,
   fontSize: 'clamp(28px, 4vw, 48px)',
   lineHeight: 1.15,
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   marginTop: 12,
   marginBottom: 0,
   maxWidth: 600,
@@ -1055,7 +1044,7 @@ const atelierLede = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
   lineHeight: 1.6,
-  color: 'rgba(239, 234, 224, 0.75)',
+  color: 'var(--v2-muted, #5A5A5A)',
   maxWidth: 360,
   margin: 0,
 }
@@ -1092,15 +1081,15 @@ const atelierLabel = {
   letterSpacing: '0.15em',
   color: 'var(--v2-cream, #EFEAE0)',
 }
-// Yalnızca KOYU (navy) hizmetler bölümünde kullanılıyor → krem italik (navy görünmez).
-const h1Accent = { fontStyle: 'italic', color: 'var(--v2-cream, #EFEAE0)' }
+// Hizmetler bölümü artık açık zemin → başlık italik vurgusu navy (emDark ile aynı rejim).
+const h1Accent = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
 
 /* BÖLÜM 2 — GÜVEN ŞERİDİ */
 const trustWrap = {
   position: 'relative',
   zIndex: 1,
-  background: 'var(--v2-navy, #2D3142)',
-  color: 'var(--v2-cream, #EFEAE0)',
+  background: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   padding: 'clamp(72px, 11vw, 96px) clamp(20px, 5vw, 48px)',
 }
 const trustGrid = {
@@ -1117,7 +1106,7 @@ const trustNum = {
   fontSize: 'clamp(44px, 5.5vw, 64px)',
   lineHeight: 1,
   letterSpacing: '-0.025em',
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
 }
 const trustLabel = {
   fontFamily: 'var(--v2-font-mono, monospace)',
@@ -1135,7 +1124,7 @@ const h2Light = {
   fontSize: 'clamp(30px, 4.4vw, 56px)',
   lineHeight: 1.06,
   letterSpacing: '-0.02em',
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: 0,
   maxWidth: '18ch',
 }
@@ -1264,8 +1253,8 @@ const cardCta = {
 const servicesWrap = {
   position: 'relative',
   zIndex: 1,
-  background: 'var(--v2-navy, #2D3142)',
-  color: 'var(--v2-cream, #EFEAE0)',
+  background: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   padding: 'clamp(64px, 10vw, 112px) clamp(20px, 5vw, 48px)',
 }
 const servicesInner = {
@@ -1290,14 +1279,14 @@ const serviceTitle = {
   fontSize: 22,
   lineHeight: 1.1,
   letterSpacing: '-0.01em',
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: 0,
 }
 const serviceSub = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 14,
   lineHeight: 1.5,
-  color: 'rgba(239, 234, 224, 0.62)',
+  color: 'var(--v2-muted, #5A5A5A)',
   margin: 0,
 }
 
@@ -1457,7 +1446,7 @@ const refAuthor = {
 const quoteWrap = {
   position: 'relative',
   zIndex: 1,
-  background: 'var(--v2-navy, #2D3142)',
+  background: 'var(--v2-cream, #EFEAE0)',
   padding: 'clamp(64px, 9vh, 110px) clamp(24px, 5vw, 80px)',
 }
 const quoteInner = {
@@ -1481,14 +1470,14 @@ const quoteH2 = {
   fontWeight: 400,
   fontSize: 'clamp(28px, 3.5vw, 46px)',
   lineHeight: 1.15,
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: '14px 0 0',
 }
 const quoteLede = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
   lineHeight: 1.6,
-  color: 'rgba(239, 234, 224, 0.8)',
+  color: 'var(--v2-muted, #5A5A5A)',
   margin: '20px 0 0',
   maxWidth: 380,
 }
@@ -1503,6 +1492,6 @@ const quoteContactLabel = {
 const quoteContactLink = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   textDecoration: 'none',
 }

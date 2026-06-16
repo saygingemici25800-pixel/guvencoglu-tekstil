@@ -209,9 +209,9 @@ export default function BizPage() {
           color: var(--v2-cream, #EFEAE0);
         }
         .biz-outline-light:hover, .biz-outline-light:focus-visible {
-          background: var(--v2-cream, #EFEAE0);
-          color: var(--v2-navy, #2D3142);
-          border-color: var(--v2-cream, #EFEAE0);
+          background: var(--v2-navy, #2D3142);
+          color: var(--v2-cream, #EFEAE0);
+          border-color: var(--v2-navy, #2D3142);
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
@@ -451,7 +451,7 @@ const flipFront = {
 }
 const flipBack = {
   ...flipFace,
-  background: 'var(--v2-navy, #2D3142)',
+  background: 'var(--v2-cream, #EFEAE0)',
   transform: 'rotateY(180deg)',
   justifyContent: 'center',
   alignItems: 'flex-start',
@@ -476,14 +476,14 @@ const flipNote = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 15,
   lineHeight: 1.55,
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
 }
 const flipSince = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
-  color: 'rgba(212, 163, 115, 0.95)',
+  color: 'var(--v2-copper, #9A0002)',
 }
 
 /* d) İŞ ORTAKLARI / REFERANSLAR */
@@ -509,7 +509,7 @@ const refsGrid = {
 }
 /* d) CTA BANT */
 const ctaWrap = {
-  background: 'var(--v2-navy, #2D3142)',
+  background: 'var(--v2-cream, #EFEAE0)',
   padding: 'clamp(64px, 10vw, 120px) clamp(24px, 6vw, 96px)',
 }
 const ctaInner = {
@@ -525,14 +525,14 @@ const ctaTitle = {
   fontSize: 'clamp(32px, 4.4vw, 56px)',
   lineHeight: 1.08,
   letterSpacing: '-0.02em',
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: '0 0 18px',
 }
 const ctaText = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 17,
   lineHeight: 1.65,
-  color: 'rgba(239, 234, 224, 0.78)',
+  color: 'var(--v2-muted, #5A5A5A)',
   margin: '0 0 36px',
   maxWidth: '46ch',
 }
@@ -540,8 +540,8 @@ const outlineBtnLight = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 12,
-  border: '1px solid var(--v2-cream, #EFEAE0)',
-  color: 'var(--v2-cream, #EFEAE0)',
+  border: '1px solid var(--v2-navy, #2D3142)',
+  color: 'var(--v2-navy, #2D3142)',
   background: 'transparent',
   padding: '15px 30px',
   fontFamily: 'var(--v2-font-body, sans-serif)',

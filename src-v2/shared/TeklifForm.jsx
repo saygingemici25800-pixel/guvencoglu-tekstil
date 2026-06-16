@@ -134,7 +134,7 @@ export default function TeklifForm({ theme = 'navy', consent = false, title }) {
         }
         .teklif-cream .teklif-submit:hover,
         .teklif-cream .teklif-submit:focus-visible {
-          background: var(--v2-copper, #D4A373); color: var(--v2-navy, #2D3142);
+          background: var(--v2-copper, #D4A373); color: var(--v2-cream, #EFEAE0);
         }
         .teklif-submit span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
         .teklif-submit:hover span, .teklif-submit:focus-visible span { transform: translateX(5px); }
@@ -210,7 +210,11 @@ const kvkkText = { fontFamily: 'var(--v2-font-body, sans-serif)', fontSize: 13, 
 
 /* ── theme tokens — palet sabit ── */
 const CREAM = {
-  card: { background: 'var(--v2-cream, #EFEAE0)' },
+  card: {
+    background: 'var(--v2-cream, #EFEAE0)',
+    border: '1px solid rgba(45, 49, 66, 0.12)',
+    boxShadow: '0 18px 48px -30px rgba(45, 49, 66, 0.4)',
+  },
   title: 'var(--v2-navy, #2D3142)',
   label: 'var(--v2-muted, #5A5A5A)',
   input: { background: '#FFFFFF', borderColor: 'rgba(45, 49, 66, 0.2)', color: 'var(--v2-ink, #1A1A1A)' },

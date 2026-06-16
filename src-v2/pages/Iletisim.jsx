@@ -131,7 +131,7 @@ export default function Iletisim() {
 
           {/* SAĞ — sade teklif formu (native required KVKK onayı) */}
           <Reveal style={rightCol} delay={120}>
-            <TeklifForm theme="navy" consent title="Hızlı teklif formu" />
+            <TeklifForm theme="cream" consent title="Hızlı teklif formu" />
           </Reveal>
         </div>
       </section>
