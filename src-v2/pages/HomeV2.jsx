@@ -305,6 +305,10 @@ export default function HomeV2() {
         }}
       />
 
+      {/* Ana sayfaya ÖZEL vurgu override: copper → Cherry Cola kırmızı (#9A0002).
+          Global --v2-copper token'ı değişmez; yalnızca bu ağaçta inline override
+          edilir → diğer sayfalar copper kalır, nav (HomeV2 dışında) etkilenmez. */}
+      <div className="v2-home" style={{ '--v2-copper': '#9A0002' }}>
       {/* ─── BÖLÜM 1 — PREMIUM ASİMETRİK HERO ──────────────── */}
       <section className="hv2-hero" style={heroWrap} aria-label="Kurumsal üniforma — sektörler">
         {/* ÜST BÖLGE — metin + yüzen sektör görselleri */}
@@ -768,6 +772,7 @@ export default function HomeV2() {
           .hv2-shiny::before { animation: none !important; }
         }
       `}</style>
+      </div>
     </PageTransition>
   )
 }
@@ -831,7 +836,7 @@ const heroH1 = {
   color: 'var(--v2-navy, #2D3142)',
   margin: '0 0 28px',
 }
-const heroH1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
+const heroH1Accent = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
 const heroLede = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 'clamp(15px, 1.05vw, 17px)',
@@ -1075,7 +1080,7 @@ const atelierLabel = {
   letterSpacing: '0.15em',
   color: 'var(--v2-cream, #EFEAE0)',
 }
-const h1Accent = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
+const h1Accent = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
 
 /* BÖLÜM 2 — GÜVEN ŞERİDİ */
 const trustWrap = {
@@ -1122,7 +1127,7 @@ const h2Light = {
   maxWidth: '18ch',
 }
 const h2Dark = { ...h2Light, color: 'var(--v2-ink, #1A1A1A)' }
-const emDark = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
+const emDark = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
 
 /* BÖLÜM 3 — VAAT */
 const promiseWrap = {
