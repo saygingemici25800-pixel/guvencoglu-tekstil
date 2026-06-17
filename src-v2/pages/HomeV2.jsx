@@ -800,7 +800,7 @@ const heroUpper = {
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  height: '72vh',
+  height: '64vh',
 }
 const heroLeft = {
   position: 'relative',
@@ -968,7 +968,7 @@ const heroWordmark = {
   bottom: 0,
   left: 0,
   right: 0,
-  height: '28vh',
+  height: '36vh',
   overflow: 'hidden',
   pointerEvents: 'none',
   display: 'flex',
