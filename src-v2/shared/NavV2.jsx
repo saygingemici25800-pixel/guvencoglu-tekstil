@@ -85,7 +85,7 @@ export default function NavV2() {
         src="/logo-tekstil.png"
         alt="Güvençoğlu Tekstil"
         style={{
-          height: isMobile ? '56px' : '76px',
+          height: isMobile ? '106px' : '154px',
           width: 'auto',
           objectFit: 'contain',
           display: 'block',
