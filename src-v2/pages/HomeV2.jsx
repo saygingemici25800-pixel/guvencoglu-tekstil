@@ -814,8 +814,8 @@ const heroLeft = {
   justifyContent: 'flex-start',
   paddingLeft: 'clamp(40px, 5vw, 96px)',
   paddingRight: 'clamp(24px, 2vw, 40px)',
-  // Metin eski yerinde (sol, normal) ve yukarıda.
-  paddingTop: 'clamp(100px, 12vh, 140px)',
+  // Metin sol/normal, biraz daha yukarıda (nav pill'in hemen altı).
+  paddingTop: 'clamp(84px, 11vh, 124px)',
   paddingBottom: 'clamp(24px, 3vw, 48px)',
 }
 const heroEyebrow = {
@@ -978,7 +978,7 @@ const heroWordmark = {
 const heroWordmarkText = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 600,
-  fontSize: 'clamp(100px, 17vw, 260px)',
+  fontSize: 'clamp(88px, 15vw, 220px)',
   lineHeight: 0.8,
   letterSpacing: '-0.03em',
   color: 'var(--v2-navy, #2D3142)',
