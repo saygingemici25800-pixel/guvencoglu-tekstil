@@ -1,3 +1,4 @@
+import { Fragment, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
@@ -13,6 +14,11 @@ import { SERVICES } from '../data/services.js'
    Sektörler EŞİT AĞIRLIK (sağlık/otel/okul aynı genişlik). 3D yok.
    ────────────────────────────────────────────────────────────── */
 
+/* Placeholder kurum adları — logo henüz yok. Gerçek logolar gelince
+   .kurum-box içine <img> girecek (kutu sabit oranlı, metin yerini alır). */
+const makeClients = (label) =>
+  Array.from({ length: 12 }, (_, i) => `${label} ${String(i + 1).padStart(2, '0')}`)
+
 const SECTORS = [
   {
     id: 'saglik',
@@ -26,6 +32,7 @@ const SECTORS = [
       'Eczane ve resepsiyon kıyafetleri',
       'Kolay yıkanır, yüksek dayanımlı kumaşlar',
     ],
+    clients: makeClients('Sağlık'),
   },
   {
     id: 'otel',
@@ -39,6 +46,7 @@ const SECTORS = [
       'Housekeeping ve teknik personel üniformaları',
       'Spa & wellness kıyafetleri',
     ],
+    clients: makeClients('Otel'),
   },
   {
     id: 'okul',
@@ -52,6 +60,7 @@ const SECTORS = [
       'Eşofman ve beden eğitimi takımları',
       'Nakışlı okul logosu, sınıf/isim baskısı',
     ],
+    clients: makeClients('Okul'),
   },
 ]
 
@@ -81,6 +90,52 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, textured
           aria-label={alt}
         />
       </Reveal>
+    </section>
+  )
+}
+
+/* Çalıştığımız Kurumlar — sektöre özel sonsuz yatay logo şeridi (marquee).
+   Saf CSS @keyframes translateX + IntersectionObserver: şerit viewport'a
+   girince animasyon başlar (is-running), çıkınca durur (animation-play-state:
+   paused) → off-screen'de CPU/GPU yakmaz. İçerik 2× kopyalanır (kesintisiz
+   döngü); 2. kopya aria-hidden. Hover-duraklatma, reduced-motion ve kenar fade
+   maskesi CSS'te (<style> bloğu). Görsel yok → placeholder logo kutuları. */
+function SectorMarquee({ clients, reverse }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node || !('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(
+      ([entry]) => node.classList.toggle('is-running', entry.isIntersecting),
+      { threshold: 0 },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  const renderGroup = (hidden) => (
+    <ul className="kurum-group" aria-hidden={hidden || undefined}>
+      {clients.map((name, i) => (
+        <li key={i} className="kurum-box" style={kurumBox}>
+          {/* Logo gelince: <img src={...} alt={name} style={kurumLogoImg} /> */}
+          <span style={kurumBoxText}>{name}</span>
+        </li>
+      ))}
+    </ul>
+  )
+
+  return (
+    <section style={kurumWrap} aria-label="Çalıştığımız kurumlar">
+      <Reveal style={kurumHead}>
+        <Eyebrow>ÇALIŞTIĞIMIZ KURUMLAR</Eyebrow>
+      </Reveal>
+      <div ref={ref} className="kurum-viewport">
+        <div className={`kurum-track${reverse ? ' kurum-track--rev' : ''}`}>
+          {renderGroup(false)}
+          {renderGroup(true)}
+        </div>
+      </div>
     </section>
   )
 }
@@ -144,27 +199,31 @@ export default function HizmetlerPage() {
       {SECTORS.map((s, i) => {
         const reverse = i % 2 === 1
         return (
-          <InterlockSection
-            key={s.id}
-            photo={s.photo}
-            alt={s.alt}
-            reverse={reverse}
-            textStyle={reverse ? ilTextRight : ilTextLeft}
-            photoStyle={ilPhotoSector}
-            textured
-          >
-            <Eyebrow>{s.label.toLocaleUpperCase('tr-TR')}</Eyebrow>
-            <h3 style={sectorTitle}>{s.label} kurumları</h3>
-            <p style={body}>{s.desc}</p>
-            <ul style={sectorList}>
-              {s.items.map((it) => (
-                <li key={it} style={sectorItem}>
-                  <span style={sectorDot} aria-hidden="true" />
-                  <span>{it}</span>
-                </li>
-              ))}
-            </ul>
-          </InterlockSection>
+          <Fragment key={s.id}>
+            <InterlockSection
+              photo={s.photo}
+              alt={s.alt}
+              reverse={reverse}
+              textStyle={reverse ? ilTextRight : ilTextLeft}
+              photoStyle={ilPhotoSector}
+              textured
+            >
+              <Eyebrow>{s.label.toLocaleUpperCase('tr-TR')}</Eyebrow>
+              <h3 style={sectorTitle}>{s.label} kurumları</h3>
+              <p style={body}>{s.desc}</p>
+              <ul style={sectorList}>
+                {s.items.map((it) => (
+                  <li key={it} style={sectorItem}>
+                    <span style={sectorDot} aria-hidden="true" />
+                    <span>{it}</span>
+                  </li>
+                ))}
+              </ul>
+            </InterlockSection>
+
+            {/* Sektörün hemen altında: o sektörün kurum logosu şeridi (yön dönüşümlü) */}
+            <SectorMarquee clients={s.clients} reverse={reverse} />
+          </Fragment>
         )
       })}
 
@@ -242,6 +301,36 @@ export default function HizmetlerPage() {
           box-shadow: 0 4px 10px rgba(45, 49, 66, 0.06), 0 30px 60px -30px rgba(45, 49, 66, 0.42);
         }
 
+        /* ── Çalıştığımız Kurumlar — sonsuz yatay logo şeridi ── */
+        .kurum-viewport {
+          position: relative;
+          overflow: hidden;
+          padding: clamp(4px, 0.8vw, 10px) 0;
+          /* kenarlarda yumuşak fade-out (kutular kenarda belirsizleşir) */
+          -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+        }
+        .kurum-track {
+          display: flex;
+          width: max-content;
+          will-change: transform;
+          animation: kurum-scroll 46s linear infinite;
+          animation-play-state: paused; /* IO görünür yapınca 'is-running' ile başlar */
+        }
+        .kurum-track.kurum-track--rev { animation-name: kurum-scroll-rev; }
+        .kurum-viewport.is-running .kurum-track { animation-play-state: running; }
+        /* hover'da okunabilirlik için duraklar (mouse çekilince devam) */
+        .kurum-viewport.is-running:hover .kurum-track { animation-play-state: paused; }
+        .kurum-group {
+          display: flex;
+          gap: clamp(14px, 1.6vw, 24px);
+          padding: 0 clamp(14px, 1.6vw, 24px) 0 0; /* gruplar arası dikiş = kutu arası boşluk */
+          margin: 0;
+          list-style: none;
+        }
+        @keyframes kurum-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes kurum-scroll-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
         @media (max-width: 860px) {
           .hz-il-row, .hz-il-rev .hz-il-row { flex-direction: column !important; }
           .hz-il-text {
@@ -265,6 +354,9 @@ export default function HizmetlerPage() {
 
         @media (prefers-reduced-motion: reduce) {
           .hz-outline-light, .hz-outline-light span, .hz-svc-card { transition: none !important; }
+          /* hareket yok → şerit statik, taşarsa yatay scroll ile erişilir */
+          .kurum-viewport .kurum-track { animation: none !important; transform: none !important; }
+          .kurum-viewport { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         }
       `}</style>
     </PageTransition>
@@ -277,6 +369,40 @@ export default function HizmetlerPage() {
    ────────────────────────────────────────────────────────────── */
 
 const CREAM_BG = 'var(--v2-cream, #EFEAE0)'
+
+/* Çalıştığımız Kurumlar — logo şeridi (marquee) stilleri */
+const kurumWrap = {
+  background: CREAM_BG,
+  marginTop: 'clamp(-64px, -5vw, -24px)', // sektör bloğuna yaklaştır (alt boş padding'i kıs)
+  padding: '0 0 clamp(48px, 8vw, 88px)',
+}
+const kurumHead = {
+  maxWidth: 1280,
+  margin: '0 auto',
+  padding: '0 clamp(24px, 6vw, 96px) clamp(14px, 1.8vw, 22px)',
+}
+const kurumBox = {
+  flex: '0 0 auto',
+  width: 'clamp(132px, 15vw, 176px)',
+  aspectRatio: '16 / 7',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '0 16px',
+  background: 'var(--v2-surface-elevated, #FFFFFF)',
+  border: '1px solid rgba(45, 49, 66, 0.1)',
+  borderRadius: 12,
+  boxShadow: '0 1px 2px rgba(45, 49, 66, 0.04)',
+  boxSizing: 'border-box',
+}
+const kurumBoxText = {
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 13,
+  letterSpacing: '0.08em',
+  color: 'var(--v2-muted, #5A5A5A)',
+  textAlign: 'center',
+  whiteSpace: 'nowrap',
+}
 const NAVY_BG = 'var(--v2-navy, #2D3142)'
 
 /* eyebrow */
