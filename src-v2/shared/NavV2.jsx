@@ -51,6 +51,12 @@ export default function NavV2() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
 
+  // Logo (fixed, top:16) ile nav pill + telefon AYNI yatay eksende (dikey ortalı).
+  // Eksen = logonun dikey merkezi = 16 + logoYüksekliği/2. Pill/telefon bu eksende
+  // translateY(-50%) ile ortalanır → üçü tek satır. Logo büyüdükçe eksen aşağı kayar.
+  const LOGO_H = isMobile ? 180 : 308
+  const headerAxis = `${16 + LOGO_H / 2}px`
+
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
     padding: isMobile ? '5px 8px' : '8px 14px',
@@ -85,7 +91,7 @@ export default function NavV2() {
         src="/logo-tekstil.png"
         alt="Güvençoğlu Tekstil"
         style={{
-          height: isMobile ? '106px' : '154px',
+          height: `${LOGO_H}px`,
           width: 'auto',
           objectFit: 'contain',
           display: 'block',
@@ -100,8 +106,9 @@ export default function NavV2() {
       className="nav-phone"
       style={{
         position: 'fixed',
-        top: '20px',
+        top: headerAxis,
         right: 'clamp(16px, 3vw, 28px)',
+        transform: 'translateY(-50%)',
         zIndex: 51,
         display: 'inline-flex',
         alignItems: 'center',
@@ -144,9 +151,9 @@ export default function NavV2() {
     <header
       style={{
         position: 'fixed',
-        top: '20px',
+        top: headerAxis,
         left: '50%',
-        transform: 'translateX(-50%)',
+        transform: 'translate(-50%, -50%)',
         zIndex: 50,
         display: 'flex',
         alignItems: 'center',
