@@ -751,7 +751,7 @@ export default function HomeV2() {
         @media (max-width: 820px) {
           .hv2-hero { height: auto !important; overflow: visible !important; }
           .hv2-hero-upper { flex-direction: column !important; height: auto !important; }
-          .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(92px, 12vh, 120px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) clamp(112px, 30vw, 132px) !important; }
+          .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(100px, 14vh, 140px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
           .hv2-hero-gallery { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
           .hv2-hg-card { grid-column: auto !important; grid-row: auto !important; margin-top: 0 !important; width: 100% !important; aspect-ratio: 16 / 10 !important; border-radius: 10px !important; }
           .hv2-wordmark { position: static !important; height: auto !important; overflow: hidden !important; }
@@ -817,11 +817,10 @@ const heroLeft = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  paddingLeft: 'clamp(184px, 13vw, 208px)',
+  paddingLeft: 'clamp(40px, 5vw, 96px)',
   paddingRight: 'clamp(24px, 2vw, 40px)',
-  // İçerik YUKARI. Logo (sol üstte, ~200px) sol marjda kalır; metin logonun
-  // SAĞINDAN başlar (paddingLeft logoyu geçer) → çakışma yok, metin yukarıda.
-  paddingTop: 'clamp(96px, 12vh, 128px)',
+  // Metin eski yerinde (sol, normal) ve yukarıda.
+  paddingTop: 'clamp(100px, 12vh, 140px)',
   paddingBottom: 'clamp(24px, 3vw, 48px)',
 }
 const heroEyebrow = {
@@ -999,14 +998,15 @@ const heroWordmark = {
 const heroWordmarkText = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 600,
-  fontSize: 'clamp(100px, 17vw, 260px)',
-  lineHeight: 0.8,
+  // Küçültüldü + aşağı itme kaldırıldı → 28vh konteynerine kırpılmadan sığar.
+  fontSize: 'clamp(64px, 12vw, 188px)',
+  lineHeight: 0.9,
   letterSpacing: '-0.03em',
   color: 'var(--v2-navy, #2D3142)',
   textAlign: 'center',
   whiteSpace: 'nowrap',
   margin: 0,
-  transform: 'translateY(8%)',
+  transform: 'translateY(0)',
 }
 
 /* BÖLÜM 2 — ATÖLYE ŞERİDİ */
