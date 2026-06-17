@@ -76,7 +76,9 @@ export default function NavV2() {
       to="/"
       aria-label="Ana Sayfa"
       style={{
-        position: 'fixed',
+        // absolute → sayfa üstüne sabitlenir, scroll'da yukarı kayıp kaybolur
+        // (yalnızca açılışta görünür; fixed gibi aşağı inmez). Nav/telefon fixed kalır.
+        position: 'absolute',
         top: '16px',
         left: 'clamp(16px, 3vw, 28px)',
         zIndex: 51,
