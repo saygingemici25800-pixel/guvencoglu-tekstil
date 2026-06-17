@@ -285,9 +285,9 @@ export default function HizmetlerPage() {
           transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         .hz-outline-light:hover, .hz-outline-light:focus-visible {
-          background: var(--v2-cream, #EFEAE0);
-          color: var(--v2-navy, #2D3142);
-          border-color: var(--v2-cream, #EFEAE0);
+          background: var(--v2-navy, #2D3142);
+          color: var(--v2-cream, #EFEAE0);
+          border-color: var(--v2-navy, #2D3142);
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
@@ -403,7 +403,6 @@ const kurumBoxText = {
   textAlign: 'center',
   whiteSpace: 'nowrap',
 }
-const NAVY_BG = 'var(--v2-navy, #2D3142)'
 
 /* eyebrow */
 const eyebrowRow = { display: 'flex', alignItems: 'center', gap: 14, margin: '0 0 20px' }
@@ -629,7 +628,7 @@ const svcFeatDot = {
 
 /* 5) CTA */
 const ctaWrap = {
-  background: NAVY_BG,
+  background: CREAM_BG,
   padding: 'clamp(64px, 10vw, 120px) clamp(24px, 6vw, 96px)',
 }
 const ctaInner = {
@@ -652,14 +651,14 @@ const ctaTitle = {
   fontSize: 'clamp(32px, 4.4vw, 56px)',
   lineHeight: 1.08,
   letterSpacing: '-0.02em',
-  color: 'var(--v2-cream, #EFEAE0)',
+  color: 'var(--v2-navy, #2D3142)',
   margin: '0 0 18px',
 }
 const ctaText = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 17,
   lineHeight: 1.65,
-  color: 'rgba(239, 234, 224, 0.78)',
+  color: 'var(--v2-muted, #5A5A5A)',
   margin: '0 0 36px',
   maxWidth: '46ch',
 }
@@ -667,8 +666,8 @@ const outlineBtnLight = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 12,
-  border: '1px solid var(--v2-cream, #EFEAE0)',
-  color: 'var(--v2-cream, #EFEAE0)',
+  border: '1px solid var(--v2-navy, #2D3142)',
+  color: 'var(--v2-navy, #2D3142)',
   background: 'transparent',
   padding: '15px 30px',
   fontFamily: 'var(--v2-font-body, sans-serif)',
