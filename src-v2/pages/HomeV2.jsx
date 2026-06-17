@@ -751,7 +751,7 @@ export default function HomeV2() {
         @media (max-width: 820px) {
           .hv2-hero { height: auto !important; overflow: visible !important; }
           .hv2-hero-upper { flex-direction: column !important; height: auto !important; }
-          .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(136px, 17vh, 154px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
+          .hv2-hero-left { width: 100% !important; height: auto !important; z-index: auto !important; padding: clamp(150px, 18vh, 168px) clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; }
           .hv2-hero-gallery { width: 100% !important; height: auto !important; padding: 0 clamp(24px, 6vw, 40px) clamp(24px, 5vw, 40px) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
           .hv2-hg-card { grid-column: auto !important; grid-row: auto !important; margin-top: 0 !important; width: 100% !important; aspect-ratio: 16 / 10 !important; border-radius: 10px !important; }
           .hv2-wordmark { position: static !important; height: auto !important; overflow: hidden !important; }
@@ -819,8 +819,8 @@ const heroLeft = {
   justifyContent: 'flex-start',
   paddingLeft: 'clamp(40px, 5vw, 96px)',
   paddingRight: 'clamp(24px, 2vw, 40px)',
-  // Büyütülmüş sol-üst logoyu (fixed, ~154px) net geçsin → içerik aşağıdan başlar.
-  paddingTop: 'clamp(182px, 19vh, 200px)',
+  // Büyütülmüş sol-üst logoyu (fixed, ~200px) net geçsin → içerik aşağıdan başlar.
+  paddingTop: 'clamp(224px, 24vh, 244px)',
   paddingBottom: 'clamp(24px, 3vw, 48px)',
 }
 const heroEyebrow = {
