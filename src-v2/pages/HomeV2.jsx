@@ -334,9 +334,6 @@ export default function HomeV2() {
                   <span className="cta-swap-bot">0532 134 7602</span>
                 </span>
               </button>
-              <Link to="/hizmetler" className="hv2-hero-link" style={heroLink}>
-                Tüm sektörler →
-              </Link>
             </div>
           </div>
 
@@ -665,8 +662,6 @@ export default function HomeV2() {
       <style>{`
         .hv2-hero-btn { transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
         .hv2-hero-btn:hover, .hv2-hero-btn:focus-visible { background: var(--v2-copper, #D4A373); color: var(--v2-cream, #EFEAE0); box-shadow: 0 6px 22px rgba(45, 49, 66, 0.32); transform: translateY(-1px); }
-        .hv2-hero-link { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
-        .hv2-hero-link:hover, .hv2-hero-link:focus-visible { background: var(--v2-navy, #2D3142); color: var(--v2-cream, #EFEAE0); }
         .hv2-hg-photo { will-change: transform; }
         .hv2-hg-card:hover .hv2-hg-photo, .hv2-hg-link:focus-visible .hv2-hg-photo { transform: scale(1.05); }
         .hv2-hg-link:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; border-radius: 16px; }
@@ -865,21 +860,6 @@ const heroBtn = {
   boxSizing: 'border-box',
   boxShadow: '0 4px 16px rgba(45, 49, 66, 0.25)',
 }
-const heroLink = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  background: 'transparent',
-  color: 'var(--v2-navy, #2D3142)',
-  border: '1.5px solid var(--v2-navy, #2D3142)',
-  padding: '12px 28px',
-  borderRadius: 999,
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  fontWeight: 500,
-  textDecoration: 'none',
-  minHeight: 44,
-  boxSizing: 'border-box',
-}
 const heroGallery = {
   position: 'relative',
   zIndex: 1,
@@ -998,15 +978,14 @@ const heroWordmark = {
 const heroWordmarkText = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 600,
-  // Küçültüldü + aşağı itme kaldırıldı → 28vh konteynerine kırpılmadan sığar.
-  fontSize: 'clamp(64px, 12vw, 188px)',
-  lineHeight: 0.9,
+  fontSize: 'clamp(100px, 17vw, 260px)',
+  lineHeight: 0.8,
   letterSpacing: '-0.03em',
   color: 'var(--v2-navy, #2D3142)',
   textAlign: 'center',
   whiteSpace: 'nowrap',
   margin: 0,
-  transform: 'translateY(0)',
+  transform: 'translateY(8%)',
 }
 
 /* BÖLÜM 2 — ATÖLYE ŞERİDİ */
