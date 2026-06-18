@@ -53,6 +53,13 @@ const HERO_SECTORS = [
     img: '/okul-main.webp',
     desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
   },
+  {
+    id: 'restoran',
+    num: '04',
+    name: 'Restoran',
+    img: '/atolye-uretim.webp', // placeholder — restoran fotosu sonra girecek
+    desc: 'Mutfaktan salona restoran ekibi için fonksiyonel, hijyenik ve markaya özel kıyafetler.',
+  },
 ]
 
 const ATELIER_PHOTOS = [
@@ -347,7 +354,7 @@ export default function HomeV2() {
                 style={galleryCard}
               >
                 <Link
-                  to="/ne-yapiyoruz"
+                  to={`/ne-yapiyoruz/${s.id}`}
                   className="hv2-hg-link"
                   style={galleryLink}
                   aria-label={`${s.name} koleksiyonu`}
@@ -665,10 +672,12 @@ export default function HomeV2() {
         .hv2-hg-photo { will-change: transform; }
         .hv2-hg-card:hover .hv2-hg-photo, .hv2-hg-link:focus-visible .hv2-hg-photo { transform: scale(1.05); }
         .hv2-hg-link:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: -3px; border-radius: 16px; }
-        /* Asimetrik yerleşim: sol uzun kart (aşağı kayık) + sağda iki kısa kart */
-        .hv2-hg-1 { grid-column: 1; grid-row: 1 / 3; margin-top: clamp(16px, 3vh, 40px); }
-        .hv2-hg-2 { grid-column: 2; grid-row: 1; }
-        .hv2-hg-3 { grid-column: 2; grid-row: 2; }
+        /* Asimetrik 4-kart yerleşim (pinwheel): col1 uzun+kısa, col2 kısa+uzun.
+           Rijit 2x2 değil; iki uzun (1,3) + iki kısa (2,4) çaprazlama. */
+        .hv2-hg-1 { grid-column: 1; grid-row: 1 / 3; margin-top: clamp(10px, 2.4vh, 30px); }
+        .hv2-hg-2 { grid-column: 2; grid-row: 1 / 2; }
+        .hv2-hg-3 { grid-column: 2; grid-row: 2 / 4; }
+        .hv2-hg-4 { grid-column: 1; grid-row: 3 / 4; }
         /* Kart içi "Koleksiyon" butonu — saf CSS shine sweep (ShinyButton taklidi) */
         .hv2-shiny::before {
           content: '';
@@ -868,7 +877,7 @@ const heroGallery = {
   boxSizing: 'border-box',
   display: 'grid',
   gridTemplateColumns: '1.05fr 0.95fr',
-  gridTemplateRows: '1.15fr 0.85fr',
+  gridTemplateRows: 'repeat(3, 1fr)',
   gap: 'clamp(12px, 1.1vw, 18px)',
   padding: 'clamp(96px, 12vh, 140px) clamp(28px, 3.2vw, 60px) clamp(28px, 4vh, 56px) clamp(8px, 1vw, 16px)',
 }
