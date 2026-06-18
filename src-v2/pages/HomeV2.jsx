@@ -493,7 +493,8 @@ export default function HomeV2() {
 
       {/* ─── BÖLÜM 5 — HİZMETLER ÖNİZLEME ───────────────────── */}
       <section className="hv2-services" style={servicesWrap} aria-labelledby="hv2-services-title">
-        <Reveal style={servicesInner}>
+        {/* STATİK — bu bölümde giriş animasyonu yok (Reveal kaldırıldı). */}
+        <div style={servicesInner}>
           <header style={sectionHead}>
             <p style={eyebrow}>HİZMETLERİMİZ</p>
             <h2 id="hv2-services-title" style={h2Light}>
@@ -516,7 +517,7 @@ export default function HomeV2() {
           <Link to="/ne-yapiyoruz" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
             Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
           </Link>
-        </Reveal>
+        </div>
       </section>
 
       {/* ─── BÖLÜM 5.5 — BİZ TEASER: SOL yazı / SAĞ 2 overlap foto ─── */}
