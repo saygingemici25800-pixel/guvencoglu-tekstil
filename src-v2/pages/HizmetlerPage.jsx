@@ -6,7 +6,7 @@ import Reveal from '../shared/Reveal.jsx'
 import { SERVICES } from '../data/services.js'
 
 /* ──────────────────────────────────────────────────────────────
-   HizmetlerPage — /hizmetler (Faz 3)
+   HizmetlerPage — /ne-yapiyoruz ("Ne Yapıyoruz" ana sayfası)
    Mevcut desen: BizPage interlocking (geniş foto arka katman + üstüne
    binen beyaz kart, ~%10 binme, gölge 0 24px 50px -28px, dikey offset
    asimetri, ritim sol/sağ dönüşümlü) + <Reveal> (one-shot).
@@ -144,9 +144,9 @@ export default function HizmetlerPage() {
   return (
     <PageTransition>
       <SEOHead
-        title="Hizmetler — Güvençoğlu Tekstil"
+        title="Ne Yapıyoruz — Güvençoğlu Tekstil"
         description="Konfeksiyon, nakış, baskı, özel tasarım, toplu üretim ve B2B çözümler. Sağlık, otel ve okul kurumları için Fethiye'deki kendi tesisimizde, aracısız, uçtan uca üretim."
-        path="/hizmetler"
+        path="/ne-yapiyoruz"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'ItemList',
@@ -171,9 +171,9 @@ export default function HizmetlerPage() {
         textStyle={ilTextIntro}
         photoStyle={ilPhotoIntro}
       >
-        <Eyebrow>NE YAPIYORUZ</Eyebrow>
+        <Eyebrow>HİZMETLERİMİZ</Eyebrow>
         <h1 style={h1}>
-          Hizmet<em style={em}>ler</em>
+          Ne <em style={em}>Yapıyoruz</em>
         </h1>
         <p style={lede}>
           Tasarımdan dikişe, nakıştan baskıya — kurumsal tekstilin her aşaması
@@ -219,6 +219,9 @@ export default function HizmetlerPage() {
                   </li>
                 ))}
               </ul>
+              <Link to={`/ne-yapiyoruz/${s.id}`} className="hz-detail-link" style={secDetailLink}>
+                {s.label} detayları <span aria-hidden="true">→</span>
+              </Link>
             </InterlockSection>
 
             {/* Sektörün hemen altında: o sektörün kurum logosu şeridi (yön dönüşümlü) */}
@@ -290,6 +293,8 @@ export default function HizmetlerPage() {
           border-color: var(--v2-navy, #2D3142);
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
+        .hz-detail-link span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
+        .hz-detail-link:hover span, .hz-detail-link:focus-visible span { transform: translateX(5px); }
 
         /* Hizmet kartları — sakin premium: yumuşak katmanlı gölge + zarif hover yükselme */
         .hz-svc-card {
@@ -415,6 +420,20 @@ const eyebrowLabel = {
   color: 'var(--v2-copper, #D4A373)',
 }
 const em = { fontStyle: 'italic', color: 'var(--v2-copper, #D4A373)' }
+/* Sektör bloğundan alt sayfaya giriş linki (/ne-yapiyoruz/<id>) */
+const secDetailLink = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  marginTop: 8,
+  alignSelf: 'flex-start',
+  fontFamily: 'var(--v2-font-mono, monospace)',
+  fontSize: 12,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  color: 'var(--v2-copper, #9A0002)',
+  textDecoration: 'none',
+}
 
 /* başlıklar / metin */
 const h1 = {

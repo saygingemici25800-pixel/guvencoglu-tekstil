@@ -12,7 +12,17 @@ const POSTS_DIR = join(ROOT, 'src-v2', 'blog', 'posts')
 const TODAY = new Date().toISOString().slice(0, 10)
 
 // Statik route'lar (routes.jsx ile aynı yollar)
-const STATIC_ROUTES = ['/', '/biz-ve-is-ortaklarimiz', '/hizmetler', '/blog', '/iletisim']
+const STATIC_ROUTES = [
+  '/',
+  '/biz-ve-is-ortaklarimiz',
+  '/ne-yapiyoruz',
+  '/ne-yapiyoruz/saglik',
+  '/ne-yapiyoruz/otel',
+  '/ne-yapiyoruz/okul',
+  '/ne-yapiyoruz/restoran',
+  '/blog',
+  '/iletisim',
+]
 
 // Basit frontmatter parser — sadece düz "key: value" satırları.
 function parseFrontmatter(raw) {

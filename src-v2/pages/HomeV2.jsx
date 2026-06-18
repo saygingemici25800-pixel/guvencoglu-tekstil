@@ -17,17 +17,17 @@ const SECTORS = [
   {
     title: 'Sağlık personeli kıyafetleri',
     sub: 'Hastane, klinik, eczane, laboratuvar, diş',
-    to: '/hizmetler',
+    to: '/ne-yapiyoruz',
   },
   {
     title: 'Otel personeli kıyafetleri',
     sub: 'Resepsiyon, restoran, housekeeping, spa, mutfak',
-    to: '/hizmetler',
+    to: '/ne-yapiyoruz',
   },
   {
     title: 'Okul üniformaları',
     sub: 'Anaokulu, ilkokul, ortaokul, lise, kolej',
-    to: '/hizmetler',
+    to: '/ne-yapiyoruz',
   },
 ]
 
@@ -347,7 +347,7 @@ export default function HomeV2() {
                 style={galleryCard}
               >
                 <Link
-                  to="/hizmetler"
+                  to="/ne-yapiyoruz"
                   className="hv2-hg-link"
                   style={galleryLink}
                   aria-label={`${s.name} koleksiyonu`}
@@ -478,7 +478,7 @@ export default function HomeV2() {
             ))}
           </div>
 
-          <Link to="/hizmetler" className="hv2-textlink" style={textLink}>
+          <Link to="/ne-yapiyoruz" className="hv2-textlink" style={textLink}>
             Diğer sektörler <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
@@ -506,7 +506,7 @@ export default function HomeV2() {
             ))}
           </div>
 
-          <Link to="/hizmetler" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
+          <Link to="/ne-yapiyoruz" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
             Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
           </Link>
         </Reveal>

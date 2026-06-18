@@ -3,9 +3,10 @@
     { "source": "/v2", "destination": "/", "permanent": true },
     { "source": "/v2/:path*", "destination": "/:path*", "permanent": true },
     { "source": "/hikayemiz", "destination": "/", "permanent": true },
-    { "source": "/uretim", "destination": "/hizmetler", "permanent": true },
-    { "source": "/referanslar", "destination": "/hizmetler", "permanent": true },
-    { "source": "/sektorler", "destination": "/hizmetler", "permanent": true }
+    { "source": "/hizmetler", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/uretim", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/referanslar", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/sektorler", "destination": "/ne-yapiyoruz", "permanent": true }
   ],
   "headers": [
     {

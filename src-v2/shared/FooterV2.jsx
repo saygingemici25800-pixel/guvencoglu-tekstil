@@ -5,8 +5,8 @@ const cols = [
     title: 'Yolculuk',
     items: [
       { label: 'Hikayemiz', to: '/biz-ve-is-ortaklarimiz' },
-      { label: 'Üretim Süreci', to: '/hizmetler' },
-      { label: 'Hizmetler', to: '/hizmetler' },
+      { label: 'Üretim Süreci', to: '/ne-yapiyoruz' },
+      { label: 'Ne Yapıyoruz', to: '/ne-yapiyoruz' },
     ],
   },
   {
