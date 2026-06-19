@@ -99,6 +99,10 @@ const TESTIMONIALS = [
     place: 'Muğla',
   },
 ]
+// Yorumlar placeholder/uydurma (atıflı gerçek müşteri yorumu yok) → "Sosyal Kanıt /
+// Referanslar" bölümü GEÇİCİ GİZLİ; sahte yorum/isim yayında kalmasın. Gerçek,
+// atıflı yorumlar gelince → true (TESTIMONIALS'ı gerçeklerle doldurup) geri açılır.
+const SHOW_TESTIMONIALS = false
 
 function ServiceIcon({ name }) {
   const common = {
@@ -599,7 +603,8 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR ───────────── */}
+      {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR (gerçek yorum gelene kadar gizli) ─ */}
+      {SHOW_TESTIMONIALS && (
       <section className="hv2-refs" style={refsWrap} aria-labelledby="hv2-refs-title">
         <Reveal style={refsInner}>
           <header style={sectionHead}>
@@ -626,6 +631,7 @@ export default function HomeV2() {
           </Link>
         </Reveal>
       </section>
+      )}
 
       {/* ─── BÖLÜM 7 — TEKLİF FORMU ─────────────────────────── */}
       <section id="teklif" className="hv2-quote" style={quoteWrap} aria-labelledby="hv2-quote-title">

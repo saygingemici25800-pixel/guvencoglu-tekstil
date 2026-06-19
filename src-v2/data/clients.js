@@ -37,11 +37,11 @@ export const CLIENTS = [
   // Belediye
   { name: 'Fethiye Belediyesi', sector: 'belediye' },
   { name: 'Seydikemer Belediyesi', sector: 'belediye' },
-  { name: 'Dalaman', sector: 'belediye' },
-  { name: 'Ortaca', sector: 'belediye' },
-  { name: 'Datça', sector: 'belediye' },
-  { name: 'Gaziemir', sector: 'belediye' },
-  { name: 'Tire', sector: 'belediye' },
+  { name: 'Dalaman Belediyesi', sector: 'belediye' },
+  { name: 'Ortaca Belediyesi', sector: 'belediye' },
+  { name: 'Datça Belediyesi', sector: 'belediye' },
+  { name: 'Gaziemir Belediyesi', sector: 'belediye' },
+  { name: 'Tire Belediyesi', sector: 'belediye' },
   { name: 'Muğla Büyükşehir Belediyesi', sector: 'belediye' },
   // Okul: liste sonra gelecek (şimdilik boş)
 ]
