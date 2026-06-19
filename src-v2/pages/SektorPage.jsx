@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
-import { SEKTORLER, SEKTOR_LIST, makeClients } from '../data/sektorler.js'
+import { SEKTORLER, SEKTOR_LIST } from '../data/sektorler.js'
+import { clientsBySector } from '../data/clients.js'
 
 const ORIGIN = 'https://guvencoglutekstil.com'
 
-// Gerçek kurum logoları gelene kadar "Çalıştığımız Kurumlar" dikey marquee'si
-// gizli (placeholder "Kurum 01.." yayında olmasın). Logolar gelince → true yap;
-// tek satırla geri açılır.
-const SHOW_MARQUEE = false
+// "Çalıştığımız Kurumlar" dikey marquee'si AÇIK — gerçek firma isimleriyle
+// (clients.js). Logo henüz yok → isim kutusu placeholder (logo gelince <img>).
+// İlgili sektörün listesi boşsa (ör. okul) marquee o sayfada gizlenir.
+const SHOW_MARQUEE = true
 
 /* ──────────────────────────────────────────────────────────────
    SektorPage — /ne-yapiyoruz/<slug> (4 statik alt sayfa).
@@ -73,9 +74,14 @@ function VerticalMarquee({ clients }) {
     return () => io.disconnect()
   }, [])
 
+  // Az isim varsa grup viewport'u doldursun diye tekrarla → kesintisiz dikey döngü.
+  const list = clients.length >= 6
+    ? clients
+    : Array.from({ length: Math.ceil(6 / clients.length) }, () => clients).flat()
+
   const group = (hidden) => (
     <ul className="spm-group" aria-hidden={hidden || undefined}>
-      {clients.map((name, i) => (
+      {list.map((name, i) => (
         <li key={i} className="spm-box" style={spmBox}>
           {/* Logo gelince: <img src={...} alt={name} style={spmImg} /> */}
           <span style={spmText}>{name}</span>
@@ -99,7 +105,8 @@ function VerticalMarquee({ clients }) {
 
 export default function SektorPage({ slug }) {
   const data = SEKTORLER[slug]
-  const clients = makeClients(data.label)
+  const clients = clientsBySector(slug) // o sektörün GERÇEK kurum adları
+  const showMarquee = SHOW_MARQUEE && clients.length > 0 // liste boşsa (okul) gizle
 
   return (
     <PageTransition>
@@ -129,7 +136,7 @@ export default function SektorPage({ slug }) {
       </section>
 
       <section style={bodyWrap} aria-label={`${data.label} alt başlıkları`}>
-        <div className="sp-grid" style={{ ...bodyGrid, ...(SHOW_MARQUEE ? null : { gridTemplateColumns: '1fr' }) }}>
+        <div className="sp-grid" style={{ ...bodyGrid, ...(showMarquee ? null : { gridTemplateColumns: '1fr' }) }}>
           <div style={mainCol}>
             {data.sections.map((sec, i) => (
               <Reveal
@@ -151,7 +158,7 @@ export default function SektorPage({ slug }) {
             ))}
           </div>
 
-          {SHOW_MARQUEE && <VerticalMarquee clients={clients} />}
+          {showMarquee && <VerticalMarquee clients={clients} />}
         </div>
       </section>
 
