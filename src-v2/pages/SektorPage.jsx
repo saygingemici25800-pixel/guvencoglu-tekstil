@@ -7,6 +7,11 @@ import { SEKTORLER, SEKTOR_LIST, makeClients } from '../data/sektorler.js'
 
 const ORIGIN = 'https://guvencoglutekstil.com'
 
+// Gerçek kurum logoları gelene kadar "Çalıştığımız Kurumlar" dikey marquee'si
+// gizli (placeholder "Kurum 01.." yayında olmasın). Logolar gelince → true yap;
+// tek satırla geri açılır.
+const SHOW_MARQUEE = false
+
 /* ──────────────────────────────────────────────────────────────
    SektorPage — /ne-yapiyoruz/<slug> (4 statik alt sayfa).
    Placeholder iskelet: başlık + lede, alt başlıklar (İngilizce terim +
@@ -124,7 +129,7 @@ export default function SektorPage({ slug }) {
       </section>
 
       <section style={bodyWrap} aria-label={`${data.label} alt başlıkları`}>
-        <div style={bodyGrid} className="sp-grid">
+        <div className="sp-grid" style={{ ...bodyGrid, ...(SHOW_MARQUEE ? null : { gridTemplateColumns: '1fr' }) }}>
           <div style={mainCol}>
             {data.sections.map((sec, i) => (
               <Reveal
@@ -146,7 +151,7 @@ export default function SektorPage({ slug }) {
             ))}
           </div>
 
-          <VerticalMarquee clients={clients} />
+          {SHOW_MARQUEE && <VerticalMarquee clients={clients} />}
         </div>
       </section>
 
