@@ -1,0 +1,15 @@
+{
+  "name": "Güvençoğlu Tekstil",
+  "short_name": "Güvençoğlu",
+  "description": "Kurumsal üniforma ve tekstil üretimi — Fethiye.",
+  "lang": "tr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EFEAE0",
+  "theme_color": "#2D3142",
+  "icons": [
+    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" }
+  ]
+}
