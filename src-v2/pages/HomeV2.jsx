@@ -305,8 +305,10 @@ export default function HomeV2() {
             "Türkiye'nin kurumsal üniforma uzmanı. Sağlık, otel ve okul üniformaları için kendi üretim tesisinde sözleşmeli üretim.",
           address: {
             '@type': 'PostalAddress',
+            streetAddress: 'Kesikkapı Mah. Atatürk Cad. No:144/146',
             addressLocality: 'Fethiye',
             addressRegion: 'Muğla',
+            postalCode: '48300',
             addressCountry: 'TR',
           },
         }}
@@ -548,10 +550,10 @@ export default function HomeV2() {
           {/* SAĞ — 2 overlap foto (HIZLI, sırayla) — placeholder */}
           <div className="hv2-bt-stack" style={btStack}>
             <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={0} duration={420} y={22}>
-              <img src="/miras.webp" alt="placeholder" loading="lazy" style={btImg} />
+              <img src="/miras.webp" alt="Güvençoğlu Tekstil'in köklü üretim mirasından bir kare" loading="lazy" style={btImg} />
             </FadeIn>
             <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={260} duration={420} y={22}>
-              <img src="/atolye-uretim.webp" alt="placeholder" loading="lazy" style={btImg} />
+              <img src="/atolye-uretim.webp" alt="Fethiye'deki üretim atölyesinde dikiş hattı" loading="lazy" style={btImg} />
             </FadeIn>
           </div>
         </div>
@@ -563,10 +565,10 @@ export default function HomeV2() {
           {/* SOL — 2 overlap foto (HIZLI, sırayla) — placeholder */}
           <div className="hv2-bt-stack" style={btStack}>
             <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, right: 0 }} delay={0} duration={420} y={22}>
-              <img src="/atolye-zanaat.webp" alt="placeholder" loading="lazy" style={btImg} />
+              <img src="/atolye-zanaat.webp" alt="Atölyede el işçiliği ve zanaat detayı" loading="lazy" style={btImg} />
             </FadeIn>
             <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, left: 0 }} delay={260} duration={420} y={22}>
-              <img src="/atolye-renk.webp" alt="placeholder" loading="lazy" style={btImg} />
+              <img src="/atolye-renk.webp" alt="Kumaş ve renk seçkisinden numuneler" loading="lazy" style={btImg} />
             </FadeIn>
           </div>
 

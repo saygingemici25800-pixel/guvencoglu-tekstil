@@ -98,8 +98,10 @@ export default function BizPage() {
               "Türkiye'nin kurumsal üniforma uzmanı. Sağlık, otel ve okul kurumları için Fethiye'deki kendi üretim tesisinde, aracısız, sözleşmeli üretim.",
             address: {
               '@type': 'PostalAddress',
+              streetAddress: 'Kesikkapı Mah. Atatürk Cad. No:144/146',
               addressLocality: 'Fethiye',
               addressRegion: 'Muğla',
+              postalCode: '48300',
               addressCountry: 'TR',
             },
           },
