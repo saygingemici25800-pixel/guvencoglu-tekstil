@@ -2,6 +2,7 @@ import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import TeklifForm from '../shared/TeklifForm.jsx'
 import Reveal from '../shared/Reveal.jsx'
+import SocialLinks, { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    Iletisim — /iletisim tam sayfası (Faz 4)
@@ -66,6 +67,7 @@ export default function Iletisim() {
               closes: '19:00',
             },
           ],
+          sameAs: SOCIAL_SAMEAS,
         }}
       />
 
@@ -127,6 +129,11 @@ export default function Iletisim() {
                 </a>
               </li>
             </ul>
+
+            <div style={{ marginTop: 28 }}>
+              <span style={contactMono}>SOSYAL MEDYA</span>
+              <SocialLinks style={{ marginTop: 12, display: 'flex' }} />
+            </div>
           </Reveal>
 
           {/* SAĞ — sade teklif formu (native required KVKK onayı) */}

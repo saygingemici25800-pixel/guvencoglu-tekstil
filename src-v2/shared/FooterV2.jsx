@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
+import SocialLinks from './SocialLinks.jsx'
 
 /* SSR'da useEffect (no-op), client'ta useLayoutEffect (paint öncesi gizler). */
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -131,6 +132,7 @@ export default function FooterV2() {
               Fethiye, Muğla<br />
               Türkiye
             </address>
+            <SocialLinks style={{ marginTop: 20 }} />
           </Reveal>
         </div>
 

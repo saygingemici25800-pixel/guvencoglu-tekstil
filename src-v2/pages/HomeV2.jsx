@@ -4,6 +4,7 @@ import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
 import TeklifForm from '../shared/TeklifForm.jsx'
+import { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    HomeV2 — B2B kurumsal üniforma odaklı ana sayfa (DressBest ilhamlı)
@@ -311,6 +312,7 @@ export default function HomeV2() {
             postalCode: '48300',
             addressCountry: 'TR',
           },
+          sameAs: SOCIAL_SAMEAS,
         }}
       />
 

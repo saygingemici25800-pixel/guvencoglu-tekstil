@@ -4,6 +4,7 @@ import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
 import { CLIENT_SECTORS, CLIENTS } from '../data/clients.js'
+import { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
 
 /* ──────────────────────────────────────────────────────────────
    BizPage — "Biz ve İş Ortaklarımız" (Faz 2)
@@ -103,6 +104,7 @@ export default function BizPage() {
               postalCode: '48300',
               addressCountry: 'TR',
             },
+            sameAs: SOCIAL_SAMEAS,
           },
         }}
       />
