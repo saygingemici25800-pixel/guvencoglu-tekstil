@@ -6,6 +6,7 @@ import SektorPage from './pages/SektorPage.jsx'
 import BlogIndex from './pages/BlogIndex.jsx'
 import BlogPost from './pages/BlogPost.jsx'
 import Iletisim from './pages/Iletisim.jsx'
+import NotFound from './pages/NotFound.jsx'
 import { ALL_SLUGS } from './blog/index.js'
 
 /* vite-react-ssg data-router route ağacı.
@@ -31,6 +32,10 @@ export const routes = [
         getStaticPaths: () => ALL_SLUGS.map((s) => `blog/${s}`),
       },
       { path: 'iletisim', element: <Iletisim /> },
+      // Statik /404 route → vite-react-ssg prerender eder → dist/404.html (Vercel 404'te sunar).
+      { path: '404', element: <NotFound /> },
+      // Catch-all → client-side bilinmeyen route'larda NotFound gösterir (SPA gezinme).
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]
