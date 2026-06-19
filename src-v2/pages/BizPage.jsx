@@ -54,7 +54,7 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children
 /* Flip-card referans — saf CSS 3D çevirme (rotateY 180, preserve-3d, backface
    hidden, ~500ms). Masaüstü hover; mobil/klavye için tap/Enter ile state (button).
    reduced-motion → CSS ile flip kapalı, iki yüz alt alta statik görünür. */
-function FlipCard({ name, sector, note, since }) {
+function FlipCard({ name, sector }) {
   const [flipped, setFlipped] = useState(false)
   return (
     <button
@@ -66,12 +66,11 @@ function FlipCard({ name, sector, note, since }) {
     >
       <span className="biz-flip-inner" style={flipInner}>
         <span className="biz-flip-front" style={flipFront}>
-          <span style={flipSector}>{sector}</span>
+          <span style={flipSector}>İŞ ORTAĞI</span>
           <span style={flipName}>{name}</span>
         </span>
         <span className="biz-flip-back" style={flipBack}>
-          <span style={flipNote}>{note}</span>
-          <span style={flipSince}>{since} yılından beri</span>
+          <span style={flipName}>{sector}</span>
         </span>
       </span>
     </button>
@@ -157,23 +156,20 @@ export default function BizPage() {
             <span style={rule} aria-hidden="true" />
             <p style={eyebrow}>İŞ ORTAKLARIMIZ</p>
             <h2 id="biz-refs-title" style={h2}>
-              Sağlık, otel ve okul kurumlarının <em style={em}>partneri</em>.
+              Otel, sağlık, restoran ve <em style={em}>belediyelerin</em> partneri.
             </h2>
             <p style={body}>
-              Bir kez başlayan ilişki ortalama altı yıl sürüyor. Birlikte
-              çalıştığımız kurumlardan bir seçki — kartın üzerine gelin (ya da
-              dokunun), kısa hikâyesi açılsın.
+              Birlikte çalıştığımız kurumlardan bir seçki — kartın üzerine gelin
+              (ya da dokunun), sektörü görünsün.
             </p>
           </Reveal>
 
           <Reveal className="biz-refs-grid" style={refsGrid} delay={120}>
             {CLIENTS.map((c) => (
               <FlipCard
-                key={c.id}
+                key={c.name}
                 name={c.name}
                 sector={SECTOR_LABEL[c.sector] || c.sector}
-                note={c.note}
-                since={c.since}
               />
             ))}
           </Reveal>
@@ -473,19 +469,6 @@ const flipName = {
   lineHeight: 1.12,
   letterSpacing: '-0.01em',
   color: 'var(--v2-navy, #2D3142)',
-}
-const flipNote = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  lineHeight: 1.55,
-  color: 'var(--v2-navy, #2D3142)',
-}
-const flipSince = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 11,
-  letterSpacing: '0.16em',
-  textTransform: 'uppercase',
-  color: 'var(--v2-copper, #9A0002)',
 }
 
 /* d) İŞ ORTAKLARI / REFERANSLAR */
