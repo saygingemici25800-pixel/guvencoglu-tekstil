@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
@@ -31,22 +30,27 @@ function Eyebrow({ children }) {
 }
 
 /* Sticky sektör seçici — 4 sektör arası gezinme; aktif kırmızı */
-function SectorSwitcher({ active }) {
+function SectorSwitcher({ active, onSelect }) {
   return (
     <nav className="sp-switch" style={switchWrap} aria-label="Sektör seçici">
-      <ul style={switchInner}>
+      <ul style={switchInner} role="tablist" aria-label="Sektörler">
         {SEKTOR_LIST.map((s) => {
           const isActive = s.slug === active
           return (
             <li key={s.slug} style={{ listStyle: 'none' }}>
-              <Link
-                to={`/ne-yapiyoruz/${s.slug}`}
-                aria-current={isActive ? 'page' : undefined}
+              {/* Sekme: tıklayınca yelpaze o sektöre döner (sayfa yenilenmez, React state) */}
+              <button
+                type="button"
+                role="tab"
+                id={`tab-${s.slug}`}
+                aria-selected={isActive}
+                aria-controls="sp-fan-panel"
                 className="sp-switch-link"
                 style={isActive ? switchLinkActive : switchLink}
+                onClick={() => onSelect(s.slug)}
               >
                 {s.label}
-              </Link>
+              </button>
             </li>
           )
         })}
@@ -134,7 +138,7 @@ const FAN_MAX = 3 // merkezden ±3 kart görünür (referans MAX_VISIBLE=7); öt
 // SSR'da uyarı vermesin diye izomorfik layout effect (no-JS'te hiç çalışmaz).
 const useIsoLayout = typeof document !== 'undefined' ? useLayoutEffect : useEffect
 
-function FanCarousel({ sections, slug, label }) {
+function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlayed }) {
   const n = sections.length
   const [active, setActive] = useState(0)
   const [entered, setEntered] = useState(true) // SSG/no-JS: yelpaze açık görünür
@@ -154,10 +158,13 @@ function FanCarousel({ sections, slug, label }) {
       ([e]) => {
         if (!e.isIntersecting || playedRef.current) return
         playedRef.current = true
-        setEntered(true) // (1) elastic giriş
-        // (2) giriş oturduktan SONRA bir kez aç → topla (sıralı; çakışmaz, zıplamaz)
-        timers.push(setTimeout(() => setInvite(true), 1000))
-        timers.push(setTimeout(() => setInvite(false), 1620))
+        setEntered(true) // (1) elastic giriş — her sektör (yeniden) açılışında oynar
+        // (2) "aç-topla" davet jesti yalnızca İLK kez (sekme değişiminde tekrarlamaz)
+        if (enableInvite) {
+          timers.push(setTimeout(() => setInvite(true), 1000))
+          timers.push(setTimeout(() => setInvite(false), 1620))
+          if (onInvitePlayed) onInvitePlayed()
+        }
         io.disconnect()
       },
       { threshold: 0.2 },
@@ -249,52 +256,103 @@ function FanCarousel({ sections, slug, label }) {
   )
 }
 
-export default function SektorPage({ slug }) {
-  const data = SEKTORLER[slug]
-  const clients = clientsBySector(slug) // o sektörün GERÇEK kurum adları
-  const showMarquee = SHOW_MARQUEE && clients.length > 0 // liste boşsa (okul) gizle
+export default function SektorPage() {
+  // Tek sayfa, sektör sekmeli. Aktif sektör URL ?s=<slug> ile gelebilir (hero
+  // "Koleksiyon" butonları); parametre yoksa ilk sektör (Sağlık). Sayfa yenilenmez.
+  const [active, setActive] = useState(SEKTOR_LIST[0].slug) // SSG/ilk render: 'saglik'
+  const invitePlayed = useRef(false) // "aç-topla" daveti yalnızca ilk kez
+
+  // İlk açılışta ?s= oku (SSG sonrası; flash olmasın diye layout effect → boyamadan önce).
+  useIsoLayout(() => {
+    const p = new URLSearchParams(window.location.search).get('s')
+    if (p && SEKTORLER[p]) setActive(p)
+  }, [])
+
+  const data = SEKTORLER[active]
+  const clients = clientsBySector(active)
+  const showMarquee = SHOW_MARQUEE && clients.length > 0
 
   return (
     <PageTransition>
       <SEOHead
-        title={data.seoTitle}
-        description={data.seoDesc}
-        path={`/ne-yapiyoruz/${slug}`}
+        title="Ne Yapıyoruz — Güvençoğlu Tekstil"
+        description="Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve tekstil üretimi. Fethiye'deki kendi tesisimizde nakış, baskı, özel tasarım, toplu üretim ve B2B çözümler."
+        path="/ne-yapiyoruz"
         schema={{
           '@context': 'https://schema.org',
-          '@type': 'Service',
-          name: data.title,
-          description: data.seoDesc,
-          areaServed: 'TR',
-          provider: { '@type': 'Organization', name: 'Güvençoğlu Tekstil' },
-          url: `${ORIGIN}/ne-yapiyoruz/${slug}`,
+          '@type': 'ItemList',
+          name: 'Güvençoğlu Tekstil — Ne Yapıyoruz',
+          itemListElement: SEKTOR_LIST.map((s, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: s.title,
+            url: `${ORIGIN}/ne-yapiyoruz?s=${s.slug}`,
+          })),
         }}
       />
 
-      <SectorSwitcher active={slug} />
+      <SectorSwitcher active={active} onSelect={setActive} />
 
-      <section style={heroWrap} aria-labelledby="sp-title">
-        <Reveal style={heroInner}>
-          <Eyebrow>NE YAPIYORUZ</Eyebrow>
-          <h1 id="sp-title" style={h1}>{data.title}</h1>
-          <p style={lede}>{data.lede}</p>
-        </Reveal>
-      </section>
-
-      <section style={bodyWrap} aria-label={`${data.label} alt başlıkları`}>
+      {/* ── TEK YELPAZE — aktif sektörün kartları; sekme değişince yumuşak yeniden açılır ── */}
+      <section style={bodyWrap} aria-label="Sektör koleksiyonları">
         <div className="sp-grid" style={{ ...bodyGrid, ...(showMarquee ? null : { gridTemplateColumns: '1fr' }) }}>
-          <div style={mainCol}>
-            {/* Sektör alt başlıkları = saf-CSS kart yelpazesi (başlık kart içinde gömülü) */}
-            <FanCarousel sections={data.sections} slug={slug} label={data.label} />
+          <div style={mainCol} id="sp-fan-panel" role="tabpanel" aria-labelledby={`tab-${active}`}>
+            {/* key={active} → sektör değişince yelpaze elastic yeniden açılır (yumuşak geçiş) */}
+            <FanCarousel
+              key={active}
+              sections={data.sections}
+              slug={active}
+              label={data.label}
+              enableInvite={!invitePlayed.current}
+              onInvitePlayed={() => {
+                invitePlayed.current = true
+              }}
+            />
           </div>
 
           {showMarquee && <VerticalMarquee clients={clients} />}
         </div>
       </section>
 
+      {/* ── EN ALTTA AÇIKLAMA — "Ne Yapıyoruz" girişi (eski landing metni, en alta alındı) ── */}
+      <section style={{ ...heroWrap, borderTop: '1px solid rgba(45, 49, 66, 0.1)' }} aria-labelledby="ny-intro-title">
+        <Reveal style={heroInner}>
+          <Eyebrow>NE YAPIYORUZ</Eyebrow>
+          <h1 id="ny-intro-title" style={h1}>
+            Ne <em style={{ fontStyle: 'italic', color: 'var(--v2-copper, #9A0002)' }}>Yapıyoruz</em>
+          </h1>
+          <p style={lede}>
+            Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve
+            tekstili uçtan uca üretiyoruz — tasarımdan dikişe, nakıştan baskıya,
+            Fethiye’deki kendi tesisimizde. Aracısız, sözleşmeli, zamanında.
+          </p>
+        </Reveal>
+      </section>
+
+      {/* ── SEO: 4 sektörün başlık + alt başlıkları statik HTML'de. Görsel olarak gizli
+             (display:none DEĞİL → taranabilir); etkileşim üstteki sekme + yelpazede. ── */}
+      <div className="sp-seo" aria-hidden="true">
+        {SEKTOR_LIST.map((s) => (
+          <section key={s.slug} aria-labelledby={`seo-${s.slug}`}>
+            <h2 id={`seo-${s.slug}`}>{s.title}</h2>
+            <p>{s.lede}</p>
+            <ul>
+              {s.sections.map((sec) => (
+                <li key={sec.term}>
+                  {sec.term} — {sec.desc}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
       <style>{`
         /* ── 2 kolon: içerik + sağda dikey sticky marquee ── */
         .sp-grid { display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 300px); gap: clamp(32px, 4vw, 64px); align-items: start; }
+
+        /* ── SEO: 4 sektör içeriği DOM'da ama görsel gizli (display:none DEĞİL → taranabilir) ── */
+        .sp-seo { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
 
         /* ── sticky sektör seçici ── */
         .sp-switch-link { transition: color 200ms ease, background 200ms ease, border-color 200ms ease; }
@@ -455,6 +513,9 @@ const switchLink = {
   display: 'inline-block',
   padding: '8px 16px',
   borderRadius: 999,
+  border: 0,
+  background: 'transparent',
+  cursor: 'pointer',
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 14,
   fontWeight: 500,
@@ -494,7 +555,7 @@ const lede = {
 }
 
 /* body grid */
-const bodyWrap = { background: CREAM, padding: '0 clamp(24px, 6vw, 96px) clamp(64px, 10vw, 128px)' }
+const bodyWrap = { background: CREAM, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 96px) clamp(56px, 9vw, 112px)' }
 const bodyGrid = { maxWidth: 1180, margin: '0 auto' }
 const mainCol = { display: 'flex', flexDirection: 'column', gap: 'clamp(28px, 4vw, 52px)', minWidth: 0 }
 

@@ -6,7 +6,11 @@
     { "source": "/hizmetler", "destination": "/ne-yapiyoruz", "permanent": true },
     { "source": "/uretim", "destination": "/ne-yapiyoruz", "permanent": true },
     { "source": "/referanslar", "destination": "/ne-yapiyoruz", "permanent": true },
-    { "source": "/sektorler", "destination": "/ne-yapiyoruz", "permanent": true }
+    { "source": "/sektorler", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/ne-yapiyoruz/saglik", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/ne-yapiyoruz/otel", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/ne-yapiyoruz/okul", "destination": "/ne-yapiyoruz", "permanent": true },
+    { "source": "/ne-yapiyoruz/restoran", "destination": "/ne-yapiyoruz", "permanent": true }
   ],
   "headers": [
     {

@@ -1,7 +1,6 @@
 import LayoutV2 from './shared/LayoutV2.jsx'
 import HomeV2 from './pages/HomeV2.jsx'
 import BizPage from './pages/BizPage.jsx'
-import HizmetlerPage from './pages/HizmetlerPage.jsx'
 import SektorPage from './pages/SektorPage.jsx'
 import BlogIndex from './pages/BlogIndex.jsx'
 import BlogPost from './pages/BlogPost.jsx'
@@ -18,11 +17,8 @@ export const routes = [
     children: [
       { index: true, element: <HomeV2 /> },
       { path: 'biz-ve-is-ortaklarimiz', element: <BizPage /> },
-      { path: 'ne-yapiyoruz', element: <HizmetlerPage /> },
-      { path: 'ne-yapiyoruz/saglik', element: <SektorPage slug="saglik" /> },
-      { path: 'ne-yapiyoruz/otel', element: <SektorPage slug="otel" /> },
-      { path: 'ne-yapiyoruz/okul', element: <SektorPage slug="okul" /> },
-      { path: 'ne-yapiyoruz/restoran', element: <SektorPage slug="restoran" /> },
+      // Tek sayfa: sektör sekmeli yelpaze (eski 4 alt sayfa birleştirildi → vercel.json 301).
+      { path: 'ne-yapiyoruz', element: <SektorPage /> },
       { path: 'blog', element: <BlogIndex /> },
       {
         path: 'blog/:slug',

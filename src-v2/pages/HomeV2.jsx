@@ -347,7 +347,7 @@ export default function HomeV2() {
                 style={galleryCard}
               >
                 <Link
-                  to={`/ne-yapiyoruz/${s.id}`}
+                  to={`/ne-yapiyoruz?s=${s.id}`}
                   className="hv2-hg-link"
                   style={galleryLink}
                   aria-label={`${s.name} koleksiyonu`}
