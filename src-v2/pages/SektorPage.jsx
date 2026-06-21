@@ -218,10 +218,11 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
                 ) : (
                   <span className="fan-photo-tag" aria-hidden="true">foto: {file}</span>
                 )}
-                <span className="fan-grad" data-cap={cap} aria-hidden="true" />
+                <span className="fan-grad" data-cap={pos === 0 ? 'bl' : cap} aria-hidden="true" />
               </span>
-              <span className="fan-cap" data-cap={cap}>
-                <span className="fan-cap-dash" aria-hidden="true" />
+              {/* İsim kartın ÜZERİNDE: aktif (merkez) kart büyük Fraunces; yan kartlar küçük mono */}
+              <span className="fan-cap" data-cap={pos === 0 ? 'bl' : cap} data-active={pos === 0 ? 'true' : undefined}>
+                {pos !== 0 && <span className="fan-cap-dash" aria-hidden="true" />}
                 <span className="fan-cap-text">{sec.term}</span>
               </span>
             </button>
@@ -251,7 +252,8 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
         </button>
       </div>
 
-      <p className="fan-active-label" aria-live="polite">{sections[active].term}</p>
+      {/* Görsel isim artık aktif kartın ÜZERİNDE; burada yalnızca ekran okuyucu için canlı bölge */}
+      <p className="fan-sr-live" aria-live="polite">{sections[active].term}</p>
     </div>
   )
 }
@@ -441,7 +443,15 @@ export default function SektorPage() {
         .fan-dot::before { content: ''; width: 10px; height: 10px; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.42); background: transparent; transition: transform 220ms ease, background 220ms ease, border-color 220ms ease; }
         .fan-dot.is-active::before { background: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); transform: scale(1.4); }
         .fan-dot:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 2px; border-radius: 999px; }
-        .fan-active-label { text-align: center; margin: clamp(14px, 2.2vw, 24px) 0 0; font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); }
+        .fan-sr-live { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+        /* Aktif (merkez) kartın ismi kartın ÜZERİNDE büyük (Fraunces, sol-alt); yan kartlar küçük mono */
+        .fan-cap[data-active="true"] { top: auto; bottom: 16px; left: 16px; right: 16px; align-items: flex-end; justify-content: flex-start; }
+        .fan-cap[data-active="true"] .fan-cap-text {
+          font-family: var(--v2-font-display, serif); font-weight: 400; text-transform: none;
+          font-size: clamp(18px, 2.3vw, 25px); letter-spacing: -0.01em; line-height: 1.08;
+          text-align: left; text-shadow: 0 1px 14px rgba(22, 24, 33, 0.55);
+        }
+        .fan-grad[data-cap="bl"] { background: linear-gradient(to top, rgba(22, 24, 33, 0.86) 0%, rgba(22, 24, 33, 0.18) 50%, transparent 74%); }
 
         @media (max-width: 1100px) {
           /* 2 kolon hâlâ açık (marquee var) → ana kolon dar; yelpaze ölçülü kalsın, taşmasın */
