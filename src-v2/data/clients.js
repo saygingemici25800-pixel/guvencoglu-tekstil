@@ -1,7 +1,7 @@
 /* Gerçek referans listesi — Güvençoğlu Tekstil iş ortakları.
    Logo henüz yok → şimdilik isim kutusu (logo gelince <img> girer).
    UYDURMA YOK: yalnızca kurum adı + sektör. "since/yıl/sayı" gibi iddia yok.
-   Okul listesi sonra gelecek (şimdilik boş — kırılma olmaması için sektör durur). */
+   Okul referansları eklendi (gerçek okul adları, sektör: okul). */
 
 export const CLIENT_SECTORS = [
   { id: 'otel', label: 'Otel' },
@@ -43,7 +43,15 @@ export const CLIENTS = [
   { name: 'Gaziemir Belediyesi', sector: 'belediye' },
   { name: 'Tire Belediyesi', sector: 'belediye' },
   { name: 'Muğla Büyükşehir Belediyesi', sector: 'belediye' },
-  // Okul: liste sonra gelecek (şimdilik boş)
+  // Okul
+  { name: 'Fethiye Merkez Atatürk Ortaokulu', sector: 'okul' },
+  { name: 'Fethiye Gazi Ortaokulu', sector: 'okul' },
+  { name: 'Fethiye Gazi İlkokulu', sector: 'okul' },
+  { name: 'Kaymakam Mustafa Karslıoğlu İlkokulu', sector: 'okul' },
+  { name: 'Şehit Yüzbaşı Özgür Özekin Mesleki ve Teknik Anadolu Lisesi', sector: 'okul' },
+  { name: 'Çıraklık Meslek Okulu', sector: 'okul' },
+  { name: 'Fethiye Anadolu Lisesi', sector: 'okul' },
+  { name: 'Vali Recai Güreli İlköğretim Okulu', sector: 'okul' },
 ]
 
 // Bir sektörün gerçek kurum adları (marquee + filtreleme). Boşsa [] döner.
