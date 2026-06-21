@@ -14,23 +14,7 @@ import { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
    → teklif formu (#teklif) → footer (global). 3D yok, statik.
    ────────────────────────────────────────────────────────────── */
 
-const SECTORS = [
-  {
-    title: 'Sağlık personeli kıyafetleri',
-    sub: 'Hastane, klinik, eczane, laboratuvar, diş',
-    to: '/ne-yapiyoruz',
-  },
-  {
-    title: 'Otel personeli kıyafetleri',
-    sub: 'Resepsiyon, restoran, housekeeping, spa, mutfak',
-    to: '/ne-yapiyoruz',
-  },
-  {
-    title: 'Okul üniformaları',
-    sub: 'Anaokulu, ilkokul, ortaokul, lise, kolej',
-    to: '/ne-yapiyoruz',
-  },
-]
+/* (SECTORS özet listesi kaldırıldı — "Çalıştığımız Sektörler" bölümü silindi) */
 
 const HERO_SECTORS = [
   {
@@ -396,6 +380,43 @@ export default function HomeV2() {
         </div>
       </section>
 
+      {/* ─── BÖLÜM 1.5 — BİZ TEASER (hero hemen altına alındı): SOL yazı / SAĞ 2 overlap foto ─ */}
+      <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
+        <div className="hv2-bt-row" style={btRow}>
+          {/* SOL — yazı (soldan, YAVAŞ; fotolardan sonra) */}
+          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={-28}>
+            <span style={bizTeaserEyebrow}>
+              <span style={bizTeaserDash} aria-hidden="true" />
+              <span style={eyebrowDark}>BİZ KİMİZ</span>
+            </span>
+            <h2 id="hv2-bizteaser-title" style={bizTeaserTitle}>
+              Biz ve <em style={emDark}>İş Ortaklarımız</em>
+            </h2>
+            <p style={bizTeaserBody}>
+              2001’den beri Fethiye’deki kendi üretim tesisimizde, aynı titizlikle
+              çalışıyoruz. Aracı yok, sözleşmeli üretim ve teslimat var.
+            </p>
+            <p style={bizTeaserBody}>
+              Sağlık, otel ve okul kurumlarının kurumsal üniforma programını uzun
+              yıllar birlikte yürütüyoruz.
+            </p>
+            <Link to="/biz-ve-is-ortaklarimiz" className="hv2-bizteaser-btn" style={bizTeaserBtn}>
+              Daha Fazla <span aria-hidden="true">→</span>
+            </Link>
+          </FadeIn>
+
+          {/* SAĞ — 2 overlap foto (HIZLI, sırayla) — placeholder */}
+          <div className="hv2-bt-stack" style={btStack}>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={0} duration={420} y={22}>
+              <img src="/miras.webp" alt="Güvençoğlu Tekstil'in köklü üretim mirasından bir kare" loading="lazy" style={btImg} />
+            </FadeIn>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={260} duration={420} y={22}>
+              <img src="/atolye-uretim.webp" alt="Fethiye'deki üretim atölyesinde dikiş hattı" loading="lazy" style={btImg} />
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
       {/* ─── BÖLÜM 2 — ATÖLYE ŞERİDİ ─────────────────────────── */}
       <section className="hv2-atelier" style={atelierWrap} aria-labelledby="hv2-atelier-title">
         <Reveal style={atelierInner}>
@@ -465,41 +486,6 @@ export default function HomeV2() {
         </Reveal>
       </section>
 
-      {/* ─── BÖLÜM 4 — SEKTÖRLER ÖNİZLEME ───────────────────── */}
-      <section className="hv2-sectors" style={sectorsWrap} aria-labelledby="hv2-sectors-title">
-        <Reveal style={sectorsInner}>
-          <header style={sectionHead}>
-            <p style={eyebrowDark}>ÇALIŞTIĞIMIZ SEKTÖRLER</p>
-            <h2 id="hv2-sectors-title" style={h2Dark}>
-              Her sektörün <em style={emDark}>kendi dili</em> vardır.
-            </h2>
-          </header>
-
-          <div style={sectorsGrid} className="hv2-sectors-grid">
-            {SECTORS.map((c) => (
-              <Link key={c.title} to={c.to} className="hv2-sector-card fabric-hover" style={sectorCard}>
-                <div
-                  style={sectorMedia}
-                  role="img"
-                  aria-label={`${c.title} görseli`}
-                />
-                <div style={sectorBody}>
-                  <h3 style={sectorTitle}>{c.title}</h3>
-                  <p style={sectorSub}>{c.sub}</p>
-                  <span className="hv2-card-cta" style={cardCta}>
-                    Detayları gör <span aria-hidden="true">→</span>
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <Link to="/ne-yapiyoruz" className="hv2-textlink" style={textLink}>
-            Diğer sektörler <span aria-hidden="true">→</span>
-          </Link>
-        </Reveal>
-      </section>
-
       {/* ─── BÖLÜM 5 — HİZMETLER ÖNİZLEME ───────────────────── */}
       <section className="hv2-services" style={servicesWrap} aria-labelledby="hv2-services-title">
         {/* STATİK — bu bölümde giriş animasyonu yok (Reveal kaldırıldı). */}
@@ -526,81 +512,6 @@ export default function HomeV2() {
           <Link to="/ne-yapiyoruz" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
             Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
           </Link>
-        </div>
-      </section>
-
-      {/* ─── BÖLÜM 5.5 — BİZ TEASER: SOL yazı / SAĞ 2 overlap foto ─── */}
-      <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
-        <div className="hv2-bt-row" style={btRow}>
-          {/* SOL — yazı (soldan, YAVAŞ; fotolardan sonra) */}
-          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={-28}>
-            <span style={bizTeaserEyebrow}>
-              <span style={bizTeaserDash} aria-hidden="true" />
-              <span style={eyebrowDark}>BİZ KİMİZ</span>
-            </span>
-            <h2 id="hv2-bizteaser-title" style={bizTeaserTitle}>
-              Biz ve <em style={emDark}>İş Ortaklarımız</em>
-            </h2>
-            <p style={bizTeaserBody}>
-              2001’den beri Fethiye’deki kendi üretim tesisimizde, aynı titizlikle
-              çalışıyoruz. Aracı yok, sözleşmeli üretim ve teslimat var.
-            </p>
-            <p style={bizTeaserBody}>
-              Sağlık, otel ve okul kurumlarının kurumsal üniforma programını uzun
-              yıllar birlikte yürütüyoruz.
-            </p>
-            <Link to="/biz-ve-is-ortaklarimiz" className="hv2-bizteaser-btn" style={bizTeaserBtn}>
-              Daha Fazla <span aria-hidden="true">→</span>
-            </Link>
-          </FadeIn>
-
-          {/* SAĞ — 2 overlap foto (HIZLI, sırayla) — placeholder */}
-          <div className="hv2-bt-stack" style={btStack}>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={0} duration={420} y={22}>
-              <img src="/miras.webp" alt="Güvençoğlu Tekstil'in köklü üretim mirasından bir kare" loading="lazy" style={btImg} />
-            </FadeIn>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={260} duration={420} y={22}>
-              <img src="/atolye-uretim.webp" alt="Fethiye'deki üretim atölyesinde dikiş hattı" loading="lazy" style={btImg} />
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── BÖLÜM 5.6 — HİKAYEMİZ (ayna): SOL 2 overlap foto / SAĞ yazı ─ */}
-      <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-hik-title">
-        <div className="hv2-hik-row" style={btRow}>
-          {/* SOL — 2 overlap foto (HIZLI, sırayla) — placeholder */}
-          <div className="hv2-bt-stack" style={btStack}>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, right: 0 }} delay={0} duration={420} y={22}>
-              <img src="/atolye-zanaat.webp" alt="Atölyede el işçiliği ve zanaat detayı" loading="lazy" style={btImg} />
-            </FadeIn>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, left: 0 }} delay={260} duration={420} y={22}>
-              <img src="/atolye-renk.webp" alt="Kumaş ve renk seçkisinden numuneler" loading="lazy" style={btImg} />
-            </FadeIn>
-          </div>
-
-          {/* SAĞ — yazı (sağdan, YAVAŞ; fotolardan sonra) */}
-          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={28}>
-            <span style={bizTeaserEyebrow}>
-              <span style={bizTeaserDash} aria-hidden="true" />
-              <span style={eyebrowDark}>HİKAYEMİZ</span>
-            </span>
-            <h2 id="hv2-hik-title" style={bizTeaserTitle}>
-              Çeyrek asır, <em style={emDark}>değişmeyen</em> standart.
-            </h2>
-            <p style={bizTeaserBody}>
-              2001’de Fethiye’de tek bir dikiş makinesiyle başladık. Bugün aynı
-              atölyede aynı aile çalışıyor — makine değişti, kumaş değişti; işin
-              standardı değişmedi.
-            </p>
-            <p style={bizTeaserBody}>
-              Aynı kumaş tedarikçisiyle yirmi yılı aşkın çalışıyor, kritik dikişleri
-              hâlâ insan eliyle bitiriyoruz.
-            </p>
-            <Link to="/biz-ve-is-ortaklarimiz" className="hv2-textlink" style={textLink}>
-              Hikayenin tamamı →
-            </Link>
-          </FadeIn>
         </div>
       </section>
 
@@ -720,18 +631,6 @@ export default function HomeV2() {
            ince alt çizgi (renk kırmızı kalır). */
         .hv2-textlink-copper:hover, .hv2-textlink-copper:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 
-        .hv2-sector-card { transition: transform 300ms cubic-bezier(0.16,1,0.3,1), box-shadow 300ms ease; }
-        .hv2-sector-card:hover, .hv2-sector-card:focus-visible {
-          transform: translateY(-6px);
-          box-shadow: 0 22px 48px rgba(45,49,66,0.16);
-        }
-        .hv2-card-cta { background-image: linear-gradient(var(--v2-copper,#D4A373), var(--v2-copper,#D4A373));
-          background-size: 0% 1.5px; background-repeat: no-repeat; background-position: 0 100%;
-          transition: background-size 300ms cubic-bezier(0.16,1,0.3,1); padding-bottom: 2px; }
-        .hv2-sector-card:hover .hv2-card-cta, .hv2-sector-card:focus-visible .hv2-card-cta {
-          background-size: 100% 1.5px;
-        }
-
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
         .hv2-bizteaser-btn { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
@@ -747,7 +646,6 @@ export default function HomeV2() {
         @media (max-width: 860px) {
           /* Overlap kalkar, dikey stack; iki bölümde de FOTO önce, yazı sonra */
           .hv2-bt-row { flex-direction: column-reverse !important; gap: clamp(24px, 6vw, 36px) !important; }
-          .hv2-hik-row { flex-direction: column !important; gap: clamp(24px, 6vw, 36px) !important; }
           .hv2-bt-text { flex: 1 1 auto !important; width: 100% !important; }
           .hv2-bt-stack {
             flex: 1 1 auto !important; width: 100% !important; min-height: 0 !important;
@@ -762,7 +660,6 @@ export default function HomeV2() {
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(3, 1fr) !important; }
           .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .hv2-sectors-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 820px) {
           .hv2-hero { height: auto !important; overflow: visible !important; }
@@ -781,7 +678,7 @@ export default function HomeV2() {
 
         @media (prefers-reduced-motion: reduce) {
           .hv2-hero-btn, .hv2-hero-link, .hv2-hg-photo,
-          .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span, .hv2-sector-card, .hv2-card-cta,
+          .hv2-atelier-photo, .hv2-textlink, .hv2-textlink span,
           .hv2-bizteaser-btn, .hv2-bizteaser-btn span {
             transition: none !important;
           }
@@ -1185,70 +1082,6 @@ const promiseCta = {
   color: 'var(--v2-copper, #D4A373)',
   borderBottom: '1.5px solid var(--v2-copper, #D4A373)',
   paddingBottom: 4,
-}
-
-/* BÖLÜM 4 — SEKTÖRLER */
-const sectorsWrap = {
-  position: 'relative',
-  zIndex: 1,
-  background: 'var(--v2-cream, #EFEAE0)',
-  borderTop: '1px solid rgba(45, 49, 66, 0.1)',
-  padding: 'clamp(64px, 10vw, 112px) clamp(20px, 5vw, 48px)',
-}
-const sectorsInner = {
-  maxWidth: 'var(--v2-content-max, 1440px)',
-  margin: '0 auto',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 'clamp(40px, 6vw, 64px)',
-  alignItems: 'flex-start',
-}
-const sectorsGrid = {
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: 'clamp(20px, 2.5vw, 32px)',
-}
-const sectorCard = {
-  display: 'flex',
-  flexDirection: 'column',
-  background: 'var(--v2-surface-elevated, #FFFFFF)',
-  border: '1px solid rgba(45, 49, 66, 0.1)',
-  borderRadius: 'var(--v2-r-md, 8px)',
-  overflow: 'hidden',
-  textDecoration: 'none',
-  color: 'inherit',
-}
-const sectorMedia = {
-  aspectRatio: '3 / 2',
-  background:
-    'linear-gradient(150deg, #2D3142 0%, #3a3f54 55%, rgba(212,163,115,0.55) 100%)',
-}
-const sectorBody = { display: 'flex', flexDirection: 'column', gap: 10, padding: '24px 24px 28px' }
-const sectorTitle = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(20px, 2.2vw, 25px)',
-  lineHeight: 1.15,
-  letterSpacing: '-0.01em',
-  color: 'var(--v2-ink, #1A1A1A)',
-  margin: 0,
-}
-const sectorSub = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 15,
-  lineHeight: 1.55,
-  color: '#5A5A5A',
-  margin: 0,
-}
-const cardCta = {
-  marginTop: 8,
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.1em',
-  textTransform: 'uppercase',
-  color: 'var(--v2-navy, #2D3142)',
-  alignSelf: 'flex-start',
 }
 
 /* BÖLÜM 5 — HİZMETLER */

@@ -524,9 +524,17 @@ const spmBox = {
 }
 const spmText = {
   fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 13,
-  letterSpacing: '0.08em',
+  fontSize: 12,
+  lineHeight: 1.3,
+  letterSpacing: '0.04em',
   color: 'var(--v2-muted, #5A5A5A)',
   textAlign: 'center',
-  whiteSpace: 'nowrap',
+  // Uzun kurum adları (ör. okul: "...Mesleki ve Teknik Anadolu Lisesi") tek satıra
+  // sığmıyor, nowrap ile taşıp kayma yapıyordu → sar + en çok 3 satır. Kısa adlar
+  // (otel/sağlık/restoran) yine tek satır görünür; kutu yüksekliği sabit kalır.
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  overflowWrap: 'break-word',
 }
