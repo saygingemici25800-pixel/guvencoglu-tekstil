@@ -78,11 +78,12 @@ const SERVICES = [
   { icon: 'logistics', title: 'Lojistik', sub: 'Türkiye geneli teslimat' },
 ]
 
+// Gerçek metrikler (kullanıcı onayladı): aktif çalışılan kurum 100+,
+// toplam kurumsal müşteri 500+, kuruluş 2001 (~çeyrek asır). Uydurma sayı yok.
 const STATS = [
-  { num: '25 Yıl', label: 'TECRÜBE' },
-  { num: '1.500+', label: 'KURUMSAL MÜŞTERİ' },
-  { num: '%100', label: 'KENDİ ÜRETİM' },
-  { num: '48 Saat', label: 'TEKLİF SÜRESİ' },
+  { num: '100+', label: 'AKTİF KURUM' },
+  { num: '500+', label: 'KURUMSAL MÜŞTERİ' },
+  { num: '2001', label: '’DEN BERİ' },
 ]
 
 const TESTIMONIALS = [
@@ -452,7 +453,7 @@ export default function HomeV2() {
           </p>
           <p style={prose}>
             Güvençoğlu Tekstil, 2001’den beri kendi üretim tesisinde, aracısız çalışıyor.
-            Sağlık kurumlarından otellere, okullardan üretim tesislerine kadar 1.500’den fazla
+            Sağlık kurumlarından otellere, okullardan üretim tesislerine kadar 500’den fazla
             kurumun üniforma programını yönetiyoruz.
           </p>
           <p style={prose}>
@@ -610,7 +611,7 @@ export default function HomeV2() {
           <header style={sectionHead}>
             <p style={eyebrowDark}>REFERANSLARIMIZ</p>
             <h2 id="hv2-refs-title" style={h2Dark}>
-              1.500’den fazla kurumun tercih ettiği partner.
+              500’den fazla kurumun tercih ettiği partner.
             </h2>
           </header>
 
@@ -759,7 +760,7 @@ export default function HomeV2() {
           .hv2-bt-ph2 { border: none !important; }
         }
         @media (max-width: 760px) {
-          .hv2-trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .hv2-trust-grid { grid-template-columns: repeat(3, 1fr) !important; }
           .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .hv2-sectors-grid { grid-template-columns: 1fr !important; }
         }
@@ -1097,7 +1098,7 @@ const trustGrid = {
   maxWidth: 'var(--v2-content-max, 1440px)',
   margin: '0 auto',
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 'clamp(28px, 4vw, 48px)',
 }
 const trustCell = { display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }
