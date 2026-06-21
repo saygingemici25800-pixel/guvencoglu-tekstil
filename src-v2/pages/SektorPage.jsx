@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
@@ -103,6 +103,141 @@ function VerticalMarquee({ clients }) {
   )
 }
 
+/* ──────────────────────────────────────────────────────────────
+   Kart yelpazesi (fan carousel) — referans fikir GSAP'tı; burada
+   GSAP/framer YOK, saf CSS transform + React state ile TAKLİT.
+   Kartlar alt-merkez pivot etrafında rotate+scale ile yelpaze açar;
+   ok + nokta ile döner; viewport'a girince overshoot'lu easing ile
+   elastic açılır; hover'da kart kalkar + komşular hafif itişir.
+   SSG-safe: no-JS'te yelpaze açık/görünür (entered=true başlar).
+
+   Beklenen GERÇEK foto dosyaları (henüz yok → placeholder kutu):
+   /public/sektor/<slug>-<term-slug>.webp  (3/4 oran, object-fit: cover)
+     saglik   → saglik-doctor-coat / -nurse-scrubs / -surgical-scrubs /
+                -patient-gown / -lab-technician / -support-staff .webp
+     otel     → otel-front-office / -bell-staff / -guest-relations /
+                -housekeeping / -f-b-service / -kitchen-chef /
+                -engineering / -spa-wellness .webp
+     okul     → okul-student-uniform / -academic-staff / -administrative /
+                -sports-pe / -corporate-office .webp
+     restoran → restoran-chef-kitchen / -service-waiter / -host /
+                -barista-bar / -busser / -prep-staff .webp
+   Foto'lar eklenince HAS_PHOTOS = true → slot otomatik <img> render eder. */
+const HAS_PHOTOS = false
+const slugifyTerm = (t) =>
+  t.toLowerCase().replace(/[/&]/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
+const FAN_ANGLE = 10 // derece / adım (merkezden uzaklaştıkça artan dönüş)
+const FAN_SCALE = 0.07 // küçülme / adım
+const FAN_MAX = 3 // merkezden ±3 kart görünür (referans MAX_VISIBLE=7); ötesi gizli
+
+// SSR'da uyarı vermesin diye izomorfik layout effect (no-JS'te hiç çalışmaz).
+const useIsoLayout = typeof document !== 'undefined' ? useLayoutEffect : useEffect
+
+function FanCarousel({ sections, slug, label }) {
+  const n = sections.length
+  const [active, setActive] = useState(0)
+  const [entered, setEntered] = useState(true) // SSG/no-JS: yelpaze açık görünür
+  const stageRef = useRef(null)
+
+  // Görünmeden önce kapat, viewport'a girince bir kez elastic aç. reduced-motion → statik.
+  useIsoLayout(() => {
+    const node = stageRef.current
+    if (!node || !('IntersectionObserver' in window)) return
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    setEntered(false)
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setEntered(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.2 },
+    )
+    io.observe(node)
+    return () => io.disconnect()
+  }, [])
+
+  const go = (dir) => setActive((a) => (a + dir + n) % n)
+
+  return (
+    <div className="fan" role="group" aria-roledescription="kart yelpazesi" aria-label={`${label} alt başlıkları`}>
+      <div ref={stageRef} className={`fan-stage${entered ? ' is-in' : ''}`}>
+        {sections.map((sec, i) => {
+          let pos = i - active // dairesel en-yakın uzaklık → simetrik yelpaze
+          if (pos > n / 2) pos -= n
+          if (pos < -n / 2) pos += n
+          const a = Math.abs(pos)
+          const hidden = a > FAN_MAX
+          const rot = entered ? pos * FAN_ANGLE : 0
+          const sc = entered ? Math.max(0.62, 1 - a * FAN_SCALE) : 0.7
+          const ty = entered ? 0 : 40
+          const cap = i % 2 === 0 ? 'bl' : 'tc' // başlık konumu 2 varyant: sol-alt / üst-orta
+          const file = `${slug}-${slugifyTerm(sec.term)}.webp`
+          return (
+            <button
+              type="button"
+              key={sec.term}
+              className="fan-card"
+              aria-label={`${sec.term}${pos === 0 ? ' (seçili)' : ''}`}
+              aria-current={pos === 0 ? 'true' : undefined}
+              tabIndex={hidden ? -1 : 0}
+              onClick={() => setActive(i)}
+              style={{
+                '--rot': `${rot}deg`,
+                '--sc': sc,
+                '--ty': `${ty}px`,
+                '--z': hidden ? 0 : 100 - a,
+                '--op': hidden ? 0 : entered ? 1 : 0,
+                '--delay': `${a * 70}ms`,
+                pointerEvents: hidden ? 'none' : 'auto',
+              }}
+            >
+              <span className="fan-photo">
+                {HAS_PHOTOS ? (
+                  <img className="fan-img" src={`/sektor/${file}`} alt={sec.term} loading="lazy" decoding="async" />
+                ) : (
+                  <span className="fan-photo-tag" aria-hidden="true">foto: {file}</span>
+                )}
+                <span className="fan-grad" data-cap={cap} aria-hidden="true" />
+              </span>
+              <span className="fan-cap" data-cap={cap}>
+                <span className="fan-cap-dash" aria-hidden="true" />
+                <span className="fan-cap-text">{sec.term}</span>
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="fan-nav">
+        <button type="button" className="fan-arrow" aria-label="Önceki kart" onClick={() => go(-1)}>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+        <ul className="fan-dots">
+          {sections.map((sec, i) => (
+            <li key={sec.term} style={{ listStyle: 'none' }}>
+              <button
+                type="button"
+                className={`fan-dot${i === active ? ' is-active' : ''}`}
+                aria-label={`${i + 1}. ${sec.term}`}
+                aria-current={i === active ? 'true' : undefined}
+                onClick={() => setActive(i)}
+              />
+            </li>
+          ))}
+        </ul>
+        <button type="button" className="fan-arrow" aria-label="Sonraki kart" onClick={() => go(1)}>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+      </div>
+
+      <p className="fan-active-label" aria-live="polite">{sections[active].term}</p>
+    </div>
+  )
+}
+
 export default function SektorPage({ slug }) {
   const data = SEKTORLER[slug]
   const clients = clientsBySector(slug) // o sektörün GERÇEK kurum adları
@@ -138,24 +273,8 @@ export default function SektorPage({ slug }) {
       <section style={bodyWrap} aria-label={`${data.label} alt başlıkları`}>
         <div className="sp-grid" style={{ ...bodyGrid, ...(showMarquee ? null : { gridTemplateColumns: '1fr' }) }}>
           <div style={mainCol}>
-            {data.sections.map((sec, i) => (
-              <Reveal
-                as="article"
-                key={sec.term}
-                className="sp-sec"
-                style={secCard}
-                delay={Math.min(i * 60, 240)}
-              >
-                <div className="sp-photo" style={spPhoto} role="img" aria-label={`Görsel yakında: ${sec.term}`}>
-                  {/* Gerçek foto sonra: <img src={...} alt={sec.term} style={spPhotoImg} /> */}
-                  <span style={spPhotoTag}>foto: {sec.photo}</span>
-                </div>
-                <div style={secText}>
-                  <h2 style={secTerm}>{sec.term}</h2>
-                  <p style={secDesc}>{sec.desc}</p>
-                </div>
-              </Reveal>
-            ))}
+            {/* Sektör alt başlıkları = saf-CSS kart yelpazesi (başlık kart içinde gömülü) */}
+            <FanCarousel sections={data.sections} slug={slug} label={data.label} />
           </div>
 
           {showMarquee && <VerticalMarquee clients={clients} />}
@@ -165,10 +284,6 @@ export default function SektorPage({ slug }) {
       <style>{`
         /* ── 2 kolon: içerik + sağda dikey sticky marquee ── */
         .sp-grid { display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 300px); gap: clamp(32px, 4vw, 64px); align-items: start; }
-
-        /* ── alt başlık satırı: foto slotu + metin ── */
-        .sp-photo { position: relative; overflow: hidden; }
-        .sp-photo::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(45,49,66,0.08); border-radius: inherit; pointer-events: none; }
 
         /* ── sticky sektör seçici ── */
         .sp-switch-link { transition: color 200ms ease, background 200ms ease, border-color 200ms ease; }
@@ -200,13 +315,74 @@ export default function SektorPage({ slug }) {
           .sp-grid { grid-template-columns: 1fr; }
           /* dikey sticky kenar şerit mobilde çalışmaz → gizle (okunabilirlik öncelik) */
           .sp-aside { display: none; }
-          .sp-sec { flex-direction: column !important; align-items: stretch !important; }
-          .sp-photo { flex: none !important; width: 100% !important; aspect-ratio: 16 / 10 !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .spm-viewport .spm-track { animation: none !important; transform: none !important; }
           .spm-viewport { overflow-y: auto; }
+        }
+
+        /* ── KART YELPAZESİ (fan carousel) — saf CSS + React state, GSAP/framer YOK ── */
+        .fan { --m: 1; max-width: 760px; margin: 0 auto; }
+        .fan-stage { position: relative; height: clamp(380px, 50vw, 480px); display: flex; align-items: flex-end; justify-content: center; }
+        .fan-card {
+          position: absolute; bottom: 0; left: 50%;
+          width: clamp(158px, 21vw, 206px); margin-left: calc(clamp(158px, 21vw, 206px) / -2);
+          aspect-ratio: 3 / 4; padding: 0; border: 0; background: transparent; cursor: pointer;
+          border-radius: 14px; transform-origin: 50% 162%;
+          transform: translateY(var(--ty, 0)) rotate(calc(var(--rot, 0deg) * var(--m))) scale(var(--sc, 1));
+          opacity: var(--op, 1); z-index: var(--z, 1);
+          transition: transform 620ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 460ms ease;
+          transition-delay: var(--delay, 0ms);
+          -webkit-tap-highlight-color: transparent;
+        }
+        .fan-photo {
+          position: absolute; inset: 0; overflow: hidden; border-radius: 14px;
+          background: linear-gradient(155deg, #2D3142 0%, #3a3f54 58%, rgba(154, 0, 2, 0.42) 100%);
+          box-shadow: 0 16px 36px rgba(45, 49, 66, 0.26), 0 0 0 1px rgba(45, 49, 66, 0.06);
+          display: flex; align-items: center; justify-content: center;
+          transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 320ms ease;
+        }
+        .fan-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .fan-photo-tag { font-family: var(--v2-font-mono, monospace); font-size: 10.5px; letter-spacing: 0.04em; color: rgba(239, 234, 224, 0.6); text-align: center; padding: 0 12px; }
+        .fan-grad { position: absolute; inset: 0; pointer-events: none; }
+        .fan-grad[data-cap="bl"] { background: linear-gradient(to top, rgba(22, 24, 33, 0.8) 0%, rgba(22, 24, 33, 0.12) 46%, transparent 70%); }
+        .fan-grad[data-cap="tc"] { background: linear-gradient(to bottom, rgba(22, 24, 33, 0.76) 0%, rgba(22, 24, 33, 0.1) 42%, transparent 66%); }
+        .fan-cap { position: absolute; left: 14px; right: 14px; display: flex; align-items: center; gap: 8px; z-index: 2; }
+        .fan-cap[data-cap="bl"] { bottom: 14px; justify-content: flex-start; }
+        .fan-cap[data-cap="tc"] { top: 14px; justify-content: center; }
+        .fan-cap-dash { width: 16px; height: 1px; background: var(--v2-copper, #9A0002); flex-shrink: 0; }
+        .fan-cap[data-cap="tc"] .fan-cap-dash { display: none; }
+        .fan-cap-text { font-family: var(--v2-font-mono, monospace); font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--v2-cream, #EFEAE0); }
+
+        .fan-card:hover, .fan-card:focus-visible { z-index: 200; }
+        .fan-stage:hover { --m: 1.08; } /* fan'a hover → hepsi biraz açılır (komşu itişmesi) */
+        .fan-card:hover .fan-photo, .fan-card:focus-visible .fan-photo { transform: translateY(-14px) scale(1.05); box-shadow: 0 24px 50px rgba(45, 49, 66, 0.34), 0 0 0 1px rgba(154, 0, 2, 0.3); }
+        .fan-card:focus-visible { outline: none; }
+        .fan-card:focus-visible .fan-photo { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
+
+        .fan-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: clamp(18px, 3vw, 32px); }
+        .fan-arrow { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.2); background: var(--v2-surface-elevated, #fff); color: var(--v2-navy, #2D3142); cursor: pointer; transition: color 200ms ease, border-color 200ms ease; }
+        .fan-arrow:hover, .fan-arrow:focus-visible { color: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); }
+        .fan-arrow:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
+        .fan-dots { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; }
+        .fan-dot { display: block; width: 9px; height: 9px; padding: 0; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.34); background: transparent; cursor: pointer; transition: transform 220ms ease, background 220ms ease, border-color 220ms ease; }
+        .fan-dot.is-active { background: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); transform: scale(1.25); }
+        .fan-dot:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
+        .fan-active-label { text-align: center; margin: clamp(14px, 2.2vw, 24px) 0 0; font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); }
+
+        @media (max-width: 640px) {
+          /* mobil: yelpaze daralır (açı/scale düşer) + kart küçülür → üst üste binip okunmaz olmasın */
+          .fan { --m: 0.6; }
+          .fan-card { width: clamp(140px, 50vw, 184px); margin-left: calc(clamp(140px, 50vw, 184px) / -2); }
+          .fan-stage { height: clamp(330px, 86vw, 420px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          /* statik yelpaze: animasyon yok, navigasyon yine çalışır */
+          .fan-card, .fan-photo { transition: none !important; }
+          .fan-stage:hover { --m: 1; }
+          .fan-card:hover .fan-photo, .fan-card:focus-visible .fan-photo { transform: none; }
         }
       `}</style>
     </PageTransition>
@@ -294,45 +470,6 @@ const lede = {
 const bodyWrap = { background: CREAM, padding: '0 clamp(24px, 6vw, 96px) clamp(64px, 10vw, 128px)' }
 const bodyGrid = { maxWidth: 1180, margin: '0 auto' }
 const mainCol = { display: 'flex', flexDirection: 'column', gap: 'clamp(28px, 4vw, 52px)', minWidth: 0 }
-
-/* alt başlık satırı (foto slotu + metin) */
-const secCard = { display: 'flex', gap: 'clamp(20px, 2.6vw, 40px)', alignItems: 'center' }
-const spPhoto = {
-  flex: '0 0 clamp(180px, 34%, 340px)',
-  aspectRatio: '4 / 3',
-  borderRadius: 12,
-  background: 'rgba(45, 49, 66, 0.05)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 12,
-  boxSizing: 'border-box',
-}
-const spPhotoTag = {
-  fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 12,
-  letterSpacing: '0.04em',
-  color: 'var(--v2-muted, #5A5A5A)',
-  textAlign: 'center',
-}
-const secText = { minWidth: 0 }
-const secTerm = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(22px, 2.4vw, 30px)',
-  lineHeight: 1.12,
-  letterSpacing: '-0.01em',
-  color: 'var(--v2-navy, #2D3142)',
-  margin: '0 0 8px',
-}
-const secDesc = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 16,
-  lineHeight: 1.6,
-  color: 'var(--v2-muted, #5A5A5A)',
-  margin: 0,
-  maxWidth: '46ch',
-}
 
 /* dikey marquee aside */
 const asideWrap = { display: 'flex', flexDirection: 'column', gap: 16 }
