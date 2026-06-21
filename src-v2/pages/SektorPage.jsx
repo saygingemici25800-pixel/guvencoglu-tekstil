@@ -138,25 +138,35 @@ function FanCarousel({ sections, slug, label }) {
   const n = sections.length
   const [active, setActive] = useState(0)
   const [entered, setEntered] = useState(true) // SSG/no-JS: yelpaze açık görünür
+  const [invite, setInvite] = useState(false) // tek seferlik "aç-topla" davet jesti
   const stageRef = useRef(null)
+  const playedRef = useRef(false)
 
-  // Görünmeden önce kapat, viewport'a girince bir kez elastic aç. reduced-motion → statik.
+  // Görünmeden önce kapat; viewport'a girince SIRAYLA: (1) elastic giriş, (2) bir kez
+  // "aç-topla" davet jesti (one-shot, loop YOK). reduced-motion → statik, jest hiç çalışmaz.
   useIsoLayout(() => {
     const node = stageRef.current
     if (!node || !('IntersectionObserver' in window)) return
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     setEntered(false)
+    const timers = []
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
-          setEntered(true)
-          io.disconnect()
-        }
+        if (!e.isIntersecting || playedRef.current) return
+        playedRef.current = true
+        setEntered(true) // (1) elastic giriş
+        // (2) giriş oturduktan SONRA bir kez aç → topla (sıralı; çakışmaz, zıplamaz)
+        timers.push(setTimeout(() => setInvite(true), 1000))
+        timers.push(setTimeout(() => setInvite(false), 1620))
+        io.disconnect()
       },
       { threshold: 0.2 },
     )
     io.observe(node)
-    return () => io.disconnect()
+    return () => {
+      io.disconnect()
+      timers.forEach(clearTimeout)
+    }
   }, [])
 
   const go = (dir) => setActive((a) => (a + dir + n) % n)
@@ -170,7 +180,8 @@ function FanCarousel({ sections, slug, label }) {
           if (pos < -n / 2) pos += n
           const a = Math.abs(pos)
           const hidden = a > FAN_MAX
-          const rot = entered ? pos * FAN_ANGLE : 0
+          // davet jesti: açıyı bir kez geçici genişlet (aç) → sonra normale topla
+          const rot = entered ? pos * FAN_ANGLE * (invite ? 1.5 : 1) : 0
           const sc = entered ? Math.max(0.62, 1 - a * FAN_SCALE) : 0.7
           const ty = entered ? 0 : 40
           const cap = i % 2 === 0 ? 'bl' : 'tc' // başlık konumu 2 varyant: sol-alt / üst-orta
@@ -323,11 +334,11 @@ export default function SektorPage({ slug }) {
         }
 
         /* ── KART YELPAZESİ (fan carousel) — saf CSS + React state, GSAP/framer YOK ── */
-        .fan { --m: 1; max-width: 760px; margin: 0 auto; }
-        .fan-stage { position: relative; height: clamp(380px, 50vw, 480px); display: flex; align-items: flex-end; justify-content: center; }
+        .fan { --m: 1.14; max-width: 900px; margin: 0 auto; }
+        .fan-stage { position: relative; height: clamp(420px, 46vw, 560px); display: flex; align-items: flex-end; justify-content: center; }
         .fan-card {
           position: absolute; bottom: 0; left: 50%;
-          width: clamp(158px, 21vw, 206px); margin-left: calc(clamp(158px, 21vw, 206px) / -2);
+          width: clamp(186px, 18vw, 244px); margin-left: calc(clamp(186px, 18vw, 244px) / -2);
           aspect-ratio: 3 / 4; padding: 0; border: 0; background: transparent; cursor: pointer;
           border-radius: 14px; transform-origin: 50% 162%;
           transform: translateY(var(--ty, 0)) rotate(calc(var(--rot, 0deg) * var(--m))) scale(var(--sc, 1));
@@ -361,21 +372,37 @@ export default function SektorPage({ slug }) {
         .fan-card:focus-visible { outline: none; }
         .fan-card:focus-visible .fan-photo { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
 
-        .fan-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: clamp(18px, 3vw, 32px); }
-        .fan-arrow { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.2); background: var(--v2-surface-elevated, #fff); color: var(--v2-navy, #2D3142); cursor: pointer; transition: color 200ms ease, border-color 200ms ease; }
+        /* nav: yelpazenin ALTINDA + kartların ÜSTÜNDE (z-index) → mobilde de net tıklanır */
+        .fan-nav { position: relative; z-index: 300; display: flex; align-items: center; justify-content: center; gap: clamp(16px, 2.4vw, 26px); margin-top: clamp(20px, 3.2vw, 38px); }
+        .fan-arrow { width: clamp(48px, 4vw, 58px); height: clamp(48px, 4vw, 58px); flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.22); background: var(--v2-surface-elevated, #fff); color: var(--v2-navy, #2D3142); cursor: pointer; box-shadow: 0 2px 8px rgba(45, 49, 66, 0.12); transition: color 200ms ease, border-color 200ms ease, background 200ms ease; }
+        .fan-arrow svg { width: 58%; height: 58%; }
         .fan-arrow:hover, .fan-arrow:focus-visible { color: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); }
         .fan-arrow:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
-        .fan-dots { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; }
-        .fan-dot { display: block; width: 9px; height: 9px; padding: 0; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.34); background: transparent; cursor: pointer; transition: transform 220ms ease, background 220ms ease, border-color 220ms ease; }
-        .fan-dot.is-active { background: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); transform: scale(1.25); }
-        .fan-dot:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 3px; }
+        .fan-dots { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; }
+        .fan-dot { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+        .fan-dot::before { content: ''; width: 10px; height: 10px; border-radius: 999px; border: 1px solid rgba(45, 49, 66, 0.42); background: transparent; transition: transform 220ms ease, background 220ms ease, border-color 220ms ease; }
+        .fan-dot.is-active::before { background: var(--v2-copper, #9A0002); border-color: var(--v2-copper, #9A0002); transform: scale(1.4); }
+        .fan-dot:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 2px; border-radius: 999px; }
         .fan-active-label { text-align: center; margin: clamp(14px, 2.2vw, 24px) 0 0; font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); }
 
+        @media (max-width: 1100px) {
+          /* 2 kolon hâlâ açık (marquee var) → ana kolon dar; yelpaze ölçülü kalsın, taşmasın */
+          .fan { --m: 0.94; }
+          .fan-card { width: clamp(168px, 19vw, 208px); margin-left: calc(clamp(168px, 19vw, 208px) / -2); }
+          .fan-stage { height: clamp(380px, 44vw, 480px); }
+        }
+        @media (max-width: 900px) {
+          /* marquee gizli → tek kolon tam genişlik: yelpaze rahatça büyür */
+          .fan { --m: 1; }
+          .fan-card { width: clamp(184px, 30vw, 240px); margin-left: calc(clamp(184px, 30vw, 240px) / -2); }
+          .fan-stage { height: clamp(380px, 58vw, 500px); }
+        }
         @media (max-width: 640px) {
-          /* mobil: yelpaze daralır (açı/scale düşer) + kart küçülür → üst üste binip okunmaz olmasın */
-          .fan { --m: 0.6; }
-          .fan-card { width: clamp(140px, 50vw, 184px); margin-left: calc(clamp(140px, 50vw, 184px) / -2); }
-          .fan-stage { height: clamp(330px, 86vw, 420px); }
+          /* mobil: yelpaze daralır + kart küçülür → üst üste binip okunmaz olmasın; oklar net altta */
+          .fan { --m: 0.66; }
+          .fan-card { width: clamp(150px, 52vw, 198px); margin-left: calc(clamp(150px, 52vw, 198px) / -2); }
+          .fan-stage { height: clamp(346px, 90vw, 432px); }
+          .fan-nav { gap: 22px; margin-top: 22px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
