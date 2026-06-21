@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Lenis from 'lenis'
 import NavV2 from './NavV2.jsx'
 import FooterV2 from './FooterV2.jsx'
+import Preloader from './Preloader.jsx'
 import { usePrefersReducedMotion } from './ReducedMotion.jsx'
 
 import '../styles/tokens.css'
@@ -38,6 +39,8 @@ export default function LayoutV2() {
 
   return (
     <div className="v2-root">
+      {/* Açılış preloader'ı — ilk girişte oturum başına 1 kez, üstte overlay (SSG-safe) */}
+      <Preloader />
       <a href="#v2-main" className="skip-link">İçeriğe atla</a>
       <NavV2 />
       <main id="v2-main">
