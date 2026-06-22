@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 
 /* ──────────────────────────────────────────────────────────────
    Açılış preloader'ı — siteye İLK girişte (hangi route olursa) oturum başına 1 kez.
-   logo-tekstil.png soldan maskeyle (clip-path) açılır → çift (iki kademeli) zoom →
-   fade-out → site görünür. Toplam < 2 sn.
+   logo-tekstil.png soldan maskeyle (clip-path) "yazılıyor" gibi açılır → üzerinden
+   soldan sağa ince bir parıltı (shine sweep, logo şekline maskeli) geçer → fade-out →
+   site görünür. Toplam ~2 sn. (Zoom yok.)
 
    SSG/SEO-safe: server'da HİÇ render edilmez (useState false) → içerik statik HTML'de
    hazır, LCP gecikmez, overlay içeriği DOM'dan gizlemez. JS kapalıysa hiç çıkmaz.
@@ -31,8 +32,8 @@ export default function Preloader() {
       sessionStorage.setItem(FLAG, '1')
     } catch {}
     setShow(true)
-    const t1 = setTimeout(() => setLeaving(true), 1450) // fade-out başlat
-    const t2 = setTimeout(() => setShow(false), 1950) // DOM'dan kaldır (toplam < 2 sn)
+    const t1 = setTimeout(() => setLeaving(true), 1700) // açılma + parıltı bitince fade-out
+    const t2 = setTimeout(() => setShow(false), 2180) // DOM'dan kaldır (toplam ~2.2 sn)
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
@@ -43,14 +44,18 @@ export default function Preloader() {
 
   return (
     <div className={`gt-pre${leaving ? ' is-leaving' : ''}`} aria-hidden="true">
-      <img
-        className="gt-pre-logo"
-        src="/logo-tekstil.png"
-        alt=""
-        width="595"
-        height="842"
-        decoding="async"
-      />
+      <div className="gt-pre-logo-wrap">
+        <img
+          className="gt-pre-logo"
+          src="/logo-tekstil.png"
+          alt=""
+          width="595"
+          height="842"
+          decoding="async"
+        />
+        {/* Parıltı: logo şekline maskeli, soldan sağa kayan ince ışık huzmesi */}
+        <span className="gt-pre-shine" aria-hidden="true" />
+      </div>
       <style>{`
         .gt-pre {
           position: fixed; inset: 0; z-index: 9999;
@@ -60,26 +65,35 @@ export default function Preloader() {
           will-change: opacity;
         }
         .gt-pre.is-leaving { opacity: 0; pointer-events: none; }
-        .gt-pre-logo {
-          width: clamp(260px, 44vw, 440px); height: auto; display: block;
-          /* (1) soldan açılma: clip-path sağdan %100 → 0 (kalemle yazılır gibi reveal) */
+        /* (1) soldan açılma: clip-path sağdan %100 → 0 ("yazılıyor" gibi yumuşak akış) */
+        .gt-pre-logo-wrap {
+          position: relative;
+          width: clamp(260px, 44vw, 440px);
           clip-path: inset(0 100% 0 0);
-          animation:
-            gt-pre-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards,
-            gt-pre-zoom 0.56s cubic-bezier(0.34, 1.56, 0.64, 1) 0.92s forwards;
-          will-change: clip-path, transform;
+          animation: gt-pre-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+          will-change: clip-path;
         }
+        .gt-pre-logo { width: 100%; height: auto; display: block; }
         @keyframes gt-pre-draw {
           from { clip-path: inset(0 100% 0 0); }
           to   { clip-path: inset(0 0 0 0); }
         }
-        /* (2) çift zoom — iki kademeli: 1 → 1.05 → 1.0 → 1.025 → 1.0 */
-        @keyframes gt-pre-zoom {
-          0%   { transform: scale(1); }
-          40%  { transform: scale(1.05); }
-          64%  { transform: scale(1); }
-          82%  { transform: scale(1.025); }
-          100% { transform: scale(1); }
+        /* (2) parıltı: logo şekline maskeli kutu; içindeki eğik ışık bandı soldan sağa geçer */
+        .gt-pre-shine {
+          position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+          -webkit-mask-image: url(/logo-tekstil.png); mask-image: url(/logo-tekstil.png);
+          -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+          -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+        }
+        .gt-pre-shine::before {
+          content: ''; position: absolute; top: -10%; bottom: -10%; left: 0; width: 42%;
+          background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
+          transform: skewX(-16deg) translateX(-260%);
+          animation: gt-pre-shine 0.82s ease-in-out 0.9s forwards;
+        }
+        @keyframes gt-pre-shine {
+          from { transform: skewX(-16deg) translateX(-260%); }
+          to   { transform: skewX(-16deg) translateX(360%); }
         }
         @media (prefers-reduced-motion: reduce) {
           .gt-pre { display: none; }
