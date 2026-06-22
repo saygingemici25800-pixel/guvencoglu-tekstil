@@ -108,25 +108,15 @@ function VerticalMarquee({ clients }) {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Kart yelpazesi (fan carousel) — referans fikir GSAP'tı; burada
-   GSAP/framer YOK, saf CSS transform + React state ile TAKLİT.
-   Kartlar alt-merkez pivot etrafında rotate+scale ile yelpaze açar;
-   ok + nokta ile döner; viewport'a girince overshoot'lu easing ile
-   elastic açılır; hover'da kart kalkar + komşular hafif itişir.
-   SSG-safe: no-JS'te yelpaze açık/görünür (entered=true başlar).
+   Kart yelpazesi (fan carousel) — saf CSS transform + React state
+   (3rd-party animasyon kütüphanesi yok). Kartlar alt-merkez pivot
+   etrafında rotate+scale ile yelpaze açar; ok + nokta ile döner;
+   viewport'a girince overshoot'lu easing ile elastic açılır; hover'da
+   kart kalkar + komşular hafif itişir. SSG-safe: no-JS'te yelpaze açık.
 
-   Beklenen GERÇEK foto dosyaları (henüz yok → placeholder kutu):
-   /public/sektor/<slug>-<term-slug>.webp  (3/4 oran, object-fit: cover)
-     saglik   → saglik-doctor-coat / -nurse-scrubs / -surgical-scrubs /
-                -patient-gown / -lab-technician / -support-staff .webp
-     otel     → otel-front-office / -bell-staff / -guest-relations /
-                -housekeeping / -f-b-service / -kitchen-chef /
-                -engineering / -spa-wellness .webp
-     okul     → okul-student-uniform / -academic-staff / -administrative /
-                -sports-pe / -corporate-office .webp
-     restoran → restoran-chef-kitchen / -service-waiter / -host /
-                -barista-bar / -busser / -prep-staff .webp
-   Foto'lar eklenince HAS_PHOTOS = true → slot otomatik <img> render eder. */
+   Kart foto'ları sektorler.js'te her bölümün `img` (WebP) + `alt`
+   alanından gelir; bir bölümün img'i yoksa o kart placeholder kutu
+   kalır (HAS_PHOTOS guard'ı). */
 const HAS_PHOTOS = true
 const slugifyTerm = (t) =>
   t.toLowerCase().replace(/[/&]/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -394,7 +384,7 @@ export default function SektorPage() {
           .spm-viewport { overflow-y: auto; }
         }
 
-        /* ── KART YELPAZESİ (fan carousel) — saf CSS + React state, GSAP/framer YOK ── */
+        /* ── KART YELPAZESİ (fan carousel) — saf CSS + React state ── */
         .fan { --m: 1.14; max-width: 900px; margin: 0 auto; }
         .fan-stage { position: relative; height: clamp(420px, 46vw, 560px); display: flex; align-items: flex-end; justify-content: center; }
         .fan-card {

@@ -15,11 +15,9 @@ const TODAY = new Date().toISOString().slice(0, 10)
 const STATIC_ROUTES = [
   '/',
   '/biz-ve-is-ortaklarimiz',
+  // Tek sayfa: eski 4 alt sayfa (/ne-yapiyoruz/<slug>) kaldırıldı → 301 redirect.
+  // 301'leyen URL'ler sitemap'e KONMAZ (SEO hijyeni).
   '/ne-yapiyoruz',
-  '/ne-yapiyoruz/saglik',
-  '/ne-yapiyoruz/otel',
-  '/ne-yapiyoruz/okul',
-  '/ne-yapiyoruz/restoran',
   '/blog',
   '/iletisim',
 ]
