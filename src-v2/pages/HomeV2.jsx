@@ -22,28 +22,32 @@ const HERO_SECTORS = [
     id: 'saglik',
     num: '01',
     name: 'Sağlık',
-    img: '/saglik-main.webp',
+    img: '/saglik-doctor.webp', // yelpazedeki gerçek sektör fotosu (en temsili: doktor önlüğü)
+    alt: 'Sağlık sektörü doktor önlüğü üniforması',
     desc: 'Hastane, klinik, eczane ve laboratuvar personeli için hijyenik, dayanıklı üniformalar.',
   },
   {
     id: 'otel',
     num: '02',
     name: 'Otel',
-    img: '/otel-main.webp',
+    img: '/otel-frontoffice.webp',
+    alt: 'Otel önbüro ve resepsiyon üniforması',
     desc: "Resepsiyondan mutfağa, housekeeping'den spa'ya otel ekipleri için kurumsal kıyafet.",
   },
   {
     id: 'okul',
     num: '03',
     name: 'Okul',
-    img: '/okul-main.webp',
+    img: '/okul-student.webp',
+    alt: 'Okul öğrenci üniforması',
     desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
   },
   {
     id: 'restoran',
     num: '04',
     name: 'Restoran',
-    img: '/atolye-uretim.webp', // placeholder — restoran fotosu sonra girecek
+    img: '/restoran-chef.webp', // önceki atolye-uretim placeholder'ı yerine gerçek restoran fotosu
+    alt: 'Restoran şef ve mutfak ceketi üniforması',
     desc: 'Mutfaktan salona restoran ekibi için fonksiyonel, hijyenik ve markaya özel kıyafetler.',
   },
 ]
@@ -358,10 +362,12 @@ export default function HomeV2() {
                   style={galleryLink}
                   aria-label={`${s.name} koleksiyonu`}
                 >
-                  <span
+                  <img
                     className="hv2-hg-photo"
-                    style={{ ...heroCardPhoto, backgroundImage: `url(${s.img})` }}
-                    aria-hidden="true"
+                    src={s.img}
+                    alt={s.alt}
+                    style={heroCardImg}
+                    decoding="async"
                   />
                   <span style={heroCardOverlay} aria-hidden="true" />
                   <span style={heroCardContent}>
@@ -838,13 +844,15 @@ const shinyLabel = {
   color: 'var(--v2-cream, #EFEAE0)',
   whiteSpace: 'nowrap',
 }
-const heroCardPhoto = {
+const heroCardImg = {
   position: 'absolute',
   inset: 0,
   zIndex: 0,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  objectPosition: 'center',
+  display: 'block',
   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
 }
 const heroCardOverlay = {
