@@ -127,7 +127,7 @@ function VerticalMarquee({ clients }) {
      restoran → restoran-chef-kitchen / -service-waiter / -host /
                 -barista-bar / -busser / -prep-staff .webp
    Foto'lar eklenince HAS_PHOTOS = true → slot otomatik <img> render eder. */
-const HAS_PHOTOS = false
+const HAS_PHOTOS = true
 const slugifyTerm = (t) =>
   t.toLowerCase().replace(/[/&]/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
@@ -213,8 +213,9 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
               }}
             >
               <span className="fan-photo">
-                {HAS_PHOTOS ? (
-                  <img className="fan-img" src={`/sektor/${file}`} alt={sec.term} loading="lazy" decoding="async" />
+                {/* Gerçek foto varsa <img> (object-cover); yoksa o kart placeholder kalır (kırık img yok) */}
+                {HAS_PHOTOS && sec.img ? (
+                  <img className="fan-img" src={sec.img} alt={sec.alt || sec.term} loading="lazy" decoding="async" />
                 ) : (
                   <span className="fan-photo-tag" aria-hidden="true">foto: {file}</span>
                 )}

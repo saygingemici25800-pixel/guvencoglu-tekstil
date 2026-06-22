@@ -9,7 +9,7 @@
    Build bu script'i ÇAĞIRMAZ — üretilen .webp dosyaları repo'ya commit'lenir. */
 
 import sharp from 'sharp'
-import { statSync, existsSync, readFileSync } from 'node:fs'
+import { statSync, existsSync, readFileSync, readdirSync, unlinkSync } from 'node:fs'
 import { join } from 'node:path'
 
 const PUBLIC = 'public'
@@ -80,5 +80,49 @@ for (const { file, width, quality } of RECOMPRESS) {
   console.log(
     `  ${file.padEnd(20)} ${meta.width}px → ${Math.min(width, meta.width)}px  ` +
       `q${quality}  ${before} KB → ${Number(kb(path))} KB`,
+  )
+}
+
+// ── Sektör yelpaze fotoğrafları (gerçek foto → WebP, kart gösterim boyutu) ──
+// Kaynaklar public/ kökünde (saglik-doctor.jpg vb.; bazıları bozuk çift-uzantılı
+// "ad.jpg .jpeg"). Her base ad ile kaynak bulunur, <base>.webp (~900px q78) yazılır,
+// büyük kaynak silinir. Bulunamayan base atlanır (o kart placeholder kalır).
+const SECTOR_BASES = [
+  'saglik-doctor', 'saglik-nurse', 'saglik-surgical', 'saglik-patient', 'saglik-lab', 'saglik-support',
+  'otel-frontoffice', 'otel-bellstaff', 'otel-guest', 'otel-housekeeping', 'otel-fb', 'otel-kitchen', 'otel-engineering', 'otel-spa',
+  'okul-student', 'okul-academic', 'okul-admin', 'okul-sports', 'okul-corporate',
+  'restoran-chef', 'restoran-service', 'restoran-host', 'restoran-barista', 'restoran-busser', 'restoran-prep',
+]
+const SECTOR_WIDTH = 900
+const SECTOR_Q = 78
+
+{
+  const files = readdirSync(PUBLIC)
+  let secBefore = 0
+  let secAfter = 0
+  let done = 0
+  const missing = []
+  for (const base of SECTOR_BASES) {
+    const out = join(PUBLIC, `${base}.webp`)
+    const srcName = files.find(
+      (f) => f.startsWith(base) && !/\.webp$/i.test(f) && /\.(jpe?g|png)/i.test(f),
+    )
+    if (!srcName) {
+      if (!existsSync(out)) missing.push(base)
+      continue
+    }
+    const src = join(PUBLIC, srcName)
+    const before = Number(kb(src))
+    const meta = await sharp(src).metadata()
+    await sharp(src).resize({ width: SECTOR_WIDTH, withoutEnlargement: true }).webp({ quality: SECTOR_Q }).toFile(out)
+    unlinkSync(src) // büyük kaynağı sil (tek format yeter, WebP geniş destekli)
+    secBefore += before
+    secAfter += Number(kb(out))
+    done++
+    console.log(`  ${base.padEnd(22)} ${meta.width}px → ${Math.min(SECTOR_WIDTH, meta.width)}px  ${before} KB → ${kb(out)} KB`)
+  }
+  console.log(
+    `\n[sektör] ${done} foto: ${secBefore} KB → ${secAfter} KB; ` +
+      `eksik: ${missing.length ? missing.join(', ') : 'yok'}`,
   )
 }
