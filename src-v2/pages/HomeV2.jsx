@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
+import { entranceSyncDelay } from '../shared/entrance.js'
 import TeklifForm from '../shared/TeklifForm.jsx'
 import { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
 
@@ -276,6 +277,8 @@ function FadeIn({ as: Tag = 'div', delay = 0, duration = 600, x = 0, y = 0, clas
 }
 
 export default function HomeV2() {
+  // Preloader varsa hero girişi fade-out ile senkron başlar; yoksa anında (mount). One-shot.
+  const [heroBase] = useState(() => entranceSyncDelay())
   const scrollToTeklif = () =>
     document.getElementById('teklif')?.scrollIntoView({ behavior: 'smooth' })
 
@@ -313,16 +316,19 @@ export default function HomeV2() {
         {/* ÜST BÖLGE — metin + yüzen sektör görselleri */}
         <div className="hv2-hero-upper" style={heroUpper}>
           {/* SOL %34 — metin */}
+          {/* Sol metin: SOLDAN yönlü, sakin (yavaş) + stagger — eyebrow→başlık→lede→buton */}
           <div className="hv2-hero-left" style={heroLeft}>
-            <p style={heroEyebrow}>2001’DEN BERİ · FETHİYE</p>
-            <h1 style={heroH1}>
+            <FadeIn as="p" style={heroEyebrow} x={-24} delay={heroBase} duration={680}>
+              2001’DEN BERİ · FETHİYE
+            </FadeIn>
+            <FadeIn as="h1" style={heroH1} x={-24} delay={heroBase + 95} duration={780}>
               Türkiye’nin <em style={heroH1Accent}>kurumsal üniforma</em> uzmanı
-            </h1>
-            <p style={heroLede}>
+            </FadeIn>
+            <FadeIn as="p" style={heroLede} x={-24} delay={heroBase + 190} duration={780}>
               Sağlık, otel ve okul kurumları için kendi tesisimizde üretim. Aracısız,
               sözleşmeli, zamanında.
-            </p>
-            <div style={heroCtaGroup}>
+            </FadeIn>
+            <FadeIn style={heroCtaGroup} x={-24} delay={heroBase + 290} duration={720}>
               <button
                 type="button"
                 className="hv2-hero-btn cta-swap-btn"
@@ -334,7 +340,7 @@ export default function HomeV2() {
                   <span className="cta-swap-bot">0532 134 7602</span>
                 </span>
               </button>
-            </div>
+            </FadeIn>
           </div>
 
           {/* SAĞ %66 — 3 kartlı asimetrik grid galeri (stagger blur-in) */}
@@ -342,7 +348,7 @@ export default function HomeV2() {
             {HERO_SECTORS.map((s, i) => (
               <BlurReveal
                 key={s.id}
-                delay={i * 200}
+                delay={heroBase + i * 200}
                 className={`hv2-hg-card hv2-hg-${i + 1}`}
                 style={galleryCard}
               >
@@ -372,12 +378,12 @@ export default function HomeV2() {
           </div>
         </div>
 
-        {/* ALT BÖLGE — dev wordmark, alttan hafif kesik */}
-        <div className="hv2-wordmark" style={heroWordmark} aria-hidden="true">
+        {/* ALT BÖLGE — dev wordmark; yumuşak opacity-fade (kendi translateY'i korunur) */}
+        <FadeIn className="hv2-wordmark" style={heroWordmark} aria-hidden="true" x={0} y={0} delay={heroBase + 340} duration={920}>
           <span className="hv2-wordmark-text" style={heroWordmarkText}>
             GUVENCOGLU
           </span>
-        </div>
+        </FadeIn>
       </section>
 
       {/* ─── BÖLÜM 1.5 — BİZ TEASER (hero hemen altına alındı): SOL yazı / SAĞ 2 overlap foto ─ */}

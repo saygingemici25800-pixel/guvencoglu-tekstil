@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { entranceSyncDelay } from './entrance.js'
 
 /* Reveal — SSG-uyumlu, tek seferlik scroll reveal (fade-in + hafif translateY).
 
@@ -24,6 +25,7 @@ export default function Reveal({
   ...rest
 }) {
   const ref = useRef(null)
+  const syncRef = useRef(0) // preloader varsa: on-mount giriş, fade-out ile senkron gecikir
   // 'idle' = SSR/no-JS görünür durum · 'hidden' = JS gizledi · 'shown' = açıldı
   const [state, setState] = useState('idle')
 
@@ -44,6 +46,7 @@ export default function Reveal({
     const rect = node.getBoundingClientRect()
     // Yüklemede zaten ekrandaysa: bir sonraki frame'de aç (giriş animasyonu çalışsın)
     if (rect.top < vh * 0.92 && rect.bottom > 0) {
+      syncRef.current = entranceSyncDelay() // preloader fade-out ile senkron başla (ilk yükleme)
       const raf = requestAnimationFrame(() => setState('shown'))
       return () => cancelAnimationFrame(raf)
     }
@@ -66,7 +69,7 @@ export default function Reveal({
     opacity: state === 'hidden' ? 0 : 1,
     transform: state === 'hidden' ? `translateY(${y}px)` : 'none',
     transition: animated
-      ? `opacity ${duration}ms ${EASE} ${delay}ms, transform ${duration}ms ${EASE} ${delay}ms`
+      ? `opacity ${duration}ms ${EASE} ${delay + syncRef.current}ms, transform ${duration}ms ${EASE} ${delay + syncRef.current}ms`
       : undefined,
   }
 
