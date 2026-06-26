@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────────
-   Ne Yapıyoruz — sektör alt sayfaları verisi (PLACEHOLDER).
+   Ürünlerimiz — sektör verisi (tek sayfa, sekmeli yelpaze).
    Her bölüm: İngilizce terim + kısa TR açıklama + foto anahtar kelimesi.
    Gerçek fotolar sonra .sp-photo slotuna <img> olarak girecek.
    clients: placeholder logo kutuları (gerçek logolar gelince <img>).

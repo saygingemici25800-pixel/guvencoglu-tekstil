@@ -268,13 +268,13 @@ export default function SektorPage() {
   return (
     <PageTransition>
       <SEOHead
-        title="Ne Yapıyoruz — Güvençoğlu Tekstil"
+        title="Ürünlerimiz — Güvençoğlu Tekstil"
         description="Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve tekstil üretimi. Fethiye'deki kendi tesisimizde nakış, baskı, özel tasarım, toplu üretim ve B2B çözümler."
         path="/ne-yapiyoruz"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'ItemList',
-          name: 'Güvençoğlu Tekstil — Ne Yapıyoruz',
+          name: 'Güvençoğlu Tekstil — Ürünlerimiz',
           itemListElement: SEKTOR_LIST.map((s, i) => ({
             '@type': 'ListItem',
             position: i + 1,
@@ -307,12 +307,12 @@ export default function SektorPage() {
         </div>
       </section>
 
-      {/* ── EN ALTTA AÇIKLAMA — "Ne Yapıyoruz" girişi (eski landing metni, en alta alındı) ── */}
+      {/* ── EN ALTTA AÇIKLAMA — "Ürünlerimiz" girişi (eski landing metni, en alta alındı) ── */}
       <section style={{ ...heroWrap, borderTop: '1px solid rgba(45, 49, 66, 0.1)' }} aria-labelledby="ny-intro-title">
         <Reveal style={heroInner}>
-          <Eyebrow>NE YAPIYORUZ</Eyebrow>
+          <Eyebrow>ÜRÜNLERİMİZ</Eyebrow>
           <h1 id="ny-intro-title" style={h1}>
-            Ne <em style={{ fontStyle: 'italic', color: 'var(--v2-copper, #9A0002)' }}>Yapıyoruz</em>
+            Ürün<em style={{ fontStyle: 'italic', color: 'var(--v2-copper, #9A0002)' }}>lerimiz</em>
           </h1>
           <p style={lede}>
             Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve

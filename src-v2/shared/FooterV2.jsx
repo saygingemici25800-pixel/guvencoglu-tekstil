@@ -13,7 +13,7 @@ const cols = [
     items: [
       { label: 'Hikayemiz', to: '/biz-ve-is-ortaklarimiz' },
       { label: 'Üretim Süreci', to: '/ne-yapiyoruz' },
-      { label: 'Ne Yapıyoruz', to: '/ne-yapiyoruz' },
+      { label: 'Ürünlerimiz', to: '/ne-yapiyoruz' },
     ],
   },
   {

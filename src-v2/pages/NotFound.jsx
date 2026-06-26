@@ -27,7 +27,7 @@ export default function NotFound() {
               Ana Sayfaya Dön <span aria-hidden="true">→</span>
             </Link>
             <nav style={links} aria-label="Hızlı bağlantılar">
-              <Link to="/ne-yapiyoruz" className="nf-link" style={link}>Ne Yapıyoruz</Link>
+              <Link to="/ne-yapiyoruz" className="nf-link" style={link}>Ürünlerimiz</Link>
               <Link to="/biz-ve-is-ortaklarimiz" className="nf-link" style={link}>Biz ve İş Ortaklarımız</Link>
               <Link to="/blog" className="nf-link" style={link}>Blog</Link>
               <Link to="/iletisim" className="nf-link" style={link}>İletişim</Link>
