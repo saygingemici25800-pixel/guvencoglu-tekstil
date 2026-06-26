@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Lenis from 'lenis'
 import NavV2 from './NavV2.jsx'
 import FooterV2 from './FooterV2.jsx'
@@ -13,6 +13,7 @@ import '../styles/motion.css'
 export default function LayoutV2() {
   const location = useLocation()
   const reduced = usePrefersReducedMotion()
+  const lenisRef = useRef(null)
 
   useEffect(() => {
     if (reduced) return; if (window.matchMedia('(max-width: 767px)').matches) return
@@ -21,6 +22,7 @@ export default function LayoutV2() {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
+    lenisRef.current = lenis
     let rafId
     function raf(time) {
       lenis.raf(time)
@@ -30,10 +32,15 @@ export default function LayoutV2() {
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [reduced])
 
+  // Route (pathname) değişiminde yeni sayfa EN ÜSTTEN başlasın. Lenis (smooth scroll)
+  // aktifse iç pozisyonunu da anında sıfırla; yoksa window.scrollTo yeter. Aynı sayfadaki
+  // ?s= sekme/state değişimi pathname'i değiştirmez → bu tetiklenmez (içi-sayfa korunur).
   useEffect(() => {
+    if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true })
     window.scrollTo(0, 0)
   }, [location.pathname])
 

@@ -520,10 +520,6 @@ export default function HomeV2() {
               </div>
             ))}
           </div>
-
-          <Link to="/ne-yapiyoruz" className="hv2-textlink hv2-textlink-copper" style={textLinkCopper}>
-            Tüm Hizmetlerimiz <span aria-hidden="true">→</span>
-          </Link>
         </div>
       </section>
 
@@ -968,7 +964,8 @@ const atelierGrid = {
 }
 const atelierCard = {
   position: 'relative',
-  aspectRatio: '4 / 5',
+  // Üretim tesisi fotoları ~yarı yükseklik (footprint yarıya); tam genişlik korunur → yan dev boşluk yok.
+  aspectRatio: '16 / 10',
   overflow: 'hidden',
 }
 const atelierPhoto = {
