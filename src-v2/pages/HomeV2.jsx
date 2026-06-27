@@ -395,8 +395,8 @@ export default function HomeV2() {
       {/* ─── BÖLÜM 1.5 — BİZ TEASER (hero hemen altına alındı): SOL yazı / SAĞ 2 overlap foto ─ */}
       <section className="hv2-bizteaser" style={bizTeaserWrap} aria-labelledby="hv2-bizteaser-title">
         <div className="hv2-bt-row" style={btRow}>
-          {/* SOL — yazı (soldan, YAVAŞ; fotolardan sonra) */}
-          <FadeIn className="hv2-bt-text" style={btText} delay={650} duration={780} x={-28}>
+          {/* SOL — yazı ÖNCE görünür (soldan kayarak); fotolar sonra gelir */}
+          <FadeIn className="hv2-bt-text" style={btText} delay={0} duration={760} x={-28}>
             <span style={bizTeaserEyebrow}>
               <span style={bizTeaserDash} aria-hidden="true" />
               <span style={eyebrowDark}>BİZ KİMİZ</span>
@@ -417,12 +417,12 @@ export default function HomeV2() {
             </Link>
           </FadeIn>
 
-          {/* SAĞ — 2 overlap foto (HIZLI, sırayla) — placeholder */}
+          {/* SAĞ — 2 overlap foto: yazıdan ~0.8sn SONRA yumuşak fade-in */}
           <div className="hv2-bt-stack" style={btStack}>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={0} duration={420} y={22}>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph1" style={{ ...photoMain, left: 0 }} delay={760} duration={760} y={18}>
               <img src="/miras.webp" alt="Güvençoğlu Tekstil'in köklü üretim mirasından bir kare" loading="lazy" style={btImg} />
             </FadeIn>
-            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={260} duration={420} y={22}>
+            <FadeIn className="hv2-bt-ph hv2-bt-ph2" style={{ ...photoOver, right: 0 }} delay={920} duration={760} y={18}>
               <img src="/atolye-uretim.webp" alt="Fethiye'deki üretim atölyesinde dikiş hattı" loading="lazy" style={btImg} />
             </FadeIn>
           </div>
@@ -431,8 +431,9 @@ export default function HomeV2() {
 
       {/* ─── BÖLÜM 2 — ATÖLYE ŞERİDİ ─────────────────────────── */}
       <section className="hv2-atelier" style={atelierWrap} aria-labelledby="hv2-atelier-title">
-        <Reveal style={atelierInner}>
-          <div className="hv2-atelier-head" style={atelierHead}>
+        <div style={atelierInner}>
+          {/* Önce başlık/metin görünür → fotolar ~0.8sn SONRA yumuşak fade-in (Reveal delay) */}
+          <Reveal as="div" className="hv2-atelier-head" style={atelierHead} y={14} delay={0}>
             <div style={atelierHeadLeft}>
               <span style={atelierEyebrow}>KENDİ ÜRETİM TESİSİMİZ</span>
               <h2 id="hv2-atelier-title" style={atelierH2}>
@@ -443,9 +444,9 @@ export default function HomeV2() {
               Tasarımdan dikişe, nakıştan son kontrole kadar her aşama Fethiye’deki kendi
               tesisimizde. Aracı yok, sürpriz yok — sadece söz verdiğimiz kalite.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="hv2-atelier-grid" style={atelierGrid}>
+          <Reveal as="div" className="hv2-atelier-grid" style={atelierGrid} y={0} delay={800} duration={900}>
             {ATELIER_PHOTOS.map((p) => (
               <div key={p.label} className="hv2-atelier-card" style={atelierCard}>
                 <div
@@ -458,8 +459,8 @@ export default function HomeV2() {
                 <span style={atelierLabel}>{p.label}</span>
               </div>
             ))}
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* ─── BÖLÜM 2 — GÜVEN ŞERİDİ ─────────────────────────── */}

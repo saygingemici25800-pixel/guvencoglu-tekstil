@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
@@ -15,9 +14,6 @@ import { SOCIAL_SAMEAS } from '../shared/SocialLinks.jsx'
    4 bölüm: Giriş · Hikâye/Miras · İş Ortakları (flip-card) · CTA.
    Scroll-anim YOK; referans flip-card'ı saf-CSS 3D (framer-motion yok).
    ────────────────────────────────────────────────────────────── */
-
-// Sektör id → okunabilir etiket (flip-card ön yüz copper etiketi için).
-const SECTOR_LABEL = Object.fromEntries(CLIENT_SECTORS.map((s) => [s.id, s.label]))
 
 /* Editorial eyebrow — copper kısa çizgi + uppercase etiket (yan yana) */
 function Eyebrow({ children }) {
@@ -37,44 +33,23 @@ function InterlockSection({ photo, alt, reverse, textStyle, photoStyle, children
       className={`biz-il${reverse ? ' biz-il-rev' : ''}`}
       style={ilSection}
     >
-      <Reveal className="biz-il-row" style={ilRow}>
-        <div className="biz-il-text" style={{ ...ilText, ...textStyle }}>
+      {/* Önce metin paneli fade-in → foto ~0.8sn SONRA yumuşak belirir (gecikmeli Reveal) */}
+      <div className="biz-il-row" style={ilRow}>
+        <Reveal as="div" className="biz-il-text" style={{ ...ilText, ...textStyle }} y={0} delay={0} duration={640}>
           {children}
-        </div>
-        <div
+        </Reveal>
+        <Reveal
+          as="div"
           className="biz-il-photo"
           style={{ ...ilPhoto, ...photoStyle, backgroundImage: `url(${photo})` }}
           role="img"
           aria-label={alt}
+          y={0}
+          delay={780}
+          duration={900}
         />
-      </Reveal>
+      </div>
     </section>
-  )
-}
-
-/* Flip-card referans — saf CSS 3D çevirme (rotateY 180, preserve-3d, backface
-   hidden, ~500ms). Masaüstü hover; mobil/klavye için tap/Enter ile state (button).
-   reduced-motion → CSS ile flip kapalı, iki yüz alt alta statik görünür. */
-function FlipCard({ name, sector }) {
-  const [flipped, setFlipped] = useState(false)
-  return (
-    <button
-      type="button"
-      className={`biz-flip${flipped ? ' is-flipped' : ''}`}
-      style={flipCard}
-      aria-pressed={flipped}
-      onClick={() => setFlipped((f) => !f)}
-    >
-      <span className="biz-flip-inner" style={flipInner}>
-        <span className="biz-flip-front" style={flipFront}>
-          <span style={flipSector}>İŞ ORTAĞI</span>
-          <span style={flipName}>{name}</span>
-        </span>
-        <span className="biz-flip-back" style={flipBack}>
-          <span style={flipName}>{sector}</span>
-        </span>
-      </span>
-    </button>
   )
 }
 
@@ -161,19 +136,28 @@ export default function BizPage() {
               Otel, sağlık, restoran ve <em style={em}>belediyelerin</em> partneri.
             </h2>
             <p style={body}>
-              Birlikte çalıştığımız kurumlardan bir seçki — kartın üzerine gelin
-              (ya da dokunun), sektörü görünsün.
+              Birlikte çalıştığımız kurumlardan bir seçki — sektörlere göre.
             </p>
           </Reveal>
 
-          <Reveal className="biz-refs-grid" style={refsGrid} delay={120}>
-            {CLIENTS.map((c) => (
-              <FlipCard
-                key={c.name}
-                name={c.name}
-                sector={SECTOR_LABEL[c.sector] || c.sector}
-              />
-            ))}
+          {/* Hairline satır liste — sektör gruplu; dev kart/flip yok (awwwards) */}
+          <Reveal className="biz-refs" style={refList} delay={120}>
+            {CLIENT_SECTORS.map((sec) => {
+              const firms = CLIENTS.filter((c) => c.sector === sec.id)
+              if (firms.length === 0) return null
+              return (
+                <div key={sec.id} className="biz-ref-group" style={refGroup}>
+                  <p style={refGroupLabel}>{sec.label}</p>
+                  <ul style={refGroupUl}>
+                    {firms.map((c) => (
+                      <li key={c.name} className="biz-ref-row" style={refRow}>
+                        <span style={refName}>{c.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })}
           </Reveal>
         </div>
       </section>
@@ -200,6 +184,9 @@ export default function BizPage() {
 
       <style>{`
         .biz-il-text, .biz-il-photo { box-sizing: border-box; }
+        /* Ritim döner: 'reverse' bölümde foto SOL / metin SAĞ. (Eksikti → ilTextB'nin
+           negatif marginLeft'i metin kartını sol kenardan taşırıp başlığı kesiyordu.) */
+        .biz-il-rev .biz-il-row { flex-direction: row-reverse; }
 
         .biz-outline, .biz-outline-light {
           transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -215,11 +202,12 @@ export default function BizPage() {
         }
         a:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 4px; border-radius: 2px; }
 
-        /* Flip-card referans — saf CSS 3D çevirme (hover masaüstü / .is-flipped tap) */
-        .biz-flip { -webkit-tap-highlight-color: transparent; }
-        .biz-flip:hover .biz-flip-inner,
-        .biz-flip.is-flipped .biz-flip-inner { transform: rotateY(180deg); }
-        .biz-flip:focus-visible { outline: 2px solid var(--v2-copper, #D4A373); outline-offset: 3px; border-radius: 14px; }
+        /* İş ortakları — hairline satır liste (awwwards): ince ayraç + hover kırmızı vurgu */
+        .biz-ref-row { position: relative; color: var(--v2-navy, #2D3142); border-top: 1px solid rgba(45, 49, 66, 0.12); transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), color 220ms ease; }
+        .biz-ref-group ul > .biz-ref-row:last-child { border-bottom: 1px solid rgba(45, 49, 66, 0.12); }
+        .biz-ref-row::before { content: ''; position: absolute; left: -12px; top: 50%; width: 2px; height: 56%; background: var(--v2-copper, #9A0002); transform: translateY(-50%) scaleY(0); transform-origin: center; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); }
+        .biz-ref-row:hover { transform: translateX(7px); color: var(--v2-copper, #9A0002); }
+        .biz-ref-row:hover::before { transform: translateY(-50%) scaleY(1); }
 
         @media (max-width: 860px) {
           .biz-il-row { flex-direction: column !important; }
@@ -237,26 +225,14 @@ export default function BizPage() {
             width: 100% !important;
             min-height: clamp(260px, 56vw, 380px) !important;
           }
-          .biz-refs-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (min-width: 861px) and (max-width: 1080px) {
-          .biz-refs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .biz-refs { grid-template-columns: 1fr !important; }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .biz-outline, .biz-outline-light, .biz-outline span, .biz-outline-light span {
             transition: none !important;
           }
-          /* Flip kapalı — iki yüz alt alta statik görünür (erişilebilir) */
-          .biz-flip { min-height: 0 !important; }
-          .biz-flip-inner { position: static !important; transform: none !important; transition: none !important; }
-          .biz-flip-front, .biz-flip-back {
-            position: static !important;
-            transform: none !important;
-            -webkit-backface-visibility: visible !important;
-            backface-visibility: visible !important;
-          }
-          .biz-flip-back { margin-top: 10px; }
+          .biz-ref-row, .biz-ref-row::before { transition: none !important; }
         }
       `}</style>
     </PageTransition>
@@ -408,69 +384,31 @@ const ilPhotoB = {
   minHeight: 'clamp(440px, 56vh, 620px)',
 }
 
-/* c) FLIP-CARD REFERANS — saf CSS 3D çevirme */
-const flipCard = {
-  position: 'relative',
-  appearance: 'none',
-  WebkitAppearance: 'none',
-  border: 'none',
-  margin: 0,
-  padding: 0,
-  background: 'transparent',
-  cursor: 'pointer',
+/* c) İŞ ORTAKLARI — hairline satır liste (sektör gruplu, awwwards) */
+const refList = {
   width: '100%',
-  minHeight: 'clamp(172px, 22vh, 200px)',
-  perspective: '1100px',
-  fontFamily: 'inherit',
-  textAlign: 'left',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+  gap: 'clamp(28px, 3.4vw, 52px)',
+  alignItems: 'start',
 }
-const flipInner = {
-  position: 'absolute',
-  inset: 0,
-  transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
-  transformStyle: 'preserve-3d',
-}
-const flipFace = {
-  position: 'absolute',
-  inset: 0,
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  padding: 'clamp(22px, 2.3vw, 30px)',
-  borderRadius: 14,
-  overflow: 'hidden',
-  WebkitBackfaceVisibility: 'hidden',
-  backfaceVisibility: 'hidden',
-}
-const flipFront = {
-  ...flipFace,
-  background: 'var(--v2-surface-elevated, #FFFFFF)',
-  boxShadow: '0 1px 2px rgba(45, 49, 66, 0.04), 0 16px 36px -26px rgba(45, 49, 66, 0.3)',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-}
-const flipBack = {
-  ...flipFace,
-  background: 'var(--v2-cream, #EFEAE0)',
-  transform: 'rotateY(180deg)',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  gap: 12,
-}
-const flipSector = {
+const refGroup = { minWidth: 0 }
+const refGroupLabel = {
   fontFamily: 'var(--v2-font-mono, monospace)',
-  fontSize: 11,
-  letterSpacing: '0.18em',
+  fontSize: 12,
+  letterSpacing: '0.2em',
   textTransform: 'uppercase',
-  color: 'var(--v2-copper, #D4A373)',
+  color: 'var(--v2-copper, #9A0002)',
+  margin: '0 0 12px',
 }
-const flipName = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 'clamp(20px, 2vw, 26px)',
-  lineHeight: 1.12,
-  letterSpacing: '-0.01em',
-  color: 'var(--v2-navy, #2D3142)',
+const refGroupUl = { listStyle: 'none', margin: 0, padding: 0 }
+const refRow = { padding: 'clamp(11px, 1.05vw, 15px) 0' }
+const refName = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 'clamp(15px, 1.4vw, 17px)',
+  fontWeight: 500,
+  lineHeight: 1.3,
+  letterSpacing: '-0.005em',
 }
 
 /* d) İŞ ORTAKLARI / REFERANSLAR */
@@ -488,12 +426,6 @@ const refsInner = {
   alignItems: 'flex-start',
 }
 const refsHead = { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }
-const refsGrid = {
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: 'clamp(18px, 2.4vw, 28px)',
-}
 /* d) CTA BANT */
 const ctaWrap = {
   background: 'var(--v2-cream, #EFEAE0)',
