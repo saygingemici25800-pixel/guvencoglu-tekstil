@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import PageTransition from '../shared/PageTransition.jsx'
 import SEOHead from '../shared/SEOHead.jsx'
 import Reveal from '../shared/Reveal.jsx'
@@ -135,6 +136,7 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
   const [invite, setInvite] = useState(false) // tek seferlik "aç-topla" davet jesti
   const stageRef = useRef(null)
   const playedRef = useRef(false)
+  const [modal, setModal] = useState(null) // tıklanan ürün → büyüyen kart (lightbox)
 
   // Görünmeden önce kapat; viewport'a girince SIRAYLA: (1) elastic giriş, (2) bir kez
   // "aç-topla" davet jesti (one-shot, loop YOK). reduced-motion → statik, jest hiç çalışmaz.
@@ -191,7 +193,10 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
               aria-label={`${sec.term}${pos === 0 ? ' (seçili)' : ''}`}
               aria-current={pos === 0 ? 'true' : undefined}
               tabIndex={hidden ? -1 : 0}
-              onClick={() => setActive(i)}
+              onClick={() => {
+                setActive(i)
+                setModal(sec) // karta tıkla → büyüyen kart (lightbox); ok/nokta nav korunur
+              }}
               style={{
                 '--rot': `${rot}deg`,
                 '--sc': sc,
@@ -245,7 +250,84 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
 
       {/* Görsel isim artık aktif kartın ÜZERİNDE; burada yalnızca ekran okuyucu için canlı bölge */}
       <p className="fan-sr-live" aria-live="polite">{sections[active].term}</p>
+
+      {/* Karta tıklayınca büyüyen kart (lightbox): foto büyük + altında başlık + açıklama */}
+      {modal && <ProductModal sec={modal} slug={slug} onClose={() => setModal(null)} />}
     </div>
+  )
+}
+
+/* Ürün modalı / lightbox — saf CSS fade+scale, body scroll-lock, ESC/overlay/X kapatma,
+   basit focus-trap. createPortal ile <body>'ye taşınır (ancestor transform'dan etkilenmez,
+   tam ekran). Sadece tıklamada (client) render edilir → SSG güvenli. Galeri navigasyonu YOK. */
+function ProductModal({ sec, slug, onClose }) {
+  const closeRef = useRef(null)
+  const panelRef = useRef(null)
+  const sectorLabel = SEKTORLER[slug]?.label
+
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden' // arka plan scroll-lock
+    closeRef.current?.focus()
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key === 'Tab') {
+        const f = panelRef.current?.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')
+        if (!f || f.length === 0) return
+        const first = f[0]
+        const last = f[f.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [onClose])
+
+  const file = `${slug}-${slugifyTerm(sec.term)}.webp`
+  return createPortal(
+    <div className="pm-overlay" role="presentation" onClick={onClose}>
+      <div
+        className="pm-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label={sec.term}
+        ref={panelRef}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" ref={closeRef} className="pm-close" aria-label="Kapat" onClick={onClose}>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
+        <div className="pm-photo">
+          {HAS_PHOTOS && sec.img ? (
+            <img className="pm-img" src={sec.img} alt={sec.alt || sec.term} decoding="async" />
+          ) : (
+            <span className="pm-photo-tag">foto: {file}</span>
+          )}
+        </div>
+        <div className="pm-body">
+          {sectorLabel && (
+            <p className="pm-eyebrow">{sectorLabel.toLocaleUpperCase('tr-TR')} ÜNİFORMASI</p>
+          )}
+          <h2 className="pm-title">{sec.term}</h2>
+          <p className="pm-desc">{sec.desc}</p>
+        </div>
+      </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -469,6 +551,49 @@ export default function SektorPage() {
           .fan-card, .fan-photo { transition: none !important; }
           .fan-stage:hover { --m: 1; }
           .fan-card:hover .fan-photo, .fan-card:focus-visible .fan-photo { transform: none; }
+        }
+
+        /* ── ÜRÜN MODAL / LIGHTBOX (karta tıklayınca) — saf CSS fade + scale ── */
+        .pm-overlay {
+          position: fixed; inset: 0; z-index: 1000;
+          display: flex; align-items: center; justify-content: center;
+          padding: clamp(14px, 4vw, 48px);
+          background: rgba(22, 24, 33, 0.62);
+          -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+          animation: pm-fade 240ms ease both;
+        }
+        @keyframes pm-fade { from { opacity: 0; } to { opacity: 1; } }
+        .pm-panel {
+          position: relative;
+          width: min(720px, 100%);
+          max-height: min(88vh, 920px);
+          overflow-y: auto;
+          background: var(--v2-cream, #EFEAE0);
+          border-radius: 16px;
+          box-shadow: 0 30px 80px rgba(22, 24, 33, 0.45);
+          animation: pm-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+          -webkit-overflow-scrolling: touch;
+        }
+        @keyframes pm-pop { from { opacity: 0; transform: scale(0.94) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .pm-close {
+          position: absolute; top: 12px; right: 12px; z-index: 2;
+          width: 44px; height: 44px; border-radius: 999px; border: 0; cursor: pointer;
+          display: inline-flex; align-items: center; justify-content: center;
+          background: rgba(239, 234, 224, 0.92); color: var(--v2-navy, #2D3142);
+          box-shadow: 0 2px 10px rgba(22, 24, 33, 0.22);
+          transition: background 200ms ease, color 200ms ease;
+        }
+        .pm-close:hover, .pm-close:focus-visible { background: var(--v2-copper, #9A0002); color: var(--v2-cream, #EFEAE0); }
+        .pm-close:focus-visible { outline: 2px solid var(--v2-cream, #EFEAE0); outline-offset: 2px; }
+        .pm-photo { width: 100%; max-height: 50vh; aspect-ratio: 16 / 10; overflow: hidden; background: var(--v2-navy, #2D3142); }
+        .pm-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pm-photo-tag { display: flex; align-items: center; justify-content: center; height: 100%; font-family: var(--v2-font-mono, monospace); font-size: 12px; color: rgba(239, 234, 224, 0.6); }
+        .pm-body { padding: clamp(20px, 3.2vw, 38px); }
+        .pm-eyebrow { font-family: var(--v2-font-mono, monospace); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--v2-copper, #9A0002); margin: 0 0 12px; }
+        .pm-title { font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(24px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); margin: 0 0 14px; }
+        .pm-desc { font-family: var(--v2-font-body, sans-serif); font-size: clamp(15px, 1.5vw, 17px); line-height: 1.72; color: var(--v2-ink, #1A1A1A); margin: 0; }
+        @media (prefers-reduced-motion: reduce) {
+          .pm-overlay, .pm-panel { animation: none !important; }
         }
       `}</style>
     </PageTransition>
