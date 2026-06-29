@@ -190,7 +190,7 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
               type="button"
               key={sec.term}
               className="fan-card"
-              aria-label={`${sec.term}${pos === 0 ? ' (seçili)' : ''}`}
+              aria-label={`${sec.tr || sec.term}${pos === 0 ? ' (seçili)' : ''}`}
               aria-current={pos === 0 ? 'true' : undefined}
               tabIndex={hidden ? -1 : 0}
               onClick={() => {
@@ -216,10 +216,11 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
                 )}
                 <span className="fan-grad" data-cap={pos === 0 ? 'bl' : cap} aria-hidden="true" />
               </span>
-              {/* İsim kartın ÜZERİNDE: aktif (merkez) kart büyük Fraunces; yan kartlar küçük mono */}
+              {/* İsim kartın ÜZERİNDE: büyük TÜRKÇE başlık (aktif kartta Fraunces) + altında küçük İngilizce terim */}
               <span className="fan-cap" data-cap={pos === 0 ? 'bl' : cap} data-active={pos === 0 ? 'true' : undefined}>
                 {pos !== 0 && <span className="fan-cap-dash" aria-hidden="true" />}
-                <span className="fan-cap-text">{sec.term}</span>
+                <span className="fan-cap-text">{sec.tr || sec.term}</span>
+                {pos === 0 && <span className="fan-cap-en">{sec.term}</span>}
               </span>
             </button>
           )
@@ -236,7 +237,7 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
               <button
                 type="button"
                 className={`fan-dot${i === active ? ' is-active' : ''}`}
-                aria-label={`${i + 1}. ${sec.term}`}
+                aria-label={`${i + 1}. ${sec.tr || sec.term}`}
                 aria-current={i === active ? 'true' : undefined}
                 onClick={() => setActive(i)}
               />
@@ -249,7 +250,7 @@ function FanCarousel({ sections, slug, label, enableInvite = true, onInvitePlaye
       </div>
 
       {/* Görsel isim artık aktif kartın ÜZERİNDE; burada yalnızca ekran okuyucu için canlı bölge */}
-      <p className="fan-sr-live" aria-live="polite">{sections[active].term}</p>
+      <p className="fan-sr-live" aria-live="polite">{sections[active].tr || sections[active].term}</p>
 
       {/* Karta tıklayınca büyüyen kart (lightbox): foto büyük + altında başlık + açıklama */}
       {modal && <ProductModal sec={modal} slug={slug} onClose={() => setModal(null)} />}
@@ -302,7 +303,7 @@ function ProductModal({ sec, slug, onClose }) {
         className="pm-panel"
         role="dialog"
         aria-modal="true"
-        aria-label={sec.term}
+        aria-label={sec.tr || sec.term}
         ref={panelRef}
         onClick={(e) => e.stopPropagation()}
       >
@@ -322,7 +323,8 @@ function ProductModal({ sec, slug, onClose }) {
           {sectorLabel && (
             <p className="pm-eyebrow">{sectorLabel.toLocaleUpperCase('tr-TR')} ÜNİFORMASI</p>
           )}
-          <h2 className="pm-title">{sec.term}</h2>
+          <h2 className="pm-title">{sec.tr || sec.term}</h2>
+          <p className="pm-en">{sec.term}</p>
           <p className="pm-desc">{sec.desc}</p>
         </div>
       </div>
@@ -414,7 +416,7 @@ export default function SektorPage() {
             <ul>
               {s.sections.map((sec) => (
                 <li key={sec.term}>
-                  {sec.term} — {sec.desc}
+                  {sec.tr || sec.term} ({sec.term}) — {sec.desc}
                 </li>
               ))}
             </ul>
@@ -518,12 +520,14 @@ export default function SektorPage() {
         .fan-dot:focus-visible { outline: 2px solid var(--v2-copper, #9A0002); outline-offset: 2px; border-radius: 999px; }
         .fan-sr-live { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
         /* Aktif (merkez) kartın ismi kartın ÜZERİNDE büyük (Fraunces, sol-alt); yan kartlar küçük mono */
-        .fan-cap[data-active="true"] { top: auto; bottom: 16px; left: 16px; right: 16px; align-items: flex-end; justify-content: flex-start; }
+        .fan-cap[data-active="true"] { top: auto; bottom: 16px; left: 16px; right: 16px; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 5px; }
         .fan-cap[data-active="true"] .fan-cap-text {
           font-family: var(--v2-font-display, serif); font-weight: 400; text-transform: none;
           font-size: clamp(18px, 2.3vw, 25px); letter-spacing: -0.01em; line-height: 1.08;
           text-align: left; text-shadow: 0 1px 14px rgba(22, 24, 33, 0.55);
         }
+        /* Aktif kart: büyük TR başlığın altında küçük İngilizce terim (mono, muted krem — koyu foto üstünde okunur) */
+        .fan-cap-en { font-family: var(--v2-font-mono, monospace); font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(239, 234, 224, 0.74); text-shadow: 0 1px 10px rgba(22, 24, 33, 0.5); }
         .fan-grad[data-cap="bl"] { background: linear-gradient(to top, rgba(22, 24, 33, 0.86) 0%, rgba(22, 24, 33, 0.18) 50%, transparent 74%); }
 
         @media (max-width: 1100px) {
@@ -590,7 +594,8 @@ export default function SektorPage() {
         .pm-photo-tag { display: flex; align-items: center; justify-content: center; height: 100%; font-family: var(--v2-font-mono, monospace); font-size: 12px; color: rgba(239, 234, 224, 0.6); }
         .pm-body { padding: clamp(20px, 3.2vw, 38px); }
         .pm-eyebrow { font-family: var(--v2-font-mono, monospace); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--v2-copper, #9A0002); margin: 0 0 12px; }
-        .pm-title { font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(24px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); margin: 0 0 14px; }
+        .pm-title { font-family: var(--v2-font-display, serif); font-weight: 400; font-size: clamp(24px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; color: var(--v2-navy, #2D3142); margin: 0 0 4px; }
+        .pm-en { font-family: var(--v2-font-mono, monospace); font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--v2-copper, #9A0002); margin: 0 0 18px; }
         .pm-desc { font-family: var(--v2-font-body, sans-serif); font-size: clamp(15px, 1.5vw, 17px); line-height: 1.72; color: var(--v2-ink, #1A1A1A); margin: 0; }
         @media (prefers-reduced-motion: reduce) {
           .pm-overlay, .pm-panel { animation: none !important; }
