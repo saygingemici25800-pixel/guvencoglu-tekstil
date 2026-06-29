@@ -53,18 +53,15 @@ const HERO_SECTORS = [
 ]
 
 const ATELIER_PHOTOS = [
-  { img: '/atolye-uretim.webp', label: 'ÜRETİM' },
-  { img: '/atolye-zanaat.webp', label: 'ZANAAT' },
-  { img: '/atolye-renk.webp', label: 'RENK & KUMAŞ' },
-]
-
-const SERVICES = [
-  { icon: 'design', title: 'Tasarım', sub: 'özel marka kimliği için' },
-  { icon: 'sew', title: 'Konfeksiyon', sub: 'kendi tesis üretimi' },
-  { icon: 'embroidery', title: 'Nakış', sub: 'logo, isim, sınıf no' },
-  { icon: 'print', title: 'Baskı', sub: 'dijital, sublimasyon' },
-  { icon: 'batch', title: 'Toplu Üretim', sub: 'B2B sözleşmeli siparişler' },
-  { icon: 'logistics', title: 'Lojistik', sub: 'Türkiye geneli teslimat' },
+  { img: '/atolye-uretim.webp', label: 'ÜRETİM', desc: 'Tasarımdan dikişe kendi tesisimizde, aracısız.' },
+  { img: '/atolye-zanaat.webp', label: 'ZANAAT', desc: 'Kritik dikiş ve son kontrol insan elinden geçer.' },
+  { img: '/atolye-renk.webp', label: 'RENK & KUMAŞ', desc: 'Aynı tedarikçiyle tutarlı renk ve gramaj.' },
+  // ── Hizmetler bölümünden taşındı (4-5-6). GEÇİCİ foto (mevcut atölye görselleri):
+  //    gerçekleri gelince img'leri tek tek değiştir →
+  //    NAKIŞ: /uretim-nakis.webp · BASKI: /uretim-baski.webp · TOPLU: /uretim-toplu.webp ──
+  { img: '/atolye-zanaat.webp', label: 'NAKIŞ', desc: 'Kurumsal logo, isim ve sınıf no nakışı — net ve kalıcı.' },
+  { img: '/atolye-renk.webp', label: 'BASKI', desc: 'Tekstil baskı: dijital ve sublimasyon uygulamaları.' },
+  { img: '/atolye-uretim.webp', label: 'TOPLU ÜRETİM', desc: 'Yüksek adetli kurumsal üretim — B2B, sözleşmeli teslimat.' },
 ]
 
 // Gerçek metrikler (kullanıcı onayladı): aktif çalışılan kurum 100+,
@@ -93,78 +90,6 @@ const TESTIMONIALS = [
 // Referanslar" bölümü GEÇİCİ GİZLİ; sahte yorum/isim yayında kalmasın. Gerçek,
 // atıflı yorumlar gelince → true (TESTIMONIALS'ı gerçeklerle doldurup) geri açılır.
 const SHOW_TESTIMONIALS = false
-
-function ServiceIcon({ name }) {
-  const common = {
-    width: 28,
-    height: 28,
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: 1.5,
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-    'aria-hidden': true,
-    focusable: false,
-  }
-  switch (name) {
-    case 'design':
-      return (
-        <svg {...common}>
-          <path d="M12 19l7-7 3 3-7 7-3-3z" />
-          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-          <path d="M2 2l7.586 7.586" />
-          <circle cx="11" cy="11" r="2" />
-        </svg>
-      )
-    case 'sew':
-      return (
-        <svg {...common}>
-          <circle cx="6" cy="6" r="3" />
-          <circle cx="6" cy="18" r="3" />
-          <path d="M20 4L8.12 15.88" />
-          <path d="M14.47 14.48L20 20" />
-          <path d="M8.12 8.12L12 12" />
-        </svg>
-      )
-    case 'embroidery':
-      return (
-        <svg {...common}>
-          <path d="M3 21l4-1 11-11a2.83 2.83 0 0 0-4-4L3 16l-1 4z" />
-          <path d="M13.5 6.5l4 4" />
-          <circle cx="19" cy="5" r="1.4" />
-        </svg>
-      )
-    case 'print':
-      return (
-        <svg {...common}>
-          <path d="M6 9V3h12v6" />
-          <rect x="4" y="9" width="16" height="8" rx="1.5" />
-          <path d="M6 15h12v6H6z" />
-          <circle cx="17" cy="12" r="0.6" fill="currentColor" />
-        </svg>
-      )
-    case 'batch':
-      return (
-        <svg {...common}>
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-          <path d="M3.27 6.96L12 12l8.73-5.04" />
-          <path d="M12 22V12" />
-        </svg>
-      )
-    case 'logistics':
-      return (
-        <svg {...common}>
-          <path d="M1 3h15v13H1z" />
-          <path d="M16 8h4l3 3v5h-7V8z" />
-          <circle cx="5.5" cy="18.5" r="2" />
-          <circle cx="18.5" cy="18.5" r="2" />
-        </svg>
-      )
-    default:
-      return null
-  }
-}
 
 /* BlurReveal — Reveal'in SSG-safe one-shot + IntersectionObserver mantığı,
    ek olarak filter blur(10px→0) ile "stagger blur-in". idle = SSR/no-JS GÖRÜNÜR
@@ -456,7 +381,10 @@ export default function HomeV2() {
                   aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
                 />
                 <div style={atelierPhotoOverlay} aria-hidden="true" />
-                <span style={atelierLabel}>{p.label}</span>
+                <div style={atelierCaption}>
+                  <span style={atelierLabel}>{p.label}</span>
+                  {p.desc && <span style={atelierDesc}>{p.desc}</span>}
+                </div>
               </div>
             ))}
           </Reveal>
@@ -497,31 +425,6 @@ export default function HomeV2() {
             Bizi Daha Yakından Tanıyın <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
-      </section>
-
-      {/* ─── BÖLÜM 5 — HİZMETLER ÖNİZLEME ───────────────────── */}
-      <section className="hv2-services" style={servicesWrap} aria-labelledby="hv2-services-title">
-        {/* STATİK — bu bölümde giriş animasyonu yok (Reveal kaldırıldı). */}
-        <div style={servicesInner}>
-          <header style={sectionHead}>
-            <p style={eyebrow}>HİZMETLERİMİZ</p>
-            <h2 id="hv2-services-title" style={h2Light}>
-              Sadece üretmiyoruz. <em style={h1Accent}>Üniforma programınızı</em> yönetiyoruz.
-            </h2>
-          </header>
-
-          <div style={servicesGrid} className="hv2-services-grid">
-            {SERVICES.map((s) => (
-              <div key={s.title} style={serviceCell}>
-                <span style={serviceIconWrap}>
-                  <ServiceIcon name={s.icon} />
-                </span>
-                <h3 style={serviceTitle}>{s.title}</h3>
-                <p style={serviceSub}>{s.sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* ─── BÖLÜM 6 — SOSYAL KANIT / REFERANSLAR (gerçek yorum gelene kadar gizli) ─ */}
@@ -668,7 +571,6 @@ export default function HomeV2() {
         }
         @media (max-width: 760px) {
           .hv2-trust-grid { grid-template-columns: repeat(3, 1fr) !important; }
-          .hv2-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 820px) {
           .hv2-hero { height: auto !important; overflow: visible !important; }
@@ -980,20 +882,33 @@ const atelierPhoto = {
 const atelierPhotoOverlay = {
   position: 'absolute',
   inset: 0,
-  background: 'linear-gradient(to top, rgba(45,49,66,0.6), transparent 60%)',
+  background: 'linear-gradient(to top, rgba(45,49,66,0.82), rgba(45,49,66,0.12) 52%, transparent 72%)',
+}
+/* Kart-içi başlık (büyük mono) + kısa metin — foto üstüne overlay (16/10 kart) */
+const atelierCaption = {
+  position: 'absolute',
+  bottom: 14,
+  left: 16,
+  right: 16,
+  zIndex: 2,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 4,
 }
 const atelierLabel = {
-  position: 'absolute',
-  bottom: 16,
-  left: 16,
-  zIndex: 2,
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 11,
   letterSpacing: '0.15em',
+  textTransform: 'uppercase',
   color: 'var(--v2-cream, #EFEAE0)',
 }
+const atelierDesc = {
+  fontFamily: 'var(--v2-font-body, sans-serif)',
+  fontSize: 12.5,
+  lineHeight: 1.4,
+  color: 'rgba(239, 234, 224, 0.82)',
+}
 // Hizmetler bölümü artık açık zemin → başlık italik vurgusu navy (emDark ile aynı rejim).
-const h1Accent = { fontStyle: 'italic', color: 'var(--v2-navy, #2D3142)' }
 
 /* BÖLÜM 2 — GÜVEN ŞERİDİ */
 const trustWrap = {
@@ -1094,47 +1009,6 @@ const promiseCta = {
   color: 'var(--v2-copper, #D4A373)',
   borderBottom: '1.5px solid var(--v2-copper, #D4A373)',
   paddingBottom: 4,
-}
-
-/* BÖLÜM 5 — HİZMETLER */
-const servicesWrap = {
-  position: 'relative',
-  zIndex: 1,
-  background: 'var(--v2-cream, #EFEAE0)',
-  color: 'var(--v2-navy, #2D3142)',
-  padding: 'clamp(64px, 10vw, 112px) clamp(20px, 5vw, 48px)',
-}
-const servicesInner = {
-  maxWidth: 'var(--v2-content-max, 1440px)',
-  margin: '0 auto',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 'clamp(40px, 6vw, 64px)',
-  alignItems: 'flex-start',
-}
-const servicesGrid = {
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(6, 1fr)',
-  gap: 'clamp(24px, 3vw, 40px)',
-}
-const serviceCell = { display: 'flex', flexDirection: 'column', gap: 12 }
-const serviceIconWrap = { color: 'var(--v2-copper, #D4A373)', display: 'inline-flex' }
-const serviceTitle = {
-  fontFamily: 'var(--v2-font-display, serif)',
-  fontWeight: 400,
-  fontSize: 22,
-  lineHeight: 1.1,
-  letterSpacing: '-0.01em',
-  color: 'var(--v2-navy, #2D3142)',
-  margin: 0,
-}
-const serviceSub = {
-  fontFamily: 'var(--v2-font-body, sans-serif)',
-  fontSize: 14,
-  lineHeight: 1.5,
-  color: 'var(--v2-muted, #5A5A5A)',
-  margin: 0,
 }
 
 /* BÖLÜM 5.5 — BİZ VE İŞ ORTAKLARIMIZ TEASER (interlocking) */
