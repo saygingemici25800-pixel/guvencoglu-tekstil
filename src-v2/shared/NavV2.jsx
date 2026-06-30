@@ -51,8 +51,9 @@ export default function NavV2() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
 
-  // Logo büyük ama header (nav pill + telefon) ESKİ yerinde — top:20px sabit.
-  const LOGO_H = isMobile ? 124 : 200
+  // Logo nav pill + telefon ile AYNI yatay eksende (dikey ortalı, top:44px + translateY(-50%)).
+  // 5 sekmeli nav ile hiza korunur; biraz büyütüldü. Portre logo (595×842) dar → pill'e girmez.
+  const LOGO_H = isMobile ? 144 : 224
 
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
@@ -79,8 +80,11 @@ export default function NavV2() {
         // absolute → sayfa üstüne sabitlenir, scroll'da yukarı kayıp kaybolur
         // (yalnızca açılışta görünür; fixed gibi aşağı inmez). Nav/telefon fixed kalır.
         position: 'absolute',
-        top: '8px',
+        // Dikey eksen: nav pill + telefon (top:20px) ortak merkezi ≈ 44px.
+        // translateY(-50%) → logo bu eksende dikey ortalı: üçü tek hizada, yamukluk yok.
+        top: '44px',
         left: 'clamp(16px, 3vw, 28px)',
+        transform: 'translateY(-50%)',
         zIndex: 51,
         display: 'flex',
         alignItems: 'center',

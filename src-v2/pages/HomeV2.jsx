@@ -35,12 +35,13 @@ const HERO_SECTORS = [
     desc: "Resepsiyondan mutfağa, housekeeping'den spa'ya otel ekipleri için kurumsal kıyafet.",
   },
   {
-    id: 'okul',
+    // Okul ile yer değişti → 3. konum (grid hv2-hg-3), numara 03.
+    id: 'is-kiyafetleri',
     num: '03',
-    name: 'Okul',
-    img: '/okul-student.webp',
-    alt: 'Okul öğrenci üniforması',
-    desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
+    name: 'İş Kıyafetleri',
+    img: '/atolye-uretim.webp', // GEÇİCİ — gerçek hero fotosu gelince /hero-is.webp
+    alt: 'İş kıyafetleri ve güvenlik ekipmanı üretimi',
+    desc: 'Sanayi, inşaat ve saha ekipleri için iş tulumu, reflektörlü mont, güvenlik kıyafeti ve koruyucu ekipman.',
   },
   {
     id: 'restoran',
@@ -51,12 +52,13 @@ const HERO_SECTORS = [
     desc: 'Mutfaktan salona restoran ekibi için fonksiyonel, hijyenik ve markaya özel kıyafetler.',
   },
   {
-    id: 'is-kiyafetleri',
+    // İş Kıyafetleri ile yer değişti → 5. konum (grid hv2-hg-5), numara 05.
+    id: 'okul',
     num: '05',
-    name: 'İş Kıyafetleri',
-    img: '/atolye-uretim.webp', // GEÇİCİ — gerçek hero fotosu gelince /hero-is.webp
-    alt: 'İş kıyafetleri ve güvenlik ekipmanı üretimi',
-    desc: 'Sanayi, inşaat ve saha ekipleri için iş tulumu, reflektörlü mont, güvenlik kıyafeti ve koruyucu ekipman.',
+    name: 'Okul',
+    img: '/okul-student.webp',
+    alt: 'Okul öğrenci üniforması',
+    desc: 'Anaokulundan liseye, okul üniforması ve kurumsal eğitim kıyafetleri.',
   },
 ]
 
