@@ -9,7 +9,7 @@ export const makeClients = (label) =>
   Array.from({ length: 12 }, (_, i) => `${label} ${String(i + 1).padStart(2, '0')}`)
 
 // Switcher + prev/next sırası
-export const SEKTOR_ORDER = ['saglik', 'otel', 'okul', 'restoran']
+export const SEKTOR_ORDER = ['saglik', 'otel', 'okul', 'restoran', 'is-kiyafetleri']
 
 export const SEKTORLER = {
   saglik: {
@@ -75,6 +75,26 @@ export const SEKTORLER = {
       { term: 'Barista / Bar', tr: 'Barista', desc: 'Bar ve barista ekibi hızlı tempoda, sürekli göz önünde çalışır. Barista ve bar personeli için şık, dayanıklı ve pratik üniformalar dikiyoruz. Önlük ve gömlek detaylarını mekânın tarzına göre, leke ve yıkamaya dayanıklı kumaşla üretiyoruz.', photo: 'barista bar apron uniform', img: '/restoran-barista.webp', alt: 'Restoran barista ve bar önlüğü' },
       { term: 'Busser', tr: 'Komi', desc: 'Komi ekibi servisin akışını sağlayan görünmez kahramanlar; kıyafet rahat ve dayanıklı olmalı. Komi ve servis destek ekibi için hareket ettiren, yıpranmaya dayanıklı üniformalar üretiyoruz. Renk kodlamasıyla ekip içi düzeni kuruma göre ayarlıyoruz.', photo: 'restaurant busser uniform', img: '/restoran-busser.webp', alt: 'Restoran komi çalışma kıyafeti' },
       { term: 'Prep Staff', tr: 'Hazırlık', desc: 'Mutfak hazırlık ekibi yoğun ve ıslak bir ortamda çalışır; kıyafet dayanıklı ve hijyenik olmalı. Hazırlık personeli için sık yıkamaya dayanıklı, pratik mutfak üniformaları dikiyoruz. Önlük ve cep düzenini işin pratiğine göre planlıyoruz.', photo: 'kitchen prep staff uniform', img: '/restoran-prep.webp', alt: 'Restoran mutfak hazırlık personeli kıyafeti' },
+    ],
+  },
+  'is-kiyafetleri': {
+    slug: 'is-kiyafetleri',
+    label: 'İş Kıyafetleri',
+    title: 'İş Kıyafetleri',
+    lede: 'Sanayi, inşaat ve saha ekipleri için iş tulumu, reflektörlü mont, güvenlik kıyafeti ve koruyucu ekipman — dayanıklı, güvenli ve kuruma özel.',
+    seoTitle: 'İş Kıyafetleri ve Güvenlik Ekipmanı — Güvençoğlu Tekstil',
+    seoDesc: 'İş tulumu, reflektörlü (hi-vis) mont, yağmurluk, güvenlik üniforması, iş ayakkabısı, baret, eldiven ve kışlık iş montu. Sanayi, inşaat ve saha için dayanıklı iş kıyafetleri ve koruyucu ekipman.',
+    // GEÇİCİ foto (mevcut atölye/üretim webp'leri). Gerçek fotolar gelince img'leri değiştir →
+    // is-tulum / is-reflektor / is-yagmurluk / is-guvenlik / is-ayakkabi / is-baret / is-eldiven / is-kislik .webp
+    sections: [
+      { term: 'Work Overalls', tr: 'İş Tulumu', desc: 'Sanayi, atölye ve sahada çalışan ekipler için tek parça ya da takım iş tulumu üretiyoruz. Yıpranmaya ve sürtünmeye dayanıklı kumaş, güçlendirilmiş diz ve cep dikişleri; kuruma özel renk ve logo. Gün boyu hareket ettiren, işin temposuna dayanan tulumlar.', photo: 'industrial work overalls coverall', img: '/atolye-uretim.webp', alt: 'İş tulumu — sanayi ve saha iş kıyafeti' },
+      { term: 'Hi-Vis Jacket', tr: 'Reflektörlü Mont', desc: 'Yol, inşaat ve gece çalışmalarında görünürlük güvenliğin ilk şartı. Reflektörlü mont ve yelekleri standartlara uygun şerit ve fosforlu kumaşla üretiyoruz. Kurumsal logo, dayanıklı reflektör bant ve mevsime uygun kumaş seçenekleriyle.', photo: 'hi-vis reflective safety jacket', img: '/atolye-zanaat.webp', alt: 'Reflektörlü (hi-vis) iş montu ve yelek' },
+      { term: 'Rainwear', tr: 'Yağmurluk', desc: 'Açık alanda çalışan ekipler için su geçirmez yağmurluk ve dış giyim üretiyoruz. Dış yüzeyi su iten, içi nefes alan kumaş; mühürlü dikişler ve kapüşon detayı. Saha personelini ıslanmadan, rahat çalışır halde tutan dayanıklı yağmurluklar.', photo: 'waterproof work rainwear', img: '/atolye-renk.webp', alt: 'Su geçirmez iş yağmurluğu' },
+      { term: 'Security Uniform', tr: 'Güvenlik Kıyafeti', desc: 'Özel güvenlik ve koruma ekipleri için ciddi, kurumsal duruşlu üniformalar dikiyoruz. Dayanıklı kumaş, profesyonel kesim, kuruma özel arma ve logo. Vardiya boyunca rahat, otoriter ve düzenli görünen güvenlik kıyafetleri.', photo: 'security guard uniform', img: '/miras.webp', alt: 'Özel güvenlik üniforması' },
+      { term: 'Safety Shoes', tr: 'İş Ayakkabısı', desc: 'Sahada ayak güvenliği pazarlık konusu değil. Çelik burunlu, kaymaz tabanlı iş ayakkabıları sunuyoruz; darbe ve delinmeye karşı koruma, gün boyu konfor. Sektöre ve iş koşuluna göre model seçenekleriyle.', photo: 'steel toe safety shoes', img: '/atolye-uretim.webp', alt: 'Çelik burunlu iş ayakkabısı' },
+      { term: 'Hard Hat', tr: 'Baret / Kask', desc: 'Baş güvenliği için darbeye dayanıklı baret ve kasklar sağlıyoruz. Standartlara uygun, ayarlanabilir, kuruma özel renk ve logo seçenekleri. İnşaat, sanayi ve saha ekipleri için temel koruyucu ekipman.', photo: 'construction hard hat helmet', img: '/atolye-zanaat.webp', alt: 'Koruyucu baret ve kask' },
+      { term: 'Work Gloves', tr: 'İş Eldiveni', desc: 'El güvenliği ve kavrama için işe uygun eldiven çeşitleri sunuyoruz. Kesilmeye, ısıya ve kimyasala dirençli modeller; el hareketini kısıtlamayan, dayanıklı malzeme. Sektörün gereğine göre koruma seviyesi.', photo: 'safety work gloves', img: '/atolye-renk.webp', alt: 'İş güvenliği eldiveni' },
+      { term: 'Winter Workwear', tr: 'Kışlık İş Montu', desc: 'Soğukta ve açık alanda çalışan ekipler için içi dolgulu, rüzgâr ve su tutmayan kışlık iş montları üretiyoruz. Sıcak tutan astar, dayanıklı dış kumaş, reflektör opsiyonu; kuruma özel renk ve logo. Zorlu kış koşullarında koruyan dış giyim.', photo: 'insulated winter work jacket', img: '/miras.webp', alt: 'Kışlık dolgulu iş montu' },
     ],
   },
 }

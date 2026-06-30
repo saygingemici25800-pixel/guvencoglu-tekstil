@@ -353,7 +353,7 @@ export default function SektorPage() {
     <PageTransition>
       <SEOHead
         title="Ürünlerimiz — Güvençoğlu Tekstil"
-        description="Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve tekstil üretimi. Fethiye'deki kendi tesisimizde nakış, baskı, özel tasarım, toplu üretim ve B2B çözümler."
+        description="Sağlık, otel, okul, restoran ve iş kıyafetleri için kurumsal üniforma, güvenlik ekipmanı ve tekstil üretimi. Fethiye'deki kendi tesisimizde nakış, baskı, özel tasarım, toplu üretim ve B2B çözümler."
         path="/ne-yapiyoruz"
         schema={{
           '@context': 'https://schema.org',
@@ -399,9 +399,9 @@ export default function SektorPage() {
             Ürün<em style={{ fontStyle: 'italic', color: 'var(--v2-copper, #9A0002)' }}>lerimiz</em>
           </h1>
           <p style={lede}>
-            Sağlık, otel, okul ve restoran kurumları için kurumsal üniforma ve
-            tekstili uçtan uca üretiyoruz — tasarımdan dikişe, nakıştan baskıya,
-            Fethiye’deki kendi tesisimizde. Aracısız, sözleşmeli, zamanında.
+            Sağlık, otel, okul, restoran ve iş kıyafetleri için kurumsal üniforma,
+            güvenlik ekipmanı ve tekstili uçtan uca üretiyoruz — tasarımdan dikişe,
+            nakıştan baskıya, Fethiye’deki kendi tesisimizde. Aracısız, sözleşmeli, zamanında.
           </p>
         </Reveal>
       </section>
