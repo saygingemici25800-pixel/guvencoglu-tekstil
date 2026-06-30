@@ -365,37 +365,88 @@ export default function HomeV2() {
       {/* ─── BÖLÜM 2 — ATÖLYE ŞERİDİ ─────────────────────────── */}
       <section className="hv2-atelier" style={atelierWrap} aria-labelledby="hv2-atelier-title">
         <div style={atelierInner}>
-          {/* Önce başlık/metin görünür → fotolar ~0.8sn SONRA yumuşak fade-in (Reveal delay) */}
-          <Reveal as="div" className="hv2-atelier-head" style={atelierHead} y={14} delay={0}>
-            <div style={atelierHeadLeft}>
+
+          {/* BANT 1 — kartlar SOL · metin SAĞ (Üretim · Zanaat · Renk & Kumaş).
+              Metin önce (delay 0) görünür, overlap kartlar hemen ardından stagger fade-in. */}
+          <div className="hv2-at-band hv2-at-band--1">
+            <Reveal as="div" className="hv2-at-text" style={atelierText} y={16} delay={0}>
               <span style={atelierEyebrow}>KENDİ ÜRETİM TESİSİMİZ</span>
               <h2 id="hv2-atelier-title" style={atelierH2}>
                 2001’den beri kendi atölyemizde, aracısız üretim.
               </h2>
-            </div>
-            <p style={atelierLede}>
-              Tasarımdan dikişe, nakıştan son kontrole kadar her aşama Fethiye’deki kendi
-              tesisimizde. Aracı yok, sürpriz yok — sadece söz verdiğimiz kalite.
-            </p>
-          </Reveal>
+              <p style={atelierPara}>
+                Tasarımdan dikişe, nakıştan son kontrole kadar her aşama Fethiye’deki kendi
+                tesisimizde. Aracı yok, sürpriz yok — sadece söz verdiğimiz kalite.
+              </p>
+            </Reveal>
 
-          <Reveal as="div" className="hv2-atelier-grid" style={atelierGrid} y={0} delay={800} duration={900}>
-            {ATELIER_PHOTOS.map((p) => (
-              <div key={p.label} className="hv2-atelier-card" style={atelierCard}>
-                <div
-                  className="hv2-atelier-photo"
-                  style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
-                  role="img"
-                  aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
-                />
-                <div style={atelierPhotoOverlay} aria-hidden="true" />
-                <div style={atelierCaption}>
-                  <span style={atelierLabel}>{p.label}</span>
-                  {p.desc && <span style={atelierDesc}>{p.desc}</span>}
-                </div>
-              </div>
-            ))}
-          </Reveal>
+            <div className="hv2-at-cluster" style={atelierCluster}>
+              {ATELIER_PHOTOS.slice(0, 3).map((p, i) => (
+                <Reveal
+                  key={p.label}
+                  as="div"
+                  className="hv2-atelier-card"
+                  style={{ ...atelierCard, marginTop: [0, 18, 36][i], zIndex: i + 1 }}
+                  y={18}
+                  delay={140 + i * 150}
+                  duration={760}
+                >
+                  <div
+                    className="hv2-atelier-photo"
+                    style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
+                    role="img"
+                    aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
+                  />
+                  <div style={atelierPhotoOverlay} aria-hidden="true" />
+                  <div style={atelierCaption}>
+                    <span style={atelierLabel}>{p.label}</span>
+                    {p.desc && <span style={atelierDesc}>{p.desc}</span>}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
+          {/* BANT 2 — metin SOL · kartlar SAĞ (Nakış · Baskı · Toplu Üretim). Zıt hizalı. */}
+          <div className="hv2-at-band hv2-at-band--2">
+            <Reveal as="div" className="hv2-at-text" style={atelierText} y={16} delay={0}>
+              <span style={atelierEyebrow}>İŞLEME & ÜRETİM</span>
+              <h2 style={atelierH2}>Tek çatı altında, baştan sona.</h2>
+              <p style={atelierPara}>
+                Logo nakışından tekstil baskısına, tek adetten yüksek hacimli B2B siparişe —
+                hepsi aynı tesiste. Dış atölyeye iş vermediğimiz için kalite, renk ve teslim
+                süresi bizim kontrolümüzde. Kurumsal projelerde tutarlılık tesadüf değil,
+                sürecin kendisinden geliyor.
+              </p>
+            </Reveal>
+
+            <div className="hv2-at-cluster" style={atelierCluster}>
+              {ATELIER_PHOTOS.slice(3, 6).map((p, i) => (
+                <Reveal
+                  key={p.label}
+                  as="div"
+                  className="hv2-atelier-card"
+                  style={{ ...atelierCard, marginTop: [36, 18, 0][i], zIndex: i + 1 }}
+                  y={18}
+                  delay={140 + i * 150}
+                  duration={760}
+                >
+                  <div
+                    className="hv2-atelier-photo"
+                    style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
+                    role="img"
+                    aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
+                  />
+                  <div style={atelierPhotoOverlay} aria-hidden="true" />
+                  <div style={atelierCaption}>
+                    <span style={atelierLabel}>{p.label}</span>
+                    {p.desc && <span style={atelierDesc}>{p.desc}</span>}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -543,6 +594,17 @@ export default function HomeV2() {
         .hv2-shiny { transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1); }
         .hv2-hg-card:hover .hv2-shiny, .hv2-hg-link:focus-visible .hv2-shiny { transform: scale(1.06); }
         .hv2-atelier-card:hover .hv2-atelier-photo { transform: scale(1.05); }
+        /* Üretim tesisi — iki zıt-hizalı bant (kart kümesi + metin), masaüstü yerleşim. */
+        .hv2-at-band { display: grid; gap: clamp(28px, 5vw, 72px); align-items: center; }
+        .hv2-at-band + .hv2-at-band { margin-top: clamp(56px, 9vh, 120px); }
+        .hv2-at-band--1 { grid-template-columns: 0.95fr 1.05fr; }
+        .hv2-at-band--1 .hv2-at-cluster { grid-column: 1; grid-row: 1; }
+        .hv2-at-band--1 .hv2-at-text    { grid-column: 2; grid-row: 1; }
+        .hv2-at-band--2 { grid-template-columns: 1.05fr 0.95fr; }
+        .hv2-at-band--2 .hv2-at-text    { grid-column: 1; grid-row: 1; }
+        .hv2-at-band--2 .hv2-at-cluster { grid-column: 2; grid-row: 1; }
+        /* Kümede 2. ve 3. kart birbirine binsin (overlap), derinlik için. */
+        .hv2-at-cluster .hv2-atelier-card + .hv2-atelier-card { margin-left: -10%; }
 
         .hv2-textlink { transition: color 220ms ease; }
         .hv2-textlink span { display: inline-block; transition: transform 260ms cubic-bezier(0.16,1,0.3,1); }
@@ -592,8 +654,16 @@ export default function HomeV2() {
           .hv2-quote-inner { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 720px) {
-          .hv2-atelier-head { flex-direction: column !important; }
-          .hv2-atelier-grid { grid-template-columns: 1fr !important; }
+          /* Üretim tesisi bantları → tek kolon, metin önce; kümede overlap kapanır, düzgün küçük stack. */
+          .hv2-at-band--1, .hv2-at-band--2 { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .hv2-at-band--1 .hv2-at-text, .hv2-at-band--1 .hv2-at-cluster,
+          .hv2-at-band--2 .hv2-at-text, .hv2-at-band--2 .hv2-at-cluster { grid-column: 1 !important; grid-row: auto !important; }
+          .hv2-at-band + .hv2-at-band { margin-top: 44px !important; }
+          .hv2-at-cluster { flex-direction: column !important; align-items: center !important; gap: 12px !important; }
+          .hv2-at-cluster .hv2-atelier-card {
+            flex: 0 0 auto !important; width: 100% !important; max-width: 300px !important;
+            aspect-ratio: 16 / 10 !important; margin-left: 0 !important; margin-top: 0 !important;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -836,15 +906,14 @@ const atelierWrap = {
   padding: 'clamp(64px, 8vh, 100px) clamp(24px, 5vw, 80px)',
 }
 const atelierInner = { maxWidth: 1280, margin: '0 auto' }
-const atelierHead = {
+/* Bant metin bloğu (eyebrow + başlık + paragraf) — kart kümesiyle zıt hizada, dikey ortalı. */
+const atelierText = {
   display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'baseline',
-  flexWrap: 'wrap',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
   gap: 16,
-  marginBottom: 48,
+  maxWidth: 480,
 }
-const atelierHeadLeft = { display: 'flex', flexDirection: 'column' }
 const atelierEyebrow = {
   fontFamily: 'var(--v2-font-mono, monospace)',
   fontSize: 12,
@@ -854,31 +923,35 @@ const atelierEyebrow = {
 const atelierH2 = {
   fontFamily: 'var(--v2-font-display, serif)',
   fontWeight: 400,
-  fontSize: 'clamp(28px, 4vw, 48px)',
+  fontSize: 'clamp(26px, 3.4vw, 42px)',
   lineHeight: 1.15,
   color: 'var(--v2-navy, #2D3142)',
-  marginTop: 12,
-  marginBottom: 0,
-  maxWidth: 600,
+  margin: 0,
+  maxWidth: 520,
 }
-const atelierLede = {
+const atelierPara = {
   fontFamily: 'var(--v2-font-body, sans-serif)',
   fontSize: 16,
-  lineHeight: 1.6,
+  lineHeight: 1.65,
   color: 'var(--v2-muted, #5A5A5A)',
-  maxWidth: 360,
   margin: 0,
 }
-const atelierGrid = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: 16,
+/* Overlap kart kümesi — 3 kart binişik (flex; negatif margin-left & responsive CSS'te). */
+const atelierCluster = {
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  width: '100%',
 }
 const atelierCard = {
   position: 'relative',
-  // Üretim tesisi fotoları ~yarı yükseklik (footprint yarıya); tam genişlik korunur → yan dev boşluk yok.
-  aspectRatio: '16 / 10',
+  // Kompakt kart — bant başına 3'ü binişik (overlap). Genişlik flex (~yarı boyut), foto korunur.
+  flex: '0 0 40%',
+  aspectRatio: '4 / 5',
   overflow: 'hidden',
+  borderRadius: 5,
+  boxShadow: '0 16px 36px -20px rgba(45, 49, 66, 0.55)',
 }
 const atelierPhoto = {
   position: 'absolute',
