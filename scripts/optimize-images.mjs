@@ -126,3 +126,52 @@ const SECTOR_Q = 78
       `eksik: ${missing.length ? missing.join(', ') : 'yok'}`,
   )
 }
+
+// ── Üretim Tesisi + İş Kıyafetleri + hero gerçek fotoları (geçici → gerçek WebP) ──
+// Kaynak public/<base>.(jpg|jpeg|png); <base>.webp (kart/hero boyutu) yazılır, ham
+// kaynak silinir (repoya tek format girsin). Bulunamayan base atlanır → o slot
+// geçici fotoda kalır (kırık img değil). Üretim/İş kartları ~900px q78, hero ~1200px q80.
+const REAL_JOBS = [
+  { base: 'uretim-nakis', width: 900, quality: 78 },
+  { base: 'uretim-baski', width: 900, quality: 78 },
+  { base: 'uretim-toplu', width: 900, quality: 78 },
+  { base: 'is-tulum', width: 900, quality: 78 },
+  { base: 'is-reflektor', width: 900, quality: 78 },
+  { base: 'is-yagmurluk', width: 900, quality: 78 },
+  { base: 'is-guvenlik', width: 900, quality: 78 },
+  { base: 'is-ayakkabi', width: 900, quality: 78 },
+  { base: 'is-baret', width: 900, quality: 78 },
+  { base: 'is-eldiven', width: 900, quality: 78 },
+  { base: 'is-kislik', width: 900, quality: 78 },
+  { base: 'hero-is', width: 1200, quality: 80 },
+]
+{
+  const files = readdirSync(PUBLIC)
+  let rBefore = 0
+  let rAfter = 0
+  let done = 0
+  const missing = []
+  for (const { base, width, quality } of REAL_JOBS) {
+    const out = join(PUBLIC, `${base}.webp`)
+    const srcName = files.find(
+      (f) => f.startsWith(`${base}.`) && !/\.webp$/i.test(f) && /\.(jpe?g|png)$/i.test(f),
+    )
+    if (!srcName) {
+      if (!existsSync(out)) missing.push(base)
+      continue
+    }
+    const src = join(PUBLIC, srcName)
+    const before = Number(kb(src))
+    const meta = await sharp(src).metadata()
+    await sharp(src).resize({ width, withoutEnlargement: true }).webp({ quality }).toFile(out)
+    unlinkSync(src) // ham kaynağı sil (tek format yeter, WebP geniş destekli)
+    rBefore += before
+    rAfter += Number(kb(out))
+    done++
+    console.log(`  ${base.padEnd(22)} ${meta.width}px → ${Math.min(width, meta.width)}px  q${quality}  ${before} KB → ${kb(out)} KB`)
+  }
+  console.log(
+    `\n[gerçek foto] ${done} foto: ${rBefore} KB → ${rAfter} KB; ` +
+      `eksik (geçici kalır): ${missing.length ? missing.join(', ') : 'yok'}`,
+  )
+}

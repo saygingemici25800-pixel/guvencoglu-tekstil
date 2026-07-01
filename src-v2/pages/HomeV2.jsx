@@ -39,7 +39,7 @@ const HERO_SECTORS = [
     id: 'is-kiyafetleri',
     num: '03',
     name: 'İş Kıyafetleri',
-    img: '/atolye-uretim.webp', // GEÇİCİ — gerçek hero fotosu gelince /hero-is.webp
+    img: '/hero-is.webp', // gerçek hero fotosu (İş Kıyafetleri)
     alt: 'İş kıyafetleri ve güvenlik ekipmanı üretimi',
     desc: 'Sanayi, inşaat ve saha ekipleri için iş tulumu, reflektörlü mont, güvenlik kıyafeti ve koruyucu ekipman.',
   },
@@ -66,12 +66,10 @@ const ATELIER_PHOTOS = [
   { img: '/atolye-uretim.webp', label: 'ÜRETİM', desc: 'Tasarımdan dikişe kendi tesisimizde, aracısız.' },
   { img: '/atolye-zanaat.webp', label: 'ZANAAT', desc: 'Kritik dikiş ve son kontrol insan elinden geçer.' },
   { img: '/atolye-renk.webp', label: 'RENK & KUMAŞ', desc: 'Aynı tedarikçiyle tutarlı renk ve gramaj.' },
-  // ── Hizmetler bölümünden taşındı (4-5-6). GEÇİCİ foto (mevcut atölye görselleri):
-  //    gerçekleri gelince img'leri tek tek değiştir →
-  //    NAKIŞ: /uretim-nakis.webp · BASKI: /uretim-baski.webp · TOPLU: /uretim-toplu.webp ──
-  { img: '/atolye-zanaat.webp', label: 'NAKIŞ', desc: 'Kurumsal logo, isim ve sınıf no nakışı — net ve kalıcı.' },
-  { img: '/atolye-renk.webp', label: 'BASKI', desc: 'Tekstil baskı: dijital ve sublimasyon uygulamaları.' },
-  { img: '/atolye-uretim.webp', label: 'TOPLU ÜRETİM', desc: 'Yüksek adetli kurumsal üretim — B2B, sözleşmeli teslimat.' },
+  // ── Hizmetler bölümünden taşındı (4-5-6). Gerçek üretim fotoları (WebP, optimize). ──
+  { img: '/uretim-nakis.webp', label: 'NAKIŞ', desc: 'Kurumsal logo, isim ve sınıf no nakışı — net ve kalıcı.', alt: 'Kurumsal logo nakışı — tekstil nakış üretimi' },
+  { img: '/uretim-baski.webp', label: 'BASKI', desc: 'Tekstil baskı: dijital ve sublimasyon uygulamaları.', alt: 'Tekstil baskı üretimi' },
+  { img: '/uretim-toplu.webp', label: 'TOPLU ÜRETİM', desc: 'Yüksek adetli kurumsal üretim — B2B, sözleşmeli teslimat.', alt: 'Yüksek adetli toplu tekstil üretimi' },
 ]
 
 // Gerçek metrikler (kullanıcı onayladı): aktif çalışılan kurum 100+,
@@ -397,7 +395,7 @@ export default function HomeV2() {
                     className="hv2-atelier-photo"
                     style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
                     role="img"
-                    aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
+                    aria-label={p.alt || `Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
                   />
                   <div style={atelierPhotoOverlay} aria-hidden="true" />
                   <div style={atelierCaption}>
@@ -437,7 +435,7 @@ export default function HomeV2() {
                     className="hv2-atelier-photo"
                     style={{ ...atelierPhoto, backgroundImage: `url(${p.img})` }}
                     role="img"
-                    aria-label={`Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
+                    aria-label={p.alt || `Atölyeden ${p.label.toLocaleLowerCase('tr-TR')} görseli`}
                   />
                   <div style={atelierPhotoOverlay} aria-hidden="true" />
                   <div style={atelierCaption}>
