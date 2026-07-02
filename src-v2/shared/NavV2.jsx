@@ -52,8 +52,9 @@ export default function NavV2() {
   const closeMobileMenu = () => setMobileMenuOpen(false)
 
   // Logo nav pill + telefon ile AYNI yatay eksende (dikey ortalı, top:44px + translateY(-50%)).
-  // 5 sekmeli nav ile hiza korunur; biraz büyütüldü. Portre logo (595×842) dar → pill'e girmez.
-  const LOGO_H = isMobile ? 144 : 224
+  // 1.5× büyütüldü (224→336 / 144→216). Portre logo (595×842); dikey ortalı kaldığı için
+  // büyürken üst/alt simetrik uzar (şeffaf kenar boşluğu üstte taşmayı yutuyor).
+  const LOGO_H = isMobile ? 216 : 336
 
   const linkStyle = (isActive, isCta) => ({
     display: 'inline-block',
